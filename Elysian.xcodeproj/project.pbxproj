@@ -1,0 +1,672 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		846DD5E5240CE2920000D4AC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 846DD5E4240CE2920000D4AC /* AppDelegate.m */; };
+		846DD5E8240CE2920000D4AC /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 846DD5E7240CE2920000D4AC /* SceneDelegate.m */; };
+		846DD5EB240CE2930000D4AC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 846DD5EA240CE2930000D4AC /* ViewController.m */; };
+		846DD5EE240CE2930000D4AC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 846DD5EC240CE2930000D4AC /* Main.storyboard */; };
+		846DD5F0240CE29C0000D4AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 846DD5EF240CE29C0000D4AC /* Assets.xcassets */; };
+		846DD5F3240CE29C0000D4AC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 846DD5F1240CE29C0000D4AC /* LaunchScreen.storyboard */; };
+		846DD5F6240CE29C0000D4AC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 846DD5F5240CE29C0000D4AC /* main.m */; };
+		846DD600240CE29C0000D4AC /* ElysianTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 846DD5FF240CE29C0000D4AC /* ElysianTests.m */; };
+		846DD60B240CE29C0000D4AC /* ElysianUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 846DD60A240CE29C0000D4AC /* ElysianUITests.m */; };
+		84E812EF240DE4860075AA3B /* kernel_memory.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812E3240DE4840075AA3B /* kernel_memory.c */; };
+		84E812F0240DE4860075AA3B /* exploit_utilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812E4240DE4840075AA3B /* exploit_utilities.c */; };
+		84E812F1240DE4860075AA3B /* offsets.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E812E6240DE4840075AA3B /* offsets.m */; };
+		84E812F2240DE4860075AA3B /* IOKit in Resources */ = {isa = PBXBuildFile; fileRef = 84E812E7240DE4840075AA3B /* IOKit */; };
+		84E812F3240DE4860075AA3B /* IOSurface_stuff.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812EA240DE4850075AA3B /* IOSurface_stuff.c */; };
+		84E812F4240DE4860075AA3B /* IOAccelerator_stuff.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812EC240DE4860075AA3B /* IOAccelerator_stuff.c */; };
+		84E812F5240DE4860075AA3B /* exploit.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812ED240DE4860075AA3B /* exploit.c */; };
+		84E812F7240DE4BF0075AA3B /* IOKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 84E812F6240DE4BF0075AA3B /* IOKit.tbd */; };
+		84E812FA240E04200075AA3B /* jailbreak.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812F9240E04200075AA3B /* jailbreak.c */; };
+		84E81301240EC5B90075AA3B /* kern_utilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E81300240EC5B90075AA3B /* kern_utilities.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		846DD5FC240CE29C0000D4AC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 846DD5D8240CE2920000D4AC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 846DD5DF240CE2920000D4AC;
+			remoteInfo = Elysian;
+		};
+		846DD607240CE29C0000D4AC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 846DD5D8240CE2920000D4AC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 846DD5DF240CE2920000D4AC;
+			remoteInfo = Elysian;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		846DD5E0240CE2920000D4AC /* Elysian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Elysian.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		846DD5E3240CE2920000D4AC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		846DD5E4240CE2920000D4AC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		846DD5E6240CE2920000D4AC /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		846DD5E7240CE2920000D4AC /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
+		846DD5E9240CE2930000D4AC /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		846DD5EA240CE2930000D4AC /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		846DD5ED240CE2930000D4AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		846DD5EF240CE29C0000D4AC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		846DD5F2240CE29C0000D4AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		846DD5F4240CE29C0000D4AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		846DD5F5240CE29C0000D4AC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		846DD5FB240CE29C0000D4AC /* ElysianTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ElysianTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		846DD5FF240CE29C0000D4AC /* ElysianTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ElysianTests.m; sourceTree = "<group>"; };
+		846DD601240CE29C0000D4AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		846DD606240CE29C0000D4AC /* ElysianUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ElysianUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		846DD60A240CE29C0000D4AC /* ElysianUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ElysianUITests.m; sourceTree = "<group>"; };
+		846DD60C240CE29C0000D4AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		84E812E2240DE4840075AA3B /* IOAccelerator_stuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOAccelerator_stuff.h; sourceTree = "<group>"; };
+		84E812E3240DE4840075AA3B /* kernel_memory.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kernel_memory.c; sourceTree = "<group>"; };
+		84E812E4240DE4840075AA3B /* exploit_utilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = exploit_utilities.c; sourceTree = "<group>"; };
+		84E812E5240DE4840075AA3B /* exploit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = exploit.h; sourceTree = "<group>"; };
+		84E812E6240DE4840075AA3B /* offsets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = offsets.m; sourceTree = "<group>"; };
+		84E812E7240DE4840075AA3B /* IOKit */ = {isa = PBXFileReference; lastKnownFileType = folder; path = IOKit; sourceTree = "<group>"; };
+		84E812E8240DE4850075AA3B /* exploit_utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = exploit_utilities.h; sourceTree = "<group>"; };
+		84E812E9240DE4850075AA3B /* IOSurface_stuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOSurface_stuff.h; sourceTree = "<group>"; };
+		84E812EA240DE4850075AA3B /* IOSurface_stuff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = IOSurface_stuff.c; sourceTree = "<group>"; };
+		84E812EB240DE4850075AA3B /* offsets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = offsets.h; sourceTree = "<group>"; };
+		84E812EC240DE4860075AA3B /* IOAccelerator_stuff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = IOAccelerator_stuff.c; sourceTree = "<group>"; };
+		84E812ED240DE4860075AA3B /* exploit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = exploit.c; sourceTree = "<group>"; };
+		84E812EE240DE4860075AA3B /* kernel_memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kernel_memory.h; sourceTree = "<group>"; };
+		84E812F6240DE4BF0075AA3B /* IOKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = IOKit.tbd; path = Elysian/IOKit/IOKit.tbd; sourceTree = "<group>"; };
+		84E812F8240E04200075AA3B /* jailbreak.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jailbreak.h; sourceTree = "<group>"; };
+		84E812F9240E04200075AA3B /* jailbreak.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = jailbreak.c; sourceTree = "<group>"; };
+		84E812FF240EC5B90075AA3B /* kern_utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kern_utilities.h; sourceTree = "<group>"; };
+		84E81300240EC5B90075AA3B /* kern_utilities.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = kern_utilities.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		846DD5DD240CE2920000D4AC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84E812F7240DE4BF0075AA3B /* IOKit.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		846DD5F8240CE29C0000D4AC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		846DD603240CE29C0000D4AC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		846DD5D7240CE2920000D4AC = {
+			isa = PBXGroup;
+			children = (
+				846DD5E2240CE2920000D4AC /* Elysian */,
+				846DD5FE240CE29C0000D4AC /* ElysianTests */,
+				846DD609240CE29C0000D4AC /* ElysianUITests */,
+				846DD5E1240CE2920000D4AC /* Products */,
+				846DD62C240CF0350000D4AC /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		846DD5E1240CE2920000D4AC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				846DD5E0240CE2920000D4AC /* Elysian.app */,
+				846DD5FB240CE29C0000D4AC /* ElysianTests.xctest */,
+				846DD606240CE29C0000D4AC /* ElysianUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		846DD5E2240CE2920000D4AC /* Elysian */ = {
+			isa = PBXGroup;
+			children = (
+				84E812E4240DE4840075AA3B /* exploit_utilities.c */,
+				84E812E8240DE4850075AA3B /* exploit_utilities.h */,
+				84E812ED240DE4860075AA3B /* exploit.c */,
+				84E812E5240DE4840075AA3B /* exploit.h */,
+				84E812EC240DE4860075AA3B /* IOAccelerator_stuff.c */,
+				84E812E2240DE4840075AA3B /* IOAccelerator_stuff.h */,
+				84E812E7240DE4840075AA3B /* IOKit */,
+				84E812EA240DE4850075AA3B /* IOSurface_stuff.c */,
+				84E812E9240DE4850075AA3B /* IOSurface_stuff.h */,
+				84E812E3240DE4840075AA3B /* kernel_memory.c */,
+				84E812EE240DE4860075AA3B /* kernel_memory.h */,
+				84E812EB240DE4850075AA3B /* offsets.h */,
+				84E812E6240DE4840075AA3B /* offsets.m */,
+				846DD5E3240CE2920000D4AC /* AppDelegate.h */,
+				846DD5E4240CE2920000D4AC /* AppDelegate.m */,
+				846DD5E6240CE2920000D4AC /* SceneDelegate.h */,
+				846DD5E7240CE2920000D4AC /* SceneDelegate.m */,
+				846DD5E9240CE2930000D4AC /* ViewController.h */,
+				846DD5EA240CE2930000D4AC /* ViewController.m */,
+				846DD5EC240CE2930000D4AC /* Main.storyboard */,
+				846DD5EF240CE29C0000D4AC /* Assets.xcassets */,
+				846DD5F1240CE29C0000D4AC /* LaunchScreen.storyboard */,
+				846DD5F4240CE29C0000D4AC /* Info.plist */,
+				846DD5F5240CE29C0000D4AC /* main.m */,
+				84E812F8240E04200075AA3B /* jailbreak.h */,
+				84E812F9240E04200075AA3B /* jailbreak.c */,
+				84E812FF240EC5B90075AA3B /* kern_utilities.h */,
+				84E81300240EC5B90075AA3B /* kern_utilities.c */,
+			);
+			path = Elysian;
+			sourceTree = "<group>";
+		};
+		846DD5FE240CE29C0000D4AC /* ElysianTests */ = {
+			isa = PBXGroup;
+			children = (
+				846DD5FF240CE29C0000D4AC /* ElysianTests.m */,
+				846DD601240CE29C0000D4AC /* Info.plist */,
+			);
+			path = ElysianTests;
+			sourceTree = "<group>";
+		};
+		846DD609240CE29C0000D4AC /* ElysianUITests */ = {
+			isa = PBXGroup;
+			children = (
+				846DD60A240CE29C0000D4AC /* ElysianUITests.m */,
+				846DD60C240CE29C0000D4AC /* Info.plist */,
+			);
+			path = ElysianUITests;
+			sourceTree = "<group>";
+		};
+		846DD62C240CF0350000D4AC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				84E812F6240DE4BF0075AA3B /* IOKit.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		846DD5DF240CE2920000D4AC /* Elysian */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 846DD60F240CE29C0000D4AC /* Build configuration list for PBXNativeTarget "Elysian" */;
+			buildPhases = (
+				846DD5DC240CE2920000D4AC /* Sources */,
+				846DD5DD240CE2920000D4AC /* Frameworks */,
+				846DD5DE240CE2920000D4AC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Elysian;
+			productName = Elysian;
+			productReference = 846DD5E0240CE2920000D4AC /* Elysian.app */;
+			productType = "com.apple.product-type.application";
+		};
+		846DD5FA240CE29C0000D4AC /* ElysianTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 846DD612240CE29C0000D4AC /* Build configuration list for PBXNativeTarget "ElysianTests" */;
+			buildPhases = (
+				846DD5F7240CE29C0000D4AC /* Sources */,
+				846DD5F8240CE29C0000D4AC /* Frameworks */,
+				846DD5F9240CE29C0000D4AC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				846DD5FD240CE29C0000D4AC /* PBXTargetDependency */,
+			);
+			name = ElysianTests;
+			productName = ElysianTests;
+			productReference = 846DD5FB240CE29C0000D4AC /* ElysianTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		846DD605240CE29C0000D4AC /* ElysianUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 846DD615240CE29C0000D4AC /* Build configuration list for PBXNativeTarget "ElysianUITests" */;
+			buildPhases = (
+				846DD602240CE29C0000D4AC /* Sources */,
+				846DD603240CE29C0000D4AC /* Frameworks */,
+				846DD604240CE29C0000D4AC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				846DD608240CE29C0000D4AC /* PBXTargetDependency */,
+			);
+			name = ElysianUITests;
+			productName = ElysianUITests;
+			productReference = 846DD606240CE29C0000D4AC /* ElysianUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		846DD5D8240CE2920000D4AC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = chr1s_0x1;
+				TargetAttributes = {
+					846DD5DF240CE2920000D4AC = {
+						CreatedOnToolsVersion = 11.3.1;
+					};
+					846DD5FA240CE29C0000D4AC = {
+						CreatedOnToolsVersion = 11.3.1;
+						TestTargetID = 846DD5DF240CE2920000D4AC;
+					};
+					846DD605240CE29C0000D4AC = {
+						CreatedOnToolsVersion = 11.3.1;
+						TestTargetID = 846DD5DF240CE2920000D4AC;
+					};
+				};
+			};
+			buildConfigurationList = 846DD5DB240CE2920000D4AC /* Build configuration list for PBXProject "Elysian" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 846DD5D7240CE2920000D4AC;
+			productRefGroup = 846DD5E1240CE2920000D4AC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				846DD5DF240CE2920000D4AC /* Elysian */,
+				846DD5FA240CE29C0000D4AC /* ElysianTests */,
+				846DD605240CE29C0000D4AC /* ElysianUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		846DD5DE240CE2920000D4AC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				846DD5F3240CE29C0000D4AC /* LaunchScreen.storyboard in Resources */,
+				84E812F2240DE4860075AA3B /* IOKit in Resources */,
+				846DD5F0240CE29C0000D4AC /* Assets.xcassets in Resources */,
+				846DD5EE240CE2930000D4AC /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		846DD5F9240CE29C0000D4AC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		846DD604240CE29C0000D4AC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		846DD5DC240CE2920000D4AC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84E81301240EC5B90075AA3B /* kern_utilities.c in Sources */,
+				84E812F0240DE4860075AA3B /* exploit_utilities.c in Sources */,
+				84E812F4240DE4860075AA3B /* IOAccelerator_stuff.c in Sources */,
+				84E812EF240DE4860075AA3B /* kernel_memory.c in Sources */,
+				84E812F3240DE4860075AA3B /* IOSurface_stuff.c in Sources */,
+				846DD5EB240CE2930000D4AC /* ViewController.m in Sources */,
+				84E812FA240E04200075AA3B /* jailbreak.c in Sources */,
+				846DD5E5240CE2920000D4AC /* AppDelegate.m in Sources */,
+				846DD5F6240CE29C0000D4AC /* main.m in Sources */,
+				84E812F1240DE4860075AA3B /* offsets.m in Sources */,
+				846DD5E8240CE2920000D4AC /* SceneDelegate.m in Sources */,
+				84E812F5240DE4860075AA3B /* exploit.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		846DD5F7240CE29C0000D4AC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				846DD600240CE29C0000D4AC /* ElysianTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		846DD602240CE29C0000D4AC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				846DD60B240CE29C0000D4AC /* ElysianUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		846DD5FD240CE29C0000D4AC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 846DD5DF240CE2920000D4AC /* Elysian */;
+			targetProxy = 846DD5FC240CE29C0000D4AC /* PBXContainerItemProxy */;
+		};
+		846DD608240CE29C0000D4AC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 846DD5DF240CE2920000D4AC /* Elysian */;
+			targetProxy = 846DD607240CE29C0000D4AC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		846DD5EC240CE2930000D4AC /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				846DD5ED240CE2930000D4AC /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		846DD5F1240CE29C0000D4AC /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				846DD5F2240CE29C0000D4AC /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		846DD60D240CE29C0000D4AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		846DD60E240CE29C0000D4AC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		846DD610240CE29C0000D4AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Z25WL7QR46;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)\"/**";
+				INFOPLIST_FILE = Elysian/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Elysian/IOKit",
+					"$(PROJECT_DIR)/Elysian/exploit/IOKit",
+				);
+				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.chr1s0x1.Elysian;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYSTEM_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Elysian\"";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Elysian\"";
+			};
+			name = Debug;
+		};
+		846DD611240CE29C0000D4AC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Z25WL7QR46;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)\"/**";
+				INFOPLIST_FILE = Elysian/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Elysian/IOKit",
+					"$(PROJECT_DIR)/Elysian/exploit/IOKit",
+				);
+				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.chr1s0x1.Elysian;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SYSTEM_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Elysian\"";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Elysian\"";
+			};
+			name = Release;
+		};
+		846DD613240CE29C0000D4AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Z25WL7QR46;
+				INFOPLIST_FILE = ElysianTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chr1s0x1.ElysianTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Elysian.app/Elysian";
+			};
+			name = Debug;
+		};
+		846DD614240CE29C0000D4AC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Z25WL7QR46;
+				INFOPLIST_FILE = ElysianTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chr1s0x1.ElysianTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Elysian.app/Elysian";
+			};
+			name = Release;
+		};
+		846DD616240CE29C0000D4AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Z25WL7QR46;
+				INFOPLIST_FILE = ElysianUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chr1s0x1.ElysianUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Elysian;
+			};
+			name = Debug;
+		};
+		846DD617240CE29C0000D4AC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Z25WL7QR46;
+				INFOPLIST_FILE = ElysianUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chr1s0x1.ElysianUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Elysian;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		846DD5DB240CE2920000D4AC /* Build configuration list for PBXProject "Elysian" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				846DD60D240CE29C0000D4AC /* Debug */,
+				846DD60E240CE29C0000D4AC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		846DD60F240CE29C0000D4AC /* Build configuration list for PBXNativeTarget "Elysian" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				846DD610240CE29C0000D4AC /* Debug */,
+				846DD611240CE29C0000D4AC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		846DD612240CE29C0000D4AC /* Build configuration list for PBXNativeTarget "ElysianTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				846DD613240CE29C0000D4AC /* Debug */,
+				846DD614240CE29C0000D4AC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		846DD615240CE29C0000D4AC /* Build configuration list for PBXNativeTarget "ElysianUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				846DD616240CE29C0000D4AC /* Debug */,
+				846DD617240CE29C0000D4AC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 846DD5D8240CE2920000D4AC /* Project object */;
+}
