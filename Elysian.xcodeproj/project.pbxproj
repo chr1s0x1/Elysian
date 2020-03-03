@@ -503,7 +503,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Z25WL7QR46;
+				DEVELOPMENT_TEAM = 37585JQ2S3;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)\"/**";
 				INFOPLIST_FILE = Elysian/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -517,7 +517,7 @@
 					"$(PROJECT_DIR)/Elysian/exploit/IOKit",
 				);
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.chr1s0x1.Elysian;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Elysian.ElysianJB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYSTEM_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Elysian\"";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -529,7 +529,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Z25WL7QR46;
+				DEVELOPMENT_TEAM = 37585JQ2S3;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)\"/**";
 				INFOPLIST_FILE = Elysian/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -543,7 +543,7 @@
 					"$(PROJECT_DIR)/Elysian/exploit/IOKit",
 				);
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.chr1s0x1.Elysian;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Elysian.ElysianJB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYSTEM_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Elysian\"";
 				TARGETED_DEVICE_FAMILY = "1,2";

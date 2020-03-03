@@ -15,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *Label;
 
 @property (weak, nonatomic) IBOutlet UIButton *JBButton;
+@property (strong, nonatomic) IBOutlet UIView *section;
 
 @end
 
@@ -24,6 +25,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    _section.layer.cornerRadius = 15;
+    _section.layer.masksToBounds = YES;
+    if( self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ){
+        _section.backgroundColor = [UIColor whiteColor];
+    }
 }
 - (IBAction)JBGo:(id)sender {
     get_tfp0();
@@ -31,5 +37,12 @@
     LOG("[*] Starting Post Exploit");
     
     
+}
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+    if( self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ){
+        _section.backgroundColor = [UIColor whiteColor];
+    }else {
+        _section.backgroundColor = [UIColor colorWithRed:36.0/255.0 green:36.0/255.0 blue:36.0/255.0 alpha:1];
+    }
 }
 @end
