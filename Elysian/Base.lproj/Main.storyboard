@@ -19,7 +19,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Elysian Jailbreak" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ye0-XN-xn9">
                                 <rect key="frame" x="16" y="14" width="310" height="37"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="37" id="sQ6-gt-hRc"/>
+                                    <constraint firstAttribute="height" constant="37" id="VqM-NA-Bkr"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="25"/>
                                 <color key="textColor" red="0.18680611659999999" green="0.3071386083" blue="0.58105844259999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -28,7 +28,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="For iOS 13 - 13.3" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JdN-24-jOa">
                                 <rect key="frame" x="16" y="58" width="184" height="31"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="31" id="gap-8B-xOh"/>
+                                    <constraint firstAttribute="height" constant="31" id="pyS-U5-dW6"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <color key="textColor" red="0.18680611659999999" green="0.3071386083" blue="0.58105844259999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -37,7 +37,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nHb-7I-M2r">
                                 <rect key="frame" x="208" y="58" width="96" height="31"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="96" id="qLM-jn-6Ay"/>
+                                    <constraint firstAttribute="width" constant="96" id="kqa-cb-H7l"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Credits">
@@ -47,48 +47,35 @@
                                     <segue destination="I0h-Qf-o8o" kind="show" id="zCb-8A-sN1"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5C4-c6-zyB">
-                                <rect key="frame" x="7" y="169" width="306" height="230"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UA9-pA-gWl">
-                                        <rect key="frame" x="8" y="70" width="290" height="90"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                        <state key="normal" title="Jailbreak"/>
-                                        <connections>
-                                            <action selector="JBGo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HHW-6o-NVS"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" red="0.14165609137055835" green="0.14165609137055835" blue="0.14165609137055835" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstItem="UA9-pA-gWl" firstAttribute="centerY" secondItem="5C4-c6-zyB" secondAttribute="centerY" id="89U-Xz-0WN"/>
-                                    <constraint firstItem="UA9-pA-gWl" firstAttribute="trailing" secondItem="5C4-c6-zyB" secondAttribute="trailingMargin" id="BMR-1g-PgO"/>
-                                    <constraint firstItem="UA9-pA-gWl" firstAttribute="leading" secondItem="5C4-c6-zyB" secondAttribute="leadingMargin" id="FJ0-o5-OZp"/>
-                                    <constraint firstItem="UA9-pA-gWl" firstAttribute="top" secondItem="5C4-c6-zyB" secondAttribute="top" constant="70" id="J47-dt-neu"/>
-                                </constraints>
-                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UA9-pA-gWl">
+                                <rect key="frame" x="15" y="239" width="290" height="90"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <state key="normal" title="Jailbreak"/>
+                                <connections>
+                                    <action selector="JBGo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HHW-6o-NVS"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="Ye0-XN-xn9" firstAttribute="leading" secondItem="JdN-24-jOa" secondAttribute="leading" id="AXL-W6-tih"/>
-                            <constraint firstItem="JdN-24-jOa" firstAttribute="top" secondItem="nHb-7I-M2r" secondAttribute="top" id="GmW-uH-daW"/>
-                            <constraint firstItem="5C4-c6-zyB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="7" id="StJ-UZ-76y"/>
-                            <constraint firstItem="nHb-7I-M2r" firstAttribute="leading" secondItem="JdN-24-jOa" secondAttribute="trailing" constant="8" id="Xut-h3-W7v"/>
-                            <constraint firstItem="JdN-24-jOa" firstAttribute="bottom" secondItem="nHb-7I-M2r" secondAttribute="bottom" id="YmC-FN-Gnn"/>
-                            <constraint firstItem="Ye0-XN-xn9" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="14" id="ZIm-3Y-xLc"/>
-                            <constraint firstItem="nHb-7I-M2r" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="gM0-x0-GUQ"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Ye0-XN-xn9" secondAttribute="trailing" constant="-22" id="iH1-qq-YBe"/>
-                            <constraint firstItem="5C4-c6-zyB" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="iaR-R9-507"/>
-                            <constraint firstItem="5C4-c6-zyB" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="m2s-Ke-kGL"/>
-                            <constraint firstItem="JdN-24-jOa" firstAttribute="top" secondItem="Ye0-XN-xn9" secondAttribute="bottom" constant="7" id="t7i-R0-9gN"/>
-                            <constraint firstItem="Ye0-XN-xn9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="trE-FX-cxL"/>
-                            <constraint firstItem="5C4-c6-zyB" firstAttribute="top" secondItem="JdN-24-jOa" secondAttribute="bottom" constant="80" id="wjI-yG-eZP"/>
+                            <constraint firstItem="JdN-24-jOa" firstAttribute="bottom" secondItem="nHb-7I-M2r" secondAttribute="bottom" id="0Eu-bJ-gNL"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="UA9-pA-gWl" secondAttribute="bottom" constant="239" id="8zE-vO-gIX"/>
+                            <constraint firstItem="UA9-pA-gWl" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="BGh-1d-7xF"/>
+                            <constraint firstItem="Ye0-XN-xn9" firstAttribute="leading" secondItem="JdN-24-jOa" secondAttribute="leading" id="FQG-yg-KdZ"/>
+                            <constraint firstItem="UA9-pA-gWl" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="M6I-6C-yjH"/>
+                            <constraint firstItem="nHb-7I-M2r" firstAttribute="leading" secondItem="JdN-24-jOa" secondAttribute="trailing" constant="8" id="TQT-Ya-RBE"/>
+                            <constraint firstItem="JdN-24-jOa" firstAttribute="top" secondItem="nHb-7I-M2r" secondAttribute="top" id="Ym0-9y-qmF"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Ye0-XN-xn9" secondAttribute="trailing" constant="-22" id="akH-Tq-MPG"/>
+                            <constraint firstItem="UA9-pA-gWl" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="bgr-hX-JIH"/>
+                            <constraint firstItem="Ye0-XN-xn9" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="14" id="jdo-f8-zXR"/>
+                            <constraint firstItem="Ye0-XN-xn9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="pJM-hg-wRG"/>
+                            <constraint firstItem="JdN-24-jOa" firstAttribute="top" secondItem="Ye0-XN-xn9" secondAttribute="bottom" constant="7" id="qxa-3J-XVP"/>
+                            <constraint firstItem="nHb-7I-M2r" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="sl7-RO-Ofb"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="JBButton" destination="UA9-pA-gWl" id="Mch-75-rKD"/>
-                        <outlet property="section" destination="5C4-c6-zyB" id="Wbz-hT-av8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
