@@ -27,9 +27,19 @@
     // Do any additional setup after loading the view.
 }
 - (IBAction)JBGo:(id)sender {
-    get_tfp0();
+    LOG("[*] Starting Exploit");
+    __block mach_port_t tfpzero = MACH_PORT_NULL;
+    tfpzero = get_tfp0();
+    if(!MACH_PORT_VALID(tfpzero)){
+        LOG("[-] Exploit Failed \n");
+        LOG("[i] Please Reboot and Try Again \n");
+        return;
+    }
     
-    LOG("[*] Starting Post Exploit");
+    LOG("[*] Starting Jailbreak Process \n");
+    
+    // Here we go!
+    LOG("[+] Unsandboxing \n");
     
     
 }

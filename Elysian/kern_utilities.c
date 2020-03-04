@@ -7,3 +7,5 @@
 //
 
 #include "kern_utilities.h"
+#import "exploit_utilities.h"
+#import "jailbreak.h"

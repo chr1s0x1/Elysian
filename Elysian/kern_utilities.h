@@ -10,5 +10,6 @@
 #define kern_utilities_h
 
 #include <stdio.h>
+#import "jailbreak.h"
 
 #endif /* kern_utilities_h */

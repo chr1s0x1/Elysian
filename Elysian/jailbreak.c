@@ -7,3 +7,9 @@
 //
 
 #include "jailbreak.h"
+#import "exploit_utilities.h"
+
+unsandboxMe() {
+    
+    return 0;
+}

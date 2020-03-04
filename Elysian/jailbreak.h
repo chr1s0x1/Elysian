@@ -14,12 +14,6 @@
 #define LOG(str)\
 printf(str)
 
-
-#define ERR(messasge)\
-printf(messasge)\
-return 1;
-
-
 #define fileExists(file) [[NSFileManager defaultManager] fileExistsAtPath:@(file)]
 
 
@@ -45,6 +39,6 @@ LOG("[-] Error moviing item %s to path %s (%s)", copyFrom, moveTo, [[error local
 error = NULL; \
 }
 
-
+int unsandboxMe(void);
 
 #endif /* jailbreak_h */
