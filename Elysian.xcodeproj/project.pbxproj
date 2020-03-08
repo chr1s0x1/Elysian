@@ -16,6 +16,7 @@
 		846DD5F6240CE29C0000D4AC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 846DD5F5240CE29C0000D4AC /* main.m */; };
 		846DD600240CE29C0000D4AC /* ElysianTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 846DD5FF240CE29C0000D4AC /* ElysianTests.m */; };
 		846DD60B240CE29C0000D4AC /* ElysianUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 846DD60A240CE29C0000D4AC /* ElysianUITests.m */; };
+		84DA44FF2415AF1B00FA5874 /* patchfinder64 in Resources */ = {isa = PBXBuildFile; fileRef = 84DA44FE2415AF1A00FA5874 /* patchfinder64 */; };
 		84E812EF240DE4860075AA3B /* kernel_memory.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812E3240DE4840075AA3B /* kernel_memory.c */; };
 		84E812F0240DE4860075AA3B /* exploit_utilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812E4240DE4840075AA3B /* exploit_utilities.c */; };
 		84E812F1240DE4860075AA3B /* offsets.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E812E6240DE4840075AA3B /* offsets.m */; };
@@ -64,6 +65,7 @@
 		846DD606240CE29C0000D4AC /* ElysianUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ElysianUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		846DD60A240CE29C0000D4AC /* ElysianUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ElysianUITests.m; sourceTree = "<group>"; };
 		846DD60C240CE29C0000D4AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		84DA44FE2415AF1A00FA5874 /* patchfinder64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = patchfinder64; sourceTree = "<group>"; };
 		84E812E2240DE4840075AA3B /* IOAccelerator_stuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOAccelerator_stuff.h; sourceTree = "<group>"; };
 		84E812E3240DE4840075AA3B /* kernel_memory.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kernel_memory.c; sourceTree = "<group>"; };
 		84E812E4240DE4840075AA3B /* exploit_utilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = exploit_utilities.c; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 		846DD5E2240CE2920000D4AC /* Elysian */ = {
 			isa = PBXGroup;
 			children = (
+				84DA44FE2415AF1A00FA5874 /* patchfinder64 */,
 				84E812E4240DE4840075AA3B /* exploit_utilities.c */,
 				84E812E8240DE4850075AA3B /* exploit_utilities.h */,
 				84E812ED240DE4860075AA3B /* exploit.c */,
@@ -299,6 +302,7 @@
 				84E812F2240DE4860075AA3B /* IOKit in Resources */,
 				846DD5F0240CE29C0000D4AC /* Assets.xcassets in Resources */,
 				846DD5EE240CE2930000D4AC /* Main.storyboard in Resources */,
+				84DA44FF2415AF1B00FA5874 /* patchfinder64 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
