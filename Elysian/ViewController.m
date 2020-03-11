@@ -32,14 +32,15 @@
     tfpzero = get_tfp0();
     if(!MACH_PORT_VALID(tfpzero)){
         LOG("[-] Exploit Failed \n");
-        LOG("[i] Please Reboot and Try Again \n");
+        LOG("[i] Please reboot and try again \n");
         return;
     }
     
     LOG("[*] Starting Jailbreak Process \n");
     
-    // Here we go!
+/* Start of Elysian****************************************************************/
     LOG("[+] Unsandboxing \n");
+    // Here we'll just make the sandbox pointer 0;
     
     
 }

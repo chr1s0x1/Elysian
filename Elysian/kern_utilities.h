@@ -14,9 +14,8 @@
 #include <stdio.h>
 #import "jailbreak.h"
 
-kptr_t = ptr_t;
 
-kptr_t find_kern_cred_addr(void);
 
 
 #endif /* kern_utilities_h */
+

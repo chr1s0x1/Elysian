@@ -506,6 +506,10 @@
 		846DD610240CE29C0000D4AC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					arm64e,
+				);
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z25WL7QR46;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)\"/**";
@@ -526,13 +530,17 @@
 				SYSTEM_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Elysian\"";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Elysian\"";
-				VALID_ARCHS = arm64e;
+				VALID_ARCHS = "arm64e armv7s";
 			};
 			name = Debug;
 		};
 		846DD611240CE29C0000D4AC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					arm64e,
+				);
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z25WL7QR46;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)\"/**";
@@ -553,7 +561,7 @@
 				SYSTEM_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Elysian\"";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Elysian\"";
-				VALID_ARCHS = arm64e;
+				VALID_ARCHS = "arm64e armv7s";
 			};
 			name = Release;
 		};
