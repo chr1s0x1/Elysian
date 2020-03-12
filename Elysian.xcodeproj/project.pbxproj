@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8404F822241AA58700A6B47A /* jelbrekLib.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8404F81E241AA24B00A6B47A /* jelbrekLib.dylib */; };
+		8404F823241AA58700A6B47A /* jelbrekLib.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 8404F81E241AA24B00A6B47A /* jelbrekLib.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		8404F825241ABC8C00A6B47A /* jelbrekLib.h in Frameworks */ = {isa = PBXBuildFile; fileRef = 8404F80D241A881C00A6B47A /* jelbrekLib.h */; };
 		846DD5E5240CE2920000D4AC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 846DD5E4240CE2920000D4AC /* AppDelegate.m */; };
 		846DD5E8240CE2920000D4AC /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 846DD5E7240CE2920000D4AC /* SceneDelegate.m */; };
 		846DD5EB240CE2930000D4AC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 846DD5EA240CE2930000D4AC /* ViewController.m */; };
@@ -25,8 +28,6 @@
 		84E812F4240DE4860075AA3B /* IOAccelerator_stuff.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812EC240DE4860075AA3B /* IOAccelerator_stuff.c */; };
 		84E812F5240DE4860075AA3B /* exploit.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812ED240DE4860075AA3B /* exploit.c */; };
 		84E812F7240DE4BF0075AA3B /* IOKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 84E812F6240DE4BF0075AA3B /* IOKit.tbd */; };
-		84E812FA240E04200075AA3B /* jailbreak.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812F9240E04200075AA3B /* jailbreak.c */; };
-		84E81301240EC5B90075AA3B /* kern_utilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E81300240EC5B90075AA3B /* kern_utilities.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,7 +47,24 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		8404F824241AA58700A6B47A /* Embed Libraries */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8404F823241AA58700A6B47A /* jelbrekLib.dylib in Embed Libraries */,
+			);
+			name = "Embed Libraries";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		8404F80D241A881C00A6B47A /* jelbrekLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jelbrekLib.h; sourceTree = "<group>"; };
+		8404F80E241A894800A6B47A /* offsets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = offsets.h; sourceTree = "<group>"; };
+		8404F81E241AA24B00A6B47A /* jelbrekLib.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = jelbrekLib.dylib; path = Elysian/jelbrekLib.dylib; sourceTree = "<group>"; };
 		846DD5E0240CE2920000D4AC /* Elysian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Elysian.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		846DD5E3240CE2920000D4AC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		846DD5E4240CE2920000D4AC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -75,15 +93,11 @@
 		84E812E8240DE4850075AA3B /* exploit_utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = exploit_utilities.h; sourceTree = "<group>"; };
 		84E812E9240DE4850075AA3B /* IOSurface_stuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOSurface_stuff.h; sourceTree = "<group>"; };
 		84E812EA240DE4850075AA3B /* IOSurface_stuff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = IOSurface_stuff.c; sourceTree = "<group>"; };
-		84E812EB240DE4850075AA3B /* offsets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = offsets.h; sourceTree = "<group>"; };
 		84E812EC240DE4860075AA3B /* IOAccelerator_stuff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = IOAccelerator_stuff.c; sourceTree = "<group>"; };
 		84E812ED240DE4860075AA3B /* exploit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = exploit.c; sourceTree = "<group>"; };
 		84E812EE240DE4860075AA3B /* kernel_memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kernel_memory.h; sourceTree = "<group>"; };
 		84E812F6240DE4BF0075AA3B /* IOKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = IOKit.tbd; path = Elysian/IOKit/IOKit.tbd; sourceTree = "<group>"; };
 		84E812F8240E04200075AA3B /* jailbreak.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jailbreak.h; sourceTree = "<group>"; };
-		84E812F9240E04200075AA3B /* jailbreak.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = jailbreak.c; sourceTree = "<group>"; };
-		84E812FF240EC5B90075AA3B /* kern_utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kern_utilities.h; sourceTree = "<group>"; };
-		84E81300240EC5B90075AA3B /* kern_utilities.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = kern_utilities.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +105,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8404F825241ABC8C00A6B47A /* jelbrekLib.h in Frameworks */,
+				8404F822241AA58700A6B47A /* jelbrekLib.dylib in Frameworks */,
 				84E812F7240DE4BF0075AA3B /* IOKit.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -136,6 +152,8 @@
 		846DD5E2240CE2920000D4AC /* Elysian */ = {
 			isa = PBXGroup;
 			children = (
+				8404F80E241A894800A6B47A /* offsets.h */,
+				8404F80D241A881C00A6B47A /* jelbrekLib.h */,
 				84DA44FE2415AF1A00FA5874 /* patchfinder64 */,
 				84E812E4240DE4840075AA3B /* exploit_utilities.c */,
 				84E812E8240DE4850075AA3B /* exploit_utilities.h */,
@@ -148,7 +166,6 @@
 				84E812E9240DE4850075AA3B /* IOSurface_stuff.h */,
 				84E812E3240DE4840075AA3B /* kernel_memory.c */,
 				84E812EE240DE4860075AA3B /* kernel_memory.h */,
-				84E812EB240DE4850075AA3B /* offsets.h */,
 				84E812E6240DE4840075AA3B /* offsets.m */,
 				846DD5E3240CE2920000D4AC /* AppDelegate.h */,
 				846DD5E4240CE2920000D4AC /* AppDelegate.m */,
@@ -162,9 +179,6 @@
 				846DD5F4240CE29C0000D4AC /* Info.plist */,
 				846DD5F5240CE29C0000D4AC /* main.m */,
 				84E812F8240E04200075AA3B /* jailbreak.h */,
-				84E812F9240E04200075AA3B /* jailbreak.c */,
-				84E812FF240EC5B90075AA3B /* kern_utilities.h */,
-				84E81300240EC5B90075AA3B /* kern_utilities.c */,
 			);
 			path = Elysian;
 			sourceTree = "<group>";
@@ -190,6 +204,7 @@
 		846DD62C240CF0350000D4AC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8404F81E241AA24B00A6B47A /* jelbrekLib.dylib */,
 				84E812F6240DE4BF0075AA3B /* IOKit.tbd */,
 			);
 			name = Frameworks;
@@ -205,6 +220,7 @@
 				846DD5DC240CE2920000D4AC /* Sources */,
 				846DD5DD240CE2920000D4AC /* Frameworks */,
 				846DD5DE240CE2920000D4AC /* Resources */,
+				8404F824241AA58700A6B47A /* Embed Libraries */,
 			);
 			buildRules = (
 			);
@@ -327,13 +343,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84E81301240EC5B90075AA3B /* kern_utilities.c in Sources */,
 				84E812F0240DE4860075AA3B /* exploit_utilities.c in Sources */,
 				84E812F4240DE4860075AA3B /* IOAccelerator_stuff.c in Sources */,
 				84E812EF240DE4860075AA3B /* kernel_memory.c in Sources */,
 				84E812F3240DE4860075AA3B /* IOSurface_stuff.c in Sources */,
 				846DD5EB240CE2930000D4AC /* ViewController.m in Sources */,
-				84E812FA240E04200075AA3B /* jailbreak.c in Sources */,
 				846DD5E5240CE2920000D4AC /* AppDelegate.m in Sources */,
 				846DD5F6240CE29C0000D4AC /* main.m in Sources */,
 				84E812F1240DE4860075AA3B /* offsets.m in Sources */,
@@ -523,6 +537,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Elysian/IOKit",
 					"$(PROJECT_DIR)/Elysian/exploit/IOKit",
+					"$(PROJECT_DIR)/Elysian/libs",
+					"$(PROJECT_DIR)/Elysian",
 				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chr1s0x1;
@@ -554,6 +570,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Elysian/IOKit",
 					"$(PROJECT_DIR)/Elysian/exploit/IOKit",
+					"$(PROJECT_DIR)/Elysian/libs",
+					"$(PROJECT_DIR)/Elysian",
 				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chr1s0x1;

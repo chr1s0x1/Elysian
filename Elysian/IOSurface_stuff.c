@@ -7,6 +7,7 @@
 //
 
 #import "IOSurface_stuff.h"
+#import "offsets.h"
 
 uint32_t pagesize;
 io_connect_t IOSurfaceRoot;

@@ -39,6 +39,4 @@ LOG("[-] Error moviing item %s to path %s (%s)", copyFrom, moveTo, [[error local
 error = NULL; \
 }
 
-int unsandboxMe(void);
-
 #endif /* jailbreak_h */

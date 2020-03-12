@@ -7,6 +7,7 @@
 //
 
 #import "kernel_memory.h"
+#import "offsets.h"
 
 static mach_port_t tfpzero;
 static uint64_t task_self;

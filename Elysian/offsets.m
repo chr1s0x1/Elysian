@@ -1,13 +1,13 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-
+#import "offsets.h"
 #import <stdio.h>
 #import <stdlib.h>
 #import <string.h>
 #import <sys/sysctl.h>
 #import <sys/utsname.h>
 
-#import "offsets.h"
+
 
 #define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)

@@ -16,7 +16,7 @@
 #import <IOKit/IOKitLib.h>
 #import <mach/mach.h>
 
-#import "offsets.h"
+
 
 #define IOSurfaceRootUserClient_create_surface_selector 6
 #define IOSurfaceRootUserClient_set_value_selector 9
