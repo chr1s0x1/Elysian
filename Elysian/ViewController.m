@@ -48,23 +48,26 @@
     
     LOG("[*] Starting Jailbreak Process \n");
     
-/* Start of Elysian Jailbreak ***************************************************************/
+/* Start of Elysian Jailbreak *****************************************************/
     LOG("[+] Unsandboxing \n");
     // Set sandbox pointer to 0;
     [sender setTitle:@"Unsandboxing.." forState:UIControlStateNormal];
     unsandbox(getpid());
     // Do we have root?
+    createFILE("/var/mobile/.elytest", nil);
     FILE *f = fopen("/var/mobile/.elytest", "w");
     if(!f){
-    LOG("[-] Failed to Unsanbox");
+    LOG("[-] Failed to Unsanbox \n");
      [sender setTitle:@"Unsanbox failed" forState:UIControlStateNormal];
      return;
     }
-    LOG("[*] Escaped Sandbox");
+    LOG("[*] Escaped Sandbox \n");
+    [sender setTitle:@"Sandbox Pwned" forState:UIControlStateNormal];
+    // Give us time to cool down lol
     sleep(1);
     
     // Remount..
-    LOG("[+] Remounting");
+    LOG("[+] Remounting \n");
     [sender setTitle:@"Remounting.." forState:UIControlStateNormal];
 }
 

@@ -39,4 +39,12 @@ LOG("[-] Error moviing item %s to path %s (%s)", copyFrom, moveTo, [[error local
 error = NULL; \
 }
 
+void createFILE(const char *where, NSData *info) {
+    [[NSFileManager defaultManager] createFileAtPath:@(where) contents:info attributes:nil];
+    if(!fileExists(where)) {
+        LOG("[-] File create failed");
+        return;
+    }
+}
+
 #endif /* jailbreak_h */
