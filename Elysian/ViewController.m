@@ -35,7 +35,7 @@
     _JBButton.enabled = NO;
     [sender setTitle: @"Exploiting Kernel.." forState:UIControlStateNormal];
     
-    LOG("[*] Starting Exploit");
+    LOG("[*] Starting Exploit\n");
     __block mach_port_t tfpzero = MACH_PORT_NULL;
     tfpzero = get_tfp0();
     if(!MACH_PORT_VALID(tfpzero)){
@@ -62,8 +62,8 @@
      return;
     }
     LOG("[*] Escaped Sandbox \n");
-    [sender setTitle:@"Sandbox Pwned" forState:UIControlStateNormal];
-    // Give us time to cool down lol
+    [sender setTitle:@"Unsandboxed" forState:UIControlStateNormal];
+    // Give us time to cool down
     sleep(1);
     
     // Remount..

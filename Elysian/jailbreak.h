@@ -42,7 +42,7 @@ error = NULL; \
 void createFILE(const char *where, NSData *info) {
     [[NSFileManager defaultManager] createFileAtPath:@(where) contents:info attributes:nil];
     if(!fileExists(where)) {
-        LOG("[-] File create failed");
+        LOG("[-] File create failed \n");
         return;
     }
 }
