@@ -1,13 +1,13 @@
 //
-//  jailbreak.h
+//  utils.h
 //  Elysian
 //
 //  Created by chr1spwn3d on 3/2/20.
 //  Copyright © 2020 chr1s_0x1. All rights reserved.
 //
 
-#ifndef jailbreak_h
-#define jailbreak_h
+#ifndef utils_h
+#define utils_h
 
 #include <stdio.h>
 
@@ -47,4 +47,4 @@ void createFILE(const char *where, NSData *info) {
     }
 }
 
-#endif /* jailbreak_h */
+#endif /* utils_h */

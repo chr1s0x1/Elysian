@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 #import "exploit.h"
-#import "jailbreak.h"
+#import "utils.h"
 #import "jelbrekLib.h"
 
 @interface ViewController ()
@@ -34,7 +34,6 @@
 - (IBAction)JBGo:(id)sender {
     _JBButton.enabled = NO;
     [sender setTitle: @"Exploiting Kernel.." forState:UIControlStateNormal];
-    
     LOG("[*] Starting Exploit\n");
     __block mach_port_t tfpzero = MACH_PORT_NULL;
     tfpzero = get_tfp0();
@@ -49,9 +48,15 @@
     LOG("[*] Starting Jailbreak Process \n");
     
 /* Start of Elysian Jailbreak *****************************************************/
+    LOG("[+] Geting Root Permissions \n");
+    kern_return_t ret = rootify(getpid());
+    if(ret != KERN_SUCCESS) {
+        LOG("[-] Getting Root Perms Failed");
+        [sender setTitle:@"Set Root Perms Failed" forState:UIControlStateNormal];
+        return;
+    }
     LOG("[+] Unsandboxing \n");
-    // Set sandbox pointer to 0;
-    [sender setTitle:@"Unsandboxing.." forState:UIControlStateNormal];
+     // Set sandbox pointer to 0;
     unsandbox(getpid());
     // Do we have root?
     createFILE("/var/mobile/.elytest", nil);
@@ -62,7 +67,6 @@
      return;
     }
     LOG("[*] Escaped Sandbox \n");
-    [sender setTitle:@"Unsandboxed" forState:UIControlStateNormal];
     // Give us time to cool down
     sleep(1);
     

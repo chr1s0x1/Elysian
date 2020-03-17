@@ -84,6 +84,7 @@
 		84837C3E241D38C300FCD15E /* jelbrekLib.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = jelbrekLib.dylib; path = Elysian/libs/jelbrekLib.dylib; sourceTree = "<group>"; };
 		84837C40241D3DB300FCD15E /* jelbrekLib.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = jelbrekLib.dylib; path = Elysian/libs/jelbrekLib.dylib; sourceTree = "<group>"; };
 		84837C44241D3E1000FCD15E /* jelbrekLib.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = jelbrekLib.dylib; path = Elysian/libs/jelbrekLib.dylib; sourceTree = "<group>"; };
+		84837C46241F3E1F00FCD15E /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 		84DA44FE2415AF1A00FA5874 /* patchfinder64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = patchfinder64; sourceTree = "<group>"; };
 		84E812E2240DE4840075AA3B /* IOAccelerator_stuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOAccelerator_stuff.h; sourceTree = "<group>"; };
 		84E812E3240DE4840075AA3B /* kernel_memory.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kernel_memory.c; sourceTree = "<group>"; };
@@ -96,7 +97,6 @@
 		84E812EC240DE4860075AA3B /* IOAccelerator_stuff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = IOAccelerator_stuff.c; sourceTree = "<group>"; };
 		84E812ED240DE4860075AA3B /* exploit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = exploit.c; sourceTree = "<group>"; };
 		84E812EE240DE4860075AA3B /* kernel_memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kernel_memory.h; sourceTree = "<group>"; };
-		84E812F8240E04200075AA3B /* jailbreak.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jailbreak.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +153,7 @@
 		846DD5E2240CE2920000D4AC /* Elysian */ = {
 			isa = PBXGroup;
 			children = (
+				84837C46241F3E1F00FCD15E /* utils.h */,
 				84837C39241C948800FCD15E /* IOKit */,
 				84837C38241C943900FCD15E /* libs */,
 				8404F80E241A894800A6B47A /* offsets.h */,
@@ -180,7 +181,6 @@
 				846DD5F1240CE29C0000D4AC /* LaunchScreen.storyboard */,
 				846DD5F4240CE29C0000D4AC /* Info.plist */,
 				846DD5F5240CE29C0000D4AC /* main.m */,
-				84E812F8240E04200075AA3B /* jailbreak.h */,
 			);
 			path = Elysian;
 			sourceTree = "<group>";
