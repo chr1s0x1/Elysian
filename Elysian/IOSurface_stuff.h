@@ -90,7 +90,7 @@ int IOSurface_empty_kalloc(uint32_t size, uint32_t kalloc_key);
 int IOSurface_kmem_alloc(void *data, uint32_t size, uint32_t kalloc_key);
 int IOSurface_kmem_alloc_spray(void *data, uint32_t size, int count, uint32_t kalloc_key);
 
-extern uint32_t pagesize;
+extern uint64_t pagesize;
 extern io_connect_t IOSurfaceRoot;
 extern io_service_t IOSurfaceRootUserClient;
 extern uint32_t IOSurface_ID;

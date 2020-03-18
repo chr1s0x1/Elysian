@@ -32,8 +32,8 @@
 
 
 - (IBAction)JBGo:(id)sender {
+     [_JBButton setTitle: @"Exploiting Kernel.." forState:UIControlStateNormal];
     _JBButton.enabled = NO;
-    [sender setTitle: @"Exploiting Kernel.." forState:UIControlStateNormal];
     LOG("[*] Starting Exploit\n");
     __block mach_port_t tfpzero = MACH_PORT_NULL;
     tfpzero = get_tfp0();
@@ -42,9 +42,8 @@
         LOG("[i] Please reboot and try again \n");
         [sender setTitle:@"Exploit Failed" forState:UIControlStateNormal];
         return;
-       
     }
-    
+    LOGM("[i] tfp0 : 0x%x \n", tfpzero);
     LOG("[*] Starting Jailbreak Process \n");
     
 /* Start of Elysian Jailbreak *****************************************************/

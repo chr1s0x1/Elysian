@@ -14,6 +14,9 @@
 #define LOG(str)\
 printf(str)
 
+#define LOGM(str, more)\
+printf(str, more)
+
 #define fileExists(file) [[NSFileManager defaultManager] fileExistsAtPath:@(file)]
 
 
