@@ -18,15 +18,14 @@
 		846DD600240CE29C0000D4AC /* ElysianTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 846DD5FF240CE29C0000D4AC /* ElysianTests.m */; };
 		846DD60B240CE29C0000D4AC /* ElysianUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 846DD60A240CE29C0000D4AC /* ElysianUITests.m */; };
 		84837C3B241C94D300FCD15E /* IOKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 84837C3A241C94D300FCD15E /* IOKit.tbd */; };
-		84837C3F241D38C300FCD15E /* jelbrekLib.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 84837C3E241D38C300FCD15E /* jelbrekLib.dylib */; };
-		84837C45241D3E1000FCD15E /* jelbrekLib.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 84837C44241D3E1000FCD15E /* jelbrekLib.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		84DA44FF2415AF1B00FA5874 /* patchfinder64 in Resources */ = {isa = PBXBuildFile; fileRef = 84DA44FE2415AF1A00FA5874 /* patchfinder64 */; };
 		84E812EF240DE4860075AA3B /* kernel_memory.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812E3240DE4840075AA3B /* kernel_memory.c */; };
 		84E812F0240DE4860075AA3B /* exploit_utilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812E4240DE4840075AA3B /* exploit_utilities.c */; };
 		84E812F1240DE4860075AA3B /* offsets.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E812E6240DE4840075AA3B /* offsets.m */; };
 		84E812F3240DE4860075AA3B /* IOSurface_stuff.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812EA240DE4850075AA3B /* IOSurface_stuff.c */; };
 		84E812F4240DE4860075AA3B /* IOAccelerator_stuff.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812EC240DE4860075AA3B /* IOAccelerator_stuff.c */; };
 		84E812F5240DE4860075AA3B /* exploit.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812ED240DE4860075AA3B /* exploit.c */; };
+		84FFBB472422E805005A9392 /* jelbrekLibE.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 84FFBB462422E805005A9392 /* jelbrekLibE.dylib */; };
+		84FFBB492422E817005A9392 /* jelbrekLibE.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 84FFBB482422E816005A9392 /* jelbrekLibE.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,7 +52,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 1;
 			files = (
-				84837C45241D3E1000FCD15E /* jelbrekLib.dylib in CopyFiles */,
+				84FFBB492422E817005A9392 /* jelbrekLibE.dylib in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,11 +80,7 @@
 		846DD60A240CE29C0000D4AC /* ElysianUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ElysianUITests.m; sourceTree = "<group>"; };
 		846DD60C240CE29C0000D4AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84837C3A241C94D300FCD15E /* IOKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = IOKit.tbd; path = Elysian/IOKit/IOKit.tbd; sourceTree = "<group>"; };
-		84837C3E241D38C300FCD15E /* jelbrekLib.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = jelbrekLib.dylib; path = Elysian/libs/jelbrekLib.dylib; sourceTree = "<group>"; };
-		84837C40241D3DB300FCD15E /* jelbrekLib.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = jelbrekLib.dylib; path = Elysian/libs/jelbrekLib.dylib; sourceTree = "<group>"; };
-		84837C44241D3E1000FCD15E /* jelbrekLib.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = jelbrekLib.dylib; path = Elysian/libs/jelbrekLib.dylib; sourceTree = "<group>"; };
 		84837C46241F3E1F00FCD15E /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
-		84DA44FE2415AF1A00FA5874 /* patchfinder64 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = patchfinder64; sourceTree = "<group>"; };
 		84E812E2240DE4840075AA3B /* IOAccelerator_stuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOAccelerator_stuff.h; sourceTree = "<group>"; };
 		84E812E3240DE4840075AA3B /* kernel_memory.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kernel_memory.c; sourceTree = "<group>"; };
 		84E812E4240DE4840075AA3B /* exploit_utilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = exploit_utilities.c; sourceTree = "<group>"; };
@@ -97,6 +92,8 @@
 		84E812EC240DE4860075AA3B /* IOAccelerator_stuff.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = IOAccelerator_stuff.c; sourceTree = "<group>"; };
 		84E812ED240DE4860075AA3B /* exploit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = exploit.c; sourceTree = "<group>"; };
 		84E812EE240DE4860075AA3B /* kernel_memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kernel_memory.h; sourceTree = "<group>"; };
+		84FFBB462422E805005A9392 /* jelbrekLibE.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = jelbrekLibE.dylib; path = Elysian/libs/jelbrekLibE.dylib; sourceTree = "<group>"; };
+		84FFBB482422E816005A9392 /* jelbrekLibE.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = jelbrekLibE.dylib; path = Elysian/libs/jelbrekLibE.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,7 +101,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84837C3F241D38C300FCD15E /* jelbrekLib.dylib in Frameworks */,
+				84FFBB472422E805005A9392 /* jelbrekLibE.dylib in Frameworks */,
 				84837C3B241C94D300FCD15E /* IOKit.tbd in Frameworks */,
 				8404F825241ABC8C00A6B47A /* jelbrekLib.h in Frameworks */,
 			);
@@ -130,8 +127,7 @@
 		846DD5D7240CE2920000D4AC = {
 			isa = PBXGroup;
 			children = (
-				84837C40241D3DB300FCD15E /* jelbrekLib.dylib */,
-				84837C44241D3E1000FCD15E /* jelbrekLib.dylib */,
+				84FFBB482422E816005A9392 /* jelbrekLibE.dylib */,
 				846DD5E2240CE2920000D4AC /* Elysian */,
 				846DD5FE240CE29C0000D4AC /* ElysianTests */,
 				846DD609240CE29C0000D4AC /* ElysianUITests */,
@@ -158,7 +154,6 @@
 				84837C38241C943900FCD15E /* libs */,
 				8404F80E241A894800A6B47A /* offsets.h */,
 				8404F80D241A881C00A6B47A /* jelbrekLib.h */,
-				84DA44FE2415AF1A00FA5874 /* patchfinder64 */,
 				84E812E4240DE4840075AA3B /* exploit_utilities.c */,
 				84E812E8240DE4850075AA3B /* exploit_utilities.h */,
 				84E812ED240DE4860075AA3B /* exploit.c */,
@@ -206,7 +201,7 @@
 		846DD62C240CF0350000D4AC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				84837C3E241D38C300FCD15E /* jelbrekLib.dylib */,
+				84FFBB462422E805005A9392 /* jelbrekLibE.dylib */,
 				84837C3A241C94D300FCD15E /* IOKit.tbd */,
 			);
 			name = Frameworks;
@@ -333,7 +328,6 @@
 				846DD5F3240CE29C0000D4AC /* LaunchScreen.storyboard in Resources */,
 				846DD5F0240CE29C0000D4AC /* Assets.xcassets in Resources */,
 				846DD5EE240CE2930000D4AC /* Main.storyboard in Resources */,
-				84DA44FF2415AF1B00FA5874 /* patchfinder64 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

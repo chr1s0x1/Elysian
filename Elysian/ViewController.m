@@ -32,7 +32,6 @@
 
 
 - (IBAction)JBGo:(id)sender {
-     [_JBButton setTitle: @"Exploiting Kernel.." forState:UIControlStateNormal];
     _JBButton.enabled = NO;
     LOG("[*] Starting Exploit\n");
     __block mach_port_t tfpzero = MACH_PORT_NULL;
@@ -44,9 +43,14 @@
         return;
     }
     LOGM("[i] tfp0 : 0x%x \n", tfpzero);
-    LOG("[*] Starting Jailbreak Process \n");
     
 /* Start of Elysian Jailbreak *****************************************************/
+    
+    LOG("[*] Starting Jailbreak Process \n");
+    
+    [_JBButton setTitle:@"Jailbreaking.." forState:UIControlStateNormal];
+    // initalize jelbrekLibE
+    init_with_kbase(tfpzero, kernel_base, NULL);
     LOG("[+] Geting Root Permissions \n");
     kern_return_t ret = rootify(getpid());
     if(ret != KERN_SUCCESS) {
