@@ -50,7 +50,6 @@ void createFILE(const char *where, NSData *info) {
     }
 }
 
-// will store the kernel base
 uint64_t kernel_base;
 
 #endif /* utils_h */

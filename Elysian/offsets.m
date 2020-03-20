@@ -1,13 +1,13 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "offsets.h"
+
 #import <stdio.h>
 #import <stdlib.h>
 #import <string.h>
 #import <sys/sysctl.h>
 #import <sys/utsname.h>
 
-
+#import "offsets.h"
 
 #define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
@@ -63,6 +63,8 @@ int kstruct_offsets_13_0[] = {
     0x7c,  // KFREE_ADDR_OFFSET
     
     0xdd0, // IOSURFACE_CREATE_OUTSIZE
+    
+    0xb8,  // getExternalTrapForIndex
 };
 
 int kstruct_offsets_12_0[] = {
@@ -111,6 +113,8 @@ int kstruct_offsets_12_0[] = {
     0x7c,  // KFREE_ADDR_OFFSET
     
     0xdd0, // IOSURFACE_CREATE_OUTSIZE
+    
+    0xb7,  // getExternalTrapForIndex
 };
 
 int koffset(enum kstruct_offset offset) {
