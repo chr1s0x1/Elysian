@@ -1,7 +1,7 @@
 # Elysian
 JB ETA????
 
-- Powered by jelbrekLib
+- Powered by jelbrekLibE
 
 # Credits ( so far )
 - chr1s_0x1 (dev)
