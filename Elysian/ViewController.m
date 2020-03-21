@@ -50,6 +50,7 @@
     
     [_JBButton setTitle:@"Jailbreaking.." forState:UIControlStateNormal];
     
+    LOGM("[i] KernelBase: 0x%llx\n", KernelBase);
     // initalize jelbrekLibE
     init_with_kbase(tfpzero, KernelBase, NULL);
     LOG("[+] Geting Root Permissions \n"); // give ourselves root perms
