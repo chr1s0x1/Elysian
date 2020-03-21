@@ -11,6 +11,11 @@
 #import "utils.h"
 #import "jelbrekLib.h"
 
+#define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
+
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+
+
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UILabel *Label;
@@ -23,7 +28,18 @@
 
 @implementation ViewController
 
+
+
+
 - (void)viewDidLoad {
+    
+    // Version check
+    if(SYSTEM_VERSION_GREATER_THAN(@"13.3") || SYSTEM_VERSION_LESS_THAN(@"13.0")){
+    printf("[-] Unsupported Firmware!\n");
+        [_JBButton setTitle:@"Unsupported" forState:UIControlStateNormal];
+        _JBButton.enabled = NO;
+    }
+    
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
