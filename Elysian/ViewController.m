@@ -49,9 +49,10 @@
     LOG("[*] Starting Jailbreak Process \n");
     
     [_JBButton setTitle:@"Jailbreaking.." forState:UIControlStateNormal];
+    
     // initalize jelbrekLibE
-    init_with_kbase(tfpzero, kernel_base, NULL);
-    LOG("[+] Geting Root Permissions \n");
+    init_with_kbase(tfpzero, KernelBase, NULL);
+    LOG("[+] Geting Root Permissions \n"); // give ourselves root perms
     kern_return_t ret = rootify(getpid());
     if(ret != KERN_SUCCESS) {
         LOG("[-] Getting Root Perms Failed");
