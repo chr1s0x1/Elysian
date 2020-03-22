@@ -8,8 +8,9 @@
 
 #import "ViewController.h"
 #import "exploit.h"
-#import "utils.h"
 #import "jelbrekLib.h"
+#import "offsets.h"
+#import "utils.h"
 
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
 
@@ -20,7 +21,6 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *Label;
 
-@property (weak, nonatomic) IBOutlet UIButton *JBButton;
 @property (strong, nonatomic) IBOutlet UIView *section;
 
 @end
@@ -36,8 +36,8 @@
     // Version check
     if(SYSTEM_VERSION_GREATER_THAN(@"13.3") || SYSTEM_VERSION_LESS_THAN(@"13.0")){
     printf("[-] Unsupported Firmware!\n");
-        [_JBButton setTitle:@"Unsupported" forState:UIControlStateNormal];
-        _JBButton.enabled = NO;
+    [JBButton setTitle:@"Unsupported" forState:UIControlStateNormal];
+        JBButton.enabled = NO;
     }
     
     [super viewDidLoad];
@@ -48,52 +48,57 @@
 
 
 - (IBAction)JBGo:(id)sender {
-    _JBButton.enabled = NO;
+    [JBButton setEnabled:NO];
+    [JBButton setTitle:@"Exploiting Kernel.." forState:UIControlStateNormal];
     LOG("[*] Starting Exploit\n");
     __block mach_port_t tfpzero = MACH_PORT_NULL;
     tfpzero = get_tfp0();
     if(!MACH_PORT_VALID(tfpzero)){
         LOG("[-] Exploit Failed \n");
         LOG("[i] Please reboot and try again \n");
-        [sender setTitle:@"Exploit Failed" forState:UIControlStateNormal];
+        [JBButton setTitle:@"Exploit Failed" forState:UIControlStateNormal];
         return;
     }
     LOGM("[i] tfp0 : 0x%x \n", tfpzero);
     
 /* Start of Elysian Jailbreak *****************************************************/
+    LOG("[*] Starting Jailbreak Process \n"); // button crap lol
+     [JBButton setTitle:@"Jailbreaking.." forState:UIControlStateNormal];
     
-    LOG("[*] Starting Jailbreak Process \n");
+    // ---------------------------------------------------//
     
-    [_JBButton setTitle:@"Jailbreaking.." forState:UIControlStateNormal];
-    
-    LOGM("[i] KernelBase: 0x%llx\n", KernelBase);
-    // initalize jelbrekLibE
-    init_with_kbase(tfpzero, KernelBase, NULL);
-    LOG("[+] Geting Root Permissions \n"); // give ourselves root perms
-    kern_return_t ret = rootify(getpid());
-    if(ret != KERN_SUCCESS) {
-        LOG("[-] Getting Root Perms Failed");
-        [sender setTitle:@"Set Root Perms Failed" forState:UIControlStateNormal];
-        return;
-    }
     LOG("[+] Unsandboxing \n");
-     // Set sandbox pointer to 0;
-    unsandbox(getpid());
-    // Do we have root?
+        // find our task
+    uint64_t our_task = find_self_task();
+    LOGM("[i] our_task: 0x%llx\n", our_task);
+        // find the sandbox slot
+    uint64_t our_proc = rk64(our_task + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
+    LOGM("[i] our_proc: 0x%llx\n", our_proc);
+    uint64_t our_ucred = rk64(our_proc + 0x100); // 0x100 - off_p_ucred
+    LOGM("[i] ucred: 0x%llx\n", our_ucred);
+    uint64_t cr_label = rk64(our_ucred + 0x78); // 0x78 - off_ucred_cr_label
+    LOGM("[i] cr_label: 0x%llx\n", cr_label);
+    uint64_t sandbox = rk64(cr_label + 0x10);
+    LOGM("[i] sandbox_slot: 0x%llx\n", sandbox);
+        // Set sandbox pointer to 0;
+    wk64(cr_label + 0x10, 0);
+        // Do we have root?
     createFILE("/var/mobile/.elytest", nil);
     FILE *f = fopen("/var/mobile/.elytest", "w");
     if(!f){
     LOG("[-] Failed to Unsanbox \n");
-     [sender setTitle:@"Unsanbox failed" forState:UIControlStateNormal];
+     [JBButton setTitle:@"Unsanbox failed" forState:UIControlStateNormal];
      return;
     }
     LOG("[*] Escaped Sandbox \n");
-    // Give us time to cool down
-    sleep(1);
+    
+    sleep(1); // Give us time to cool down
+    
+    //---------------------------------------------------//
     
     // Remount..
     LOG("[+] Remounting \n");
-    [sender setTitle:@"Remounting.." forState:UIControlStateNormal];
+    
 }
 
 @end

@@ -42,5 +42,6 @@ int kstrcmp_u(uint64_t string1, char *string2);
 unsigned long kstrlen(uint64_t string);
 
 uint64_t find_port(mach_port_name_t port);
+uint64_t find_self_task(void);
 
 #endif /* kernel_memory_h */
