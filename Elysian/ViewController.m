@@ -49,7 +49,6 @@
 
 - (IBAction)JBGo:(id)sender {
     [JBButton setEnabled:NO];
-    [JBButton setTitle:@"Exploiting Kernel.." forState:UIControlStateNormal];
     LOG("[*] Starting Exploit\n");
     __block mach_port_t tfpzero = MACH_PORT_NULL;
     tfpzero = get_tfp0();
@@ -61,11 +60,8 @@
     }
     LOGM("[i] tfp0 : 0x%x \n", tfpzero);
     
-/* Start of Elysian Jailbreak *****************************************************/
-    LOG("[*] Starting Jailbreak Process \n"); // button crap lol
-     [JBButton setTitle:@"Jailbreaking.." forState:UIControlStateNormal];
-    
-    // ---------------------------------------------------//
+/* Start of Elysian Jailbreak **********************************************/
+    LOG("[*] Starting Jailbreak Process \n");
     
     LOG("[+] Unsandboxing \n");
         // find our task
@@ -80,6 +76,8 @@
     LOGM("[i] cr_label: 0x%llx\n", cr_label);
     uint64_t sandbox = rk64(cr_label + 0x10);
     LOGM("[i] sandbox_slot: 0x%llx\n", sandbox);
+    
+    LOG("[+] Setting Sandbox Pointer to 0\n");
         // Set sandbox pointer to 0;
     wk64(cr_label + 0x10, 0);
         // Do we have root?
@@ -90,11 +88,18 @@
      [JBButton setTitle:@"Unsanbox failed" forState:UIControlStateNormal];
      return;
     }
+    LOG("[*} Successfully set Sandbox Pointer to 0 \n");
     LOG("[*] Escaped Sandbox \n");
     
-    sleep(1); // Give us time to cool down
+    LOG("[i] Here comes the fun..\n");
+    // Initiate jelbrekLibE
+    int ret = init_with_kbase(tfpzero, KernelBase, NULL);
+    LOG("[i] Does this log run?");
+    if(ret != 0) {
+        LOG("[-] Failed to initiate jelbrekLibE\n");
+     [JBButton setTitle:@"Failed to initiate jelbrekLibE" forState:UIControlStateNormal];
+    }
     
-    //---------------------------------------------------//
     
     // Remount..
     LOG("[+] Remounting \n");
