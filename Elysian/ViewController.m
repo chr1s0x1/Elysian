@@ -77,10 +77,10 @@
     uint64_t sandbox = rk64(cr_label + 0x10);
     LOGM("[i] sandbox_slot: 0x%llx\n", sandbox);
     
-    LOG("[+] Setting Sandbox Pointer to 0\n");
+    LOG("[+] Setting sandbox_slot to 0\n");
         // Set sandbox pointer to 0;
     wk64(cr_label + 0x10, 0);
-        // Do we have root?
+        // Are we free?
     createFILE("/var/mobile/.elytest", nil);
     FILE *f = fopen("/var/mobile/.elytest", "w");
     if(!f){
@@ -88,17 +88,19 @@
      [JBButton setTitle:@"Unsanbox failed" forState:UIControlStateNormal];
      return;
     }
-    LOG("[*} Successfully set Sandbox Pointer to 0 \n");
+    LOG("[*} Successfully set sandbox_slot to 0 \n");
     LOG("[*] Escaped Sandbox \n");
     
-    LOG("[i] Here comes the fun..\n");
+    LOG("[*] Here comes the fun..\n");
+    
     // Initiate jelbrekLibE
     int ret = init_with_kbase(tfpzero, KernelBase, NULL);
-    LOG("[i] Does this log run?");
     if(ret != 0) {
         LOG("[-] Failed to initiate jelbrekLibE\n");
      [JBButton setTitle:@"Failed to initiate jelbrekLibE" forState:UIControlStateNormal];
     }
+    LOG("[*] Initialized Patchfinder\n");
+    term_jelbrek();
     
     
     // Remount..
