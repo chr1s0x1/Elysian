@@ -45,8 +45,6 @@
 }
 
 
-
-
 - (IBAction)JBGo:(id)sender {
     [JBButton setEnabled:NO];
     LOG("[*] Starting Exploit\n");
@@ -58,7 +56,7 @@
         [JBButton setTitle:@"Exploit Failed" forState:UIControlStateNormal];
         return;
     }
-    LOGM("[i] tfp0 : 0x%x \n", tfpzero);
+    LOGM("[i] tfp0: 0x%x \n", tfpzero);
     
 /* Start of Elysian Jailbreak **********************************************/
     LOG("[*] Starting Jailbreak Process \n");
@@ -77,7 +75,7 @@
     uint64_t sandbox = rk64(cr_label + 0x10);
     LOGM("[i] sandbox_slot: 0x%llx\n", sandbox);
     
-    LOG("[+] Setting sandbox_slot to 0\n");
+    LOG("[+] Setting sandbox_slot to 0 \n");
         // Set sandbox pointer to 0;
     wk64(cr_label + 0x10, 0);
         // Are we free?
@@ -91,21 +89,23 @@
     LOG("[*} Successfully set sandbox_slot to 0 \n");
     LOG("[*] Escaped Sandbox \n");
     
-    LOG("[*] Here comes the fun..\n");
     
+    LOG("[*] Here comes the fun \n");
     // Initiate jelbrekLibE
     int ret = init_with_kbase(tfpzero, KernelBase, NULL);
     if(ret != 0) {
-        LOG("[-] Failed to initiate jelbrekLibE\n");
-     [JBButton setTitle:@"Failed to initiate jelbrekLibE" forState:UIControlStateNormal];
+        LOG("[-] Failed to initialize jelbrekLibE \n");
+     [JBButton setTitle:@"Failed to initialize jelbrekLibE" forState:UIControlStateNormal];
     }
-    LOG("[*] Initialized Patchfinder\n");
+    LOG("[*] Initialized jelbrekLibE \n");
     term_jelbrek();
     
     
     // Remount..
     LOG("[+] Remounting \n");
     
+    // Added for now so Elysian returns
+    return;
 }
 
 @end
