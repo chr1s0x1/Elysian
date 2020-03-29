@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1157CB492430355D00B8A0CA /* parameters.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB3A2430355B00B8A0CA /* parameters.c */; };
+		1157CB4A2430355D00B8A0CA /* kernel.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB3C2430355B00B8A0CA /* kernel.c */; };
+		1157CB4B2430355D00B8A0CA /* kernel_memory.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB412430355C00B8A0CA /* kernel_memory.c */; };
+		1157CB4C2430355D00B8A0CA /* pac_bypass.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB452430355D00B8A0CA /* pac_bypass.c */; };
+		1157CB4D2430355D00B8A0CA /* log.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB462430355D00B8A0CA /* log.c */; };
+		1157CB4E2430355D00B8A0CA /* platform.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB472430355D00B8A0CA /* platform.c */; };
+		1157CB4F2430355D00B8A0CA /* kernel_call.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB482430355D00B8A0CA /* kernel_call.c */; };
+		1157CB52243038B500B8A0CA /* platform_match.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB50243038B400B8A0CA /* platform_match.c */; };
 		8439DB3024296CDC003403BA /* jelbrekLibE.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 84FFBB482422E816005A9392 /* jelbrekLibE.dylib */; };
 		8439DB3124296CE5003403BA /* jelbrekLibE.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 84FFBB482422E816005A9392 /* jelbrekLibE.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		8439DB3224296CF1003403BA /* jelbrekLibE.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 84FFBB482422E816005A9392 /* jelbrekLibE.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -70,9 +78,25 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1157CB3A2430355B00B8A0CA /* parameters.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = parameters.c; sourceTree = "<group>"; };
+		1157CB3B2430355B00B8A0CA /* mach_vm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mach_vm.h; sourceTree = "<group>"; };
+		1157CB3C2430355B00B8A0CA /* kernel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kernel.c; sourceTree = "<group>"; };
+		1157CB3D2430355C00B8A0CA /* kernel_memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kernel_memory.h; sourceTree = "<group>"; };
+		1157CB3E2430355C00B8A0CA /* kernel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kernel.h; sourceTree = "<group>"; };
+		1157CB3F2430355C00B8A0CA /* pac_bypass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pac_bypass.h; sourceTree = "<group>"; };
+		1157CB402430355C00B8A0CA /* parameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = parameters.h; sourceTree = "<group>"; };
+		1157CB412430355C00B8A0CA /* kernel_memory.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kernel_memory.c; sourceTree = "<group>"; };
+		1157CB422430355C00B8A0CA /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
+		1157CB432430355C00B8A0CA /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
+		1157CB442430355C00B8A0CA /* kernel_call.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kernel_call.h; sourceTree = "<group>"; };
+		1157CB452430355D00B8A0CA /* pac_bypass.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pac_bypass.c; sourceTree = "<group>"; };
+		1157CB462430355D00B8A0CA /* log.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = log.c; sourceTree = "<group>"; };
+		1157CB472430355D00B8A0CA /* platform.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = platform.c; sourceTree = "<group>"; };
+		1157CB482430355D00B8A0CA /* kernel_call.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kernel_call.c; sourceTree = "<group>"; };
+		1157CB50243038B400B8A0CA /* platform_match.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = platform_match.c; sourceTree = "<group>"; };
+		1157CB51243038B500B8A0CA /* platform_match.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform_match.h; sourceTree = "<group>"; };
 		8404F80D241A881C00A6B47A /* jelbrekLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jelbrekLib.h; sourceTree = "<group>"; };
 		8404F80E241A894800A6B47A /* offsets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = offsets.h; sourceTree = "<group>"; };
-		8439DB2B24296B96003403BA /* jelbrekLib.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = jelbrekLib.dylib; sourceTree = "<group>"; };
 		846DD5E0240CE2920000D4AC /* Elysian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Elysian.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		846DD5E3240CE2920000D4AC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		846DD5E4240CE2920000D4AC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -135,6 +159,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1157CB392430353600B8A0CA /* pac */ = {
+			isa = PBXGroup;
+			children = (
+				1157CB50243038B400B8A0CA /* platform_match.c */,
+				1157CB51243038B500B8A0CA /* platform_match.h */,
+				1157CB482430355D00B8A0CA /* kernel_call.c */,
+				1157CB442430355C00B8A0CA /* kernel_call.h */,
+				1157CB412430355C00B8A0CA /* kernel_memory.c */,
+				1157CB3D2430355C00B8A0CA /* kernel_memory.h */,
+				1157CB3C2430355B00B8A0CA /* kernel.c */,
+				1157CB3E2430355C00B8A0CA /* kernel.h */,
+				1157CB462430355D00B8A0CA /* log.c */,
+				1157CB432430355C00B8A0CA /* log.h */,
+				1157CB3B2430355B00B8A0CA /* mach_vm.h */,
+				1157CB452430355D00B8A0CA /* pac_bypass.c */,
+				1157CB3F2430355C00B8A0CA /* pac_bypass.h */,
+				1157CB3A2430355B00B8A0CA /* parameters.c */,
+				1157CB402430355C00B8A0CA /* parameters.h */,
+				1157CB472430355D00B8A0CA /* platform.c */,
+				1157CB422430355C00B8A0CA /* platform.h */,
+			);
+			path = pac;
+			sourceTree = "<group>";
+		};
 		846DD5D7240CE2920000D4AC = {
 			isa = PBXGroup;
 			children = (
@@ -159,12 +207,13 @@
 		846DD5E2240CE2920000D4AC /* Elysian */ = {
 			isa = PBXGroup;
 			children = (
-				84837C46241F3E1F00FCD15E /* utils.h */,
+				1157CB392430353600B8A0CA /* pac */,
 				84837C39241C948800FCD15E /* IOKit */,
 				84837C38241C943900FCD15E /* libs */,
 				8404F80E241A894800A6B47A /* offsets.h */,
 				8404F80D241A881C00A6B47A /* jelbrekLib.h */,
 				84E812E4240DE4840075AA3B /* exploit_utilities.c */,
+				84837C46241F3E1F00FCD15E /* utils.h */,
 				84E812E8240DE4850075AA3B /* exploit_utilities.h */,
 				84E812ED240DE4860075AA3B /* exploit.c */,
 				84E812E5240DE4840075AA3B /* exploit.h */,
@@ -221,7 +270,6 @@
 			isa = PBXGroup;
 			children = (
 				84FFBB482422E816005A9392 /* jelbrekLibE.dylib */,
-				8439DB2B24296B96003403BA /* jelbrekLib.dylib */,
 			);
 			path = libs;
 			sourceTree = "<group>";
@@ -365,7 +413,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1157CB4E2430355D00B8A0CA /* platform.c in Sources */,
 				84E812F0240DE4860075AA3B /* exploit_utilities.c in Sources */,
+				1157CB52243038B500B8A0CA /* platform_match.c in Sources */,
+				1157CB4B2430355D00B8A0CA /* kernel_memory.c in Sources */,
 				84E812F4240DE4860075AA3B /* IOAccelerator_stuff.c in Sources */,
 				84E812EF240DE4860075AA3B /* kernel_memory.c in Sources */,
 				84E812F3240DE4860075AA3B /* IOSurface_stuff.c in Sources */,
@@ -373,7 +424,12 @@
 				846DD5E5240CE2920000D4AC /* AppDelegate.m in Sources */,
 				846DD5F6240CE29C0000D4AC /* main.m in Sources */,
 				84E812F1240DE4860075AA3B /* offsets.m in Sources */,
+				1157CB492430355D00B8A0CA /* parameters.c in Sources */,
 				846DD5E8240CE2920000D4AC /* SceneDelegate.m in Sources */,
+				1157CB4F2430355D00B8A0CA /* kernel_call.c in Sources */,
+				1157CB4A2430355D00B8A0CA /* kernel.c in Sources */,
+				1157CB4D2430355D00B8A0CA /* log.c in Sources */,
+				1157CB4C2430355D00B8A0CA /* pac_bypass.c in Sources */,
 				84E812F5240DE4860075AA3B /* exploit.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

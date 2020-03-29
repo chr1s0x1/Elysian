@@ -11,6 +11,9 @@
 #import "jelbrekLib.h"
 #import "offsets.h"
 #import "utils.h"
+#include "pac/kernel_call.h"
+#include "pac/parameters.h"
+#include "pac/kernel.h"
 
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
 
@@ -33,7 +36,7 @@
 
 - (void)viewDidLoad {
     
-    // Version check
+    // iOS Compatibility check
     if(SYSTEM_VERSION_GREATER_THAN(@"13.3") || SYSTEM_VERSION_LESS_THAN(@"13.0")){
     printf("[-] Unsupported Firmware!\n");
     [JBButton setTitle:@"Unsupported" forState:UIControlStateNormal];
@@ -58,8 +61,10 @@
     }
     LOGM("[i] tfp0: 0x%x \n", tfpzero);
     
-/* Start of Elysian Jailbreak **********************************************/
+/* Start of Elysian Jailbreak ************************************/
     LOG("[*] Starting Jailbreak Process \n");
+    
+        // ------------ Unsandbox ------------ //
     
     LOG("[+] Unsandboxing \n");
         // find our task
@@ -91,19 +96,50 @@
     
     
     LOG("[*] Here comes the fun \n");
-    // Initiate jelbrekLibE
+        // Initiate jelbrekLibE
     int ret = init_with_kbase(tfpzero, KernelBase, NULL);
     if(ret != 0) {
         LOG("[-] Failed to initialize jelbrekLibE \n");
      [JBButton setTitle:@"Failed to initialize jelbrekLibE" forState:UIControlStateNormal];
     }
     LOG("[*] Initialized jelbrekLibE \n");
+    
+    
+    //--------- initiate kernel_call for remount --------//
+    
+    LOG("[+] Initializing kernel_call \n");
+    bool init = kernel_init();
+    if(init != true){
+        LOG("[-] kernel_init failed \n");
+        [JBButton setTitle:@"Kernel_Init Failed" forState:UIControlStateNormal];
+    }
+    LOG("[*] kernel_init succeeded \n");
+    
+    bool kcall = kernel_call_init();
+    if(kcall != true) {
+        [JBButton setTitle:@"Failed to initiate kernel call" forState:UIControlStateNormal];
+        LOG("[-] Failed to initialize kernel_call \n");
+        return;
+    }
+    
+    LOG("[*] Initialized kernel_call \n");
+    
+    // ------------ Remount ------------ //
+    
+        // Remount RootFS
+    LOG("[+] Remounting RootFS \n");
+    bool renamed_snap = NO;
+    // check if we already renamed snapshot
+    if(renamed_snap == NO) {
+        const char *orig_snapshot = "orig-fs";
+        const char *apple_snap = "/dev/disk0s1";
+        
+    }
+    
+    LOG("[i] Snapshot already renamed \n");
+    
+    
     term_jelbrek();
-    
-    
-    // Remount..
-    LOG("[+] Remounting \n");
-    
     // Added for now so Elysian returns
     return;
 }
