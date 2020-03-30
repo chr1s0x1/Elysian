@@ -62,6 +62,7 @@
     LOGM("[i] tfp0: 0x%x \n", tfpzero);
     
 /* Start of Elysian Jailbreak ************************************/
+   
     LOG("[*] Starting Jailbreak Process \n");
     
         // ------------ Unsandbox ------------ //
@@ -95,8 +96,11 @@
     LOG("[*] Escaped Sandbox \n");
     
     
-    LOG("[*] Here comes the fun \n");
+    LOG("[i] Here comes the fun \n");
         // Initiate jelbrekLibE
+    // There's also KRead error logs after initiating jelbrekLibE
+    // I'm certain that has to do with it's kexec which we won't use, so
+    // No serious error logs here
     int ret = init_with_kbase(tfpzero, KernelBase, NULL);
     if(ret != 0) {
         LOG("[-] Failed to initialize jelbrekLibE \n");
@@ -107,11 +111,14 @@
     
     //--------- initiate kernel_call for remount --------//
     
+    // This currently doesn't work rn
+    // I'll push a fix next commit
     LOG("[+] Initializing kernel_call \n");
     bool init = kernel_init();
     if(init != true){
         LOG("[-] kernel_init failed \n");
         [JBButton setTitle:@"Kernel_Init Failed" forState:UIControlStateNormal];
+        return;
     }
     LOG("[*] kernel_init succeeded \n");
     
@@ -124,23 +131,23 @@
     
     LOG("[*] Initialized kernel_call \n");
     
-    // ------------ Remount ------------ //
+    // ------------ Remount RootFS -------------- //
     
-        // Remount RootFS
-    LOG("[+] Remounting RootFS \n");
+    // WIP
+    
     bool renamed_snap = NO;
     // check if we already renamed snapshot
-    if(renamed_snap == NO) {
-        const char *orig_snapshot = "orig-fs";
-        const char *apple_snap = "/dev/disk0s1";
-        
-    }
+    ASSERT(renamed_snap == NO, "[i] Snapshot already renamed")
     
-    LOG("[i] Snapshot already renamed \n");
+    const char *orig_snapshot = "orig-fs";
+    const char *apple_snap = "/dev/disk0s1";
     
     
+    // terminate jelbrekLibE
     term_jelbrek();
-    // Added for now so Elysian returns
+    
+    
+    // Added so Elysian returns
     return;
 }
 

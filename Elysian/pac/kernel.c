@@ -11,6 +11,7 @@
 #include "log.h"
 #include "parameters.h"
 
+
 bool
 kernel_init() {
 	// Try to grab the kernel task port as host special port 4.

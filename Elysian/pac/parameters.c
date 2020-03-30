@@ -125,6 +125,8 @@ kernel_parameters__common() {
 // A list of kernel parameter initializations by platform.
 static const struct platform_initialization kernel_parameters[] = {
 	{ "iPhone12,3", "17C54", kernel_parameters__iphone12_3__17C54 },
+    // These offsets should be the same for all devices 
+    { "*",          "*",     kernel_parameters__iphone12_3__17C54 },
 	{ "*",          "*",     kernel_parameters__common            },
 };
 
@@ -175,6 +177,12 @@ pac_bypass_parameters__iphone12_3__17C54() {
 	ADDRESS(pthread_returning_to_userspace)       = SLIDE(0xFFFFFFF007F77FBC);
 	ADDRESS(thread_exception_return)              = SLIDE(0xFFFFFFF0081BF8AC);
 	ADDRESS(STR_X0_X20__LDP_X29_X30_SP_10__RETAB) = SLIDE(0xFFFFFFF008E65780);
+}
+
+static void
+pac_bypass_parameters_iphone11_8__17B111() {
+    
+    ADDRESS(memmove) = SLIDE(0xFFFFFFF007B2102C);
 }
 
 // A list of PAC bypass parameter initializations by platform.

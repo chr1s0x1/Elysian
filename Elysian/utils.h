@@ -49,6 +49,17 @@ printf(str, more)
  
  */
 
+#define ASSERT(stuff, error)\
+if(!stuff) {\
+printf(error);\
+}
+
+#define ASSERTM(stuff, error, more)\
+if(!stuff) {\
+printf(error, more);\
+}
+
+
 #define fileExists(file) [[NSFileManager defaultManager] fileExistsAtPath:@(file)]
 
 
