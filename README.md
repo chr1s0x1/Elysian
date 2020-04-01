@@ -13,5 +13,5 @@ JB ETA????
 - Jake James (jelbrekLib)
 - Mach Port (design)
 
-- Huge thank you to s0uthwes for being an inspiration and a amazing friend
+## Huge thank you to s0uthwes for being an inspiration and a amazing friend
 - Rip my friend : (
