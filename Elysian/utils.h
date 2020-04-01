@@ -13,6 +13,15 @@
 
 
 
+#define ASSERT(stuff, error) do {\
+if(stuff){\
+break;\
+}else{\
+LOG(error);\
+return;\
+}\
+} while(false)
+
 /*
  
  function : LOG
@@ -48,16 +57,6 @@ printf(str, more)
  check if "file" exists at "fileExistsAtPath(file)"
  
  */
-
-#define ASSERT(stuff, error)\
-if(!stuff) {\
-printf(error);\
-}
-
-#define ASSERTM(stuff, error, more)\
-if(!stuff) {\
-printf(error, more);\
-}
 
 
 #define fileExists(file) [[NSFileManager defaultManager] fileExistsAtPath:@(file)]

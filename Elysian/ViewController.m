@@ -108,40 +108,25 @@
     }
     LOG("[*] Initialized jelbrekLibE \n");
     
-    
-    //--------- initiate kernel_call for remount --------//
-    
-    // This currently doesn't work rn
-    // I'll push a fix next commit
-    LOG("[+] Initializing kernel_call \n");
-    bool init = kernel_init();
-    if(init != true){
-        LOG("[-] kernel_init failed \n");
-        [JBButton setTitle:@"Kernel_Init Failed" forState:UIControlStateNormal];
-        return;
-    }
-    LOG("[*] kernel_init succeeded \n");
-    
-    bool kcall = kernel_call_init();
-    if(kcall != true) {
-        [JBButton setTitle:@"Failed to initiate kernel call" forState:UIControlStateNormal];
-        LOG("[-] Failed to initialize kernel_call \n");
-        return;
-    }
-    
-    LOG("[*] Initialized kernel_call \n");
-    
     // ------------ Remount RootFS -------------- //
     
     // WIP
     
     bool renamed_snap = NO;
     // check if we already renamed snapshot
-    ASSERT(renamed_snap == NO, "[i] Snapshot already renamed")
+    ASSERT(renamed_snap == NO, "[i] Snapshot already renamed \n");
     
     const char *orig_snapshot = "orig-fs";
     const char *apple_snap = "/dev/disk0s1";
     
+    
+    int rootfd = open("/", O_RDONLY, 0);
+    ASSERT(rootfd > 0, "[-] Failed to open / \n");
+    LOG("Opened /");
+    const char **snaps = list_snapshots(rootfd);
+    ASSERT(snaps != 0, "[-] Failed to find snapshots \n");
+    LOGM("[i] snapshots: %s\n", snaps);
+    // attempt to remove flags
     
     // terminate jelbrekLibE
     term_jelbrek();
@@ -152,3 +137,4 @@
 }
 
 @end
+
