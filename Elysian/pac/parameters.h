@@ -72,6 +72,7 @@ extern size_t OFFSET(task, active);
 extern size_t OFFSET(task, map);
 extern size_t OFFSET(task, itk_sself);
 extern size_t OFFSET(task, itk_space);
+extern size_t OFFSET(task, itk_registered);
 extern size_t OFFSET(task, bsd_info);
 extern size_t OFFSET(task, all_image_info_addr);
 extern size_t OFFSET(task, all_image_info_size);

@@ -125,6 +125,38 @@ int koffset(enum kstruct_offset offset) {
     return offsets[offset];
 }
 
+int voffset(enum vnode_offset offset) {
+    if (offsets == NULL) {
+        printf("[-] Please call init_offsets() prior to querying offsets\n");
+        return 0;
+    }
+    return offsets[offset];
+}
+
+int moffset(enum mount_offset offset) {
+    if (offsets == NULL) {
+        printf("[-] Please call init_offsets() prior to querying offsets\n");
+        return 0;
+    }
+    return offsets[offset];
+}
+
+int apfsoffset(enum apfs_offset offset) {
+    if (offsets == NULL) {
+        printf("[-] Please call init_offsets() prior to querying offsets\n");
+        return 0;
+    }
+    return offsets[offset];
+}
+
+int procoffset(enum proc_offset offset) {
+    if (offsets == NULL) {
+        printf("[-] Please call init_offsets() prior to querying offsets\n");
+        return 0;
+    }
+    return offsets[offset];
+}
+
 uint32_t create_outsize;
 
 int init_offsets() {

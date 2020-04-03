@@ -18,7 +18,17 @@ if(stuff){\
 break;\
 }else{\
 LOG(error);\
-return;\
+goto out;\
+}\
+} while(false)
+
+#define ASSERTM(stuff, error, more) do {\
+if(stuff){\
+break;\
+}else{\
+LOG(error);\
+more;\
+goto out;\
 }\
 } while(false)
 
@@ -125,12 +135,12 @@ error = NULL; \
  
  */
 
-void createFILE(const char *where, NSData *info) {
-    [[NSFileManager defaultManager] createFileAtPath:@(where) contents:info attributes:nil];
-    if(!fileExists(where)) {
-        LOG("[-] File create failed \n");
-        return;
-    }
+#define createFILE(where, info) {\
+    [[NSFileManager defaultManager] createFileAtPath:@(where) contents:info attributes:nil];\
+    if(!fileExists(where)) {\
+        LOG("[-] File create failed \n");\
+        return;\
+    }\
 }
 
 #endif /* utils_h */

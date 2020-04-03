@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		112A60B52436589D00258F9C /* sethsp4.c in Sources */ = {isa = PBXBuildFile; fileRef = 112A60B42436589D00258F9C /* sethsp4.c */; };
 		1157CB492430355D00B8A0CA /* parameters.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB3A2430355B00B8A0CA /* parameters.c */; };
 		1157CB4A2430355D00B8A0CA /* kernel.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB3C2430355B00B8A0CA /* kernel.c */; };
 		1157CB4B2430355D00B8A0CA /* kernel_memory.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB412430355C00B8A0CA /* kernel_memory.c */; };
@@ -15,6 +16,7 @@
 		1157CB4E2430355D00B8A0CA /* platform.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB472430355D00B8A0CA /* platform.c */; };
 		1157CB4F2430355D00B8A0CA /* kernel_call.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB482430355D00B8A0CA /* kernel_call.c */; };
 		1157CB52243038B500B8A0CA /* platform_match.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB50243038B400B8A0CA /* platform_match.c */; };
+		1157CB572435857E00B8A0CA /* remount.m in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB562435857E00B8A0CA /* remount.m */; };
 		8439DB3024296CDC003403BA /* jelbrekLibE.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 84FFBB482422E816005A9392 /* jelbrekLibE.dylib */; };
 		8439DB3124296CE5003403BA /* jelbrekLibE.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 84FFBB482422E816005A9392 /* jelbrekLibE.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		8439DB3224296CF1003403BA /* jelbrekLibE.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 84FFBB482422E816005A9392 /* jelbrekLibE.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -78,6 +80,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		112A60B32436589D00258F9C /* sethsp4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sethsp4.h; sourceTree = "<group>"; };
+		112A60B42436589D00258F9C /* sethsp4.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = sethsp4.c; sourceTree = "<group>"; };
 		1157CB3A2430355B00B8A0CA /* parameters.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = parameters.c; sourceTree = "<group>"; };
 		1157CB3B2430355B00B8A0CA /* mach_vm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mach_vm.h; sourceTree = "<group>"; };
 		1157CB3C2430355B00B8A0CA /* kernel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kernel.c; sourceTree = "<group>"; };
@@ -95,6 +99,8 @@
 		1157CB482430355D00B8A0CA /* kernel_call.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kernel_call.c; sourceTree = "<group>"; };
 		1157CB50243038B400B8A0CA /* platform_match.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = platform_match.c; sourceTree = "<group>"; };
 		1157CB51243038B500B8A0CA /* platform_match.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform_match.h; sourceTree = "<group>"; };
+		1157CB562435857E00B8A0CA /* remount.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = remount.m; sourceTree = "<group>"; };
+		1157CB582435864400B8A0CA /* remount.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = remount.h; sourceTree = "<group>"; };
 		8404F80D241A881C00A6B47A /* jelbrekLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jelbrekLib.h; sourceTree = "<group>"; };
 		8404F80E241A894800A6B47A /* offsets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = offsets.h; sourceTree = "<group>"; };
 		846DD5E0240CE2920000D4AC /* Elysian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Elysian.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -210,7 +216,6 @@
 				1157CB392430353600B8A0CA /* pac */,
 				84837C39241C948800FCD15E /* IOKit */,
 				84837C38241C943900FCD15E /* libs */,
-				8404F80E241A894800A6B47A /* offsets.h */,
 				8404F80D241A881C00A6B47A /* jelbrekLib.h */,
 				84E812E4240DE4840075AA3B /* exploit_utilities.c */,
 				84837C46241F3E1F00FCD15E /* utils.h */,
@@ -223,6 +228,7 @@
 				84E812E9240DE4850075AA3B /* IOSurface_stuff.h */,
 				84E812E3240DE4840075AA3B /* kernel_memory.c */,
 				84E812EE240DE4860075AA3B /* kernel_memory.h */,
+				8404F80E241A894800A6B47A /* offsets.h */,
 				84E812E6240DE4840075AA3B /* offsets.m */,
 				846DD5E3240CE2920000D4AC /* AppDelegate.h */,
 				846DD5E4240CE2920000D4AC /* AppDelegate.m */,
@@ -235,6 +241,10 @@
 				846DD5F1240CE29C0000D4AC /* LaunchScreen.storyboard */,
 				846DD5F4240CE29C0000D4AC /* Info.plist */,
 				846DD5F5240CE29C0000D4AC /* main.m */,
+				1157CB562435857E00B8A0CA /* remount.m */,
+				1157CB582435864400B8A0CA /* remount.h */,
+				112A60B32436589D00258F9C /* sethsp4.h */,
+				112A60B42436589D00258F9C /* sethsp4.c */,
 			);
 			path = Elysian;
 			sourceTree = "<group>";
@@ -420,6 +430,7 @@
 				84E812F4240DE4860075AA3B /* IOAccelerator_stuff.c in Sources */,
 				84E812EF240DE4860075AA3B /* kernel_memory.c in Sources */,
 				84E812F3240DE4860075AA3B /* IOSurface_stuff.c in Sources */,
+				1157CB572435857E00B8A0CA /* remount.m in Sources */,
 				846DD5EB240CE2930000D4AC /* ViewController.m in Sources */,
 				846DD5E5240CE2920000D4AC /* AppDelegate.m in Sources */,
 				846DD5F6240CE29C0000D4AC /* main.m in Sources */,
@@ -429,6 +440,7 @@
 				1157CB4F2430355D00B8A0CA /* kernel_call.c in Sources */,
 				1157CB4A2430355D00B8A0CA /* kernel.c in Sources */,
 				1157CB4D2430355D00B8A0CA /* log.c in Sources */,
+				112A60B52436589D00258F9C /* sethsp4.c in Sources */,
 				1157CB4C2430355D00B8A0CA /* pac_bypass.c in Sources */,
 				84E812F5240DE4860075AA3B /* exploit.c in Sources */,
 			);

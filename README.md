@@ -7,6 +7,13 @@ JB ETA????
 
 - UI will not be added until Elysian is fully functional
 
+# TODO :
+- Remount: In Progress
+- Kernel Call: After Remount
+- Code Signing (amfid patching): Next
+- TC Injection
+- (More added later) 
+
 # Credits ( so far )
 - chr1s_0x1 (dev)
 - s0uthwes (dev)

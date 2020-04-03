@@ -6,11 +6,17 @@
 //  Copyright © 2020 chr1s_0x1. All rights reserved.
 //
 
+#include <sys/mount.h>
+#include <sys/snapshot.h>
+#include <spawn.h>
+
 #import "ViewController.h"
 #import "exploit.h"
 #import "jelbrekLib.h"
 #import "offsets.h"
+#import "sethsp4.h"
 #import "utils.h"
+#import "remount.h"
 #include "pac/kernel_call.h"
 #include "pac/parameters.h"
 #include "pac/kernel.h"
@@ -54,8 +60,8 @@
     __block mach_port_t tfpzero = MACH_PORT_NULL;
     tfpzero = get_tfp0();
     if(!MACH_PORT_VALID(tfpzero)){
-        LOG("[-] Exploit Failed \n");
-        LOG("[i] Please reboot and try again \n");
+        LOG("Exploit Failed \n");
+        LOG("Please reboot and try again \n");
         [JBButton setTitle:@"Exploit Failed" forState:UIControlStateNormal];
         return;
     }
@@ -63,75 +69,68 @@
     
 /* Start of Elysian Jailbreak ************************************/
    
-    LOG("[*] Starting Jailbreak Process \n");
+    LOG("Starting Jailbreak Process.. \n");
     
         // ------------ Unsandbox ------------ //
     
-    LOG("[+] Unsandboxing \n");
+    LOG("Unsandboxing.. \n");
         // find our task
     uint64_t our_task = find_self_task();
-    LOGM("[i] our_task: 0x%llx\n", our_task);
+    LOGM("our_task: 0x%llx\n", our_task);
         // find the sandbox slot
     uint64_t our_proc = rk64(our_task + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
-    LOGM("[i] our_proc: 0x%llx\n", our_proc);
+    LOGM("our_proc: 0x%llx\n", our_proc);
     uint64_t our_ucred = rk64(our_proc + 0x100); // 0x100 - off_p_ucred
-    LOGM("[i] ucred: 0x%llx\n", our_ucred);
+    LOGM("ucred: 0x%llx\n", our_ucred);
     uint64_t cr_label = rk64(our_ucred + 0x78); // 0x78 - off_ucred_cr_label
-    LOGM("[i] cr_label: 0x%llx\n", cr_label);
+    LOGM("cr_label: 0x%llx\n", cr_label);
     uint64_t sandbox = rk64(cr_label + 0x10);
-    LOGM("[i] sandbox_slot: 0x%llx\n", sandbox);
+    LOGM("sandbox_slot: 0x%llx\n", sandbox);
     
-    LOG("[+] Setting sandbox_slot to 0 \n");
+    LOG("Setting sandbox_slot to 0 \n");
         // Set sandbox pointer to 0;
     wk64(cr_label + 0x10, 0);
         // Are we free?
     createFILE("/var/mobile/.elytest", nil);
     FILE *f = fopen("/var/mobile/.elytest", "w");
     if(!f){
-    LOG("[-] Failed to Unsanbox \n");
+    LOG("Failed to Unsanbox \n");
      [JBButton setTitle:@"Unsanbox failed" forState:UIControlStateNormal];
      return;
     }
-    LOG("[*} Successfully set sandbox_slot to 0 \n");
-    LOG("[*] Escaped Sandbox \n");
+    LOG("Successfully set sandbox_slot to 0 \n");
+    LOG("Escaped Sandbox \n");
     
     
-    LOG("[i] Here comes the fun \n");
+    LOG("Here comes the fun.. \n");
         // Initiate jelbrekLibE
     // There's also KRead error logs after initiating jelbrekLibE
     // I'm certain that has to do with it's kexec which we won't use, so
     // No serious error logs here
     int ret = init_with_kbase(tfpzero, KernelBase, NULL);
     if(ret != 0) {
-        LOG("[-] Failed to initialize jelbrekLibE \n");
+        LOG("Failed to initialize jelbrekLibE \n");
      [JBButton setTitle:@"Failed to initialize jelbrekLibE" forState:UIControlStateNormal];
     }
     LOG("[*] Initialized jelbrekLibE \n");
     
+    LOG("Exprting tfp0 as HSP4..\n ");
+    
+    // Export tfp0
+    set_tfp0_hsp4(tfpzero);
+    
     // ------------ Remount RootFS -------------- //
     
-    // WIP
+    // remount.m for code
+    remountFS();
     
-    bool renamed_snap = NO;
-    // check if we already renamed snapshot
-    ASSERT(renamed_snap == NO, "[i] Snapshot already renamed \n");
+    // check if remount returned any of these errors
     
-    const char *orig_snapshot = "orig-fs";
-    const char *apple_snap = "/dev/disk0s1";
-    
-    
-    int rootfd = open("/", O_RDONLY, 0);
-    ASSERT(rootfd > 0, "[-] Failed to open / \n");
-    LOG("Opened /");
-    const char **snaps = list_snapshots(rootfd);
-    ASSERT(snaps != 0, "[-] Failed to find snapshots \n");
-    LOGM("[i] snapshots: %s\n", snaps);
-    // attempt to remove flags
     
     // terminate jelbrekLibE
     term_jelbrek();
     
-    
+    out:
     // Added so Elysian returns
     return;
 }
