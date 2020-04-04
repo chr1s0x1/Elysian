@@ -26,15 +26,15 @@ int remountFS() {
     // check if we can open /
     int file = open("/", O_RDONLY, 0);
     if(file <= 0) {
-        printf("Failed to open /, we are root?\n");
+        printf("Failed to open /, are we root?\n");
     }
     const char **snaps = list_snapshots("/");
-    if(*snaps == NULL) {
+    if(**snaps == 0) {
         LOG("Failed to find snapshots");
-        err = _NOSNAPS;
-        return err;
+        return _NOSNAPS;
     }
     LOG("Found System snapshot(s)\n");
+    
     
 next_step:
     return 0;

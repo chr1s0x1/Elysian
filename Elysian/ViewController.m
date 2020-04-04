@@ -61,7 +61,7 @@
     tfpzero = get_tfp0();
     if(!MACH_PORT_VALID(tfpzero)){
         LOG("Exploit Failed \n");
-        LOG("Please reboot and try again \n");
+        LOG("Please reboot and try again\n");
         [JBButton setTitle:@"Exploit Failed" forState:UIControlStateNormal];
         return;
     }
@@ -69,11 +69,11 @@
     
 /* Start of Elysian Jailbreak ************************************/
    
-    LOG("Starting Jailbreak Process.. \n");
+    LOG("Starting Jailbreak Process..\n");
     
         // ------------ Unsandbox ------------ //
     
-    LOG("Unsandboxing.. \n");
+    LOG("Unsandboxing..\n");
         // find our task
     uint64_t our_task = find_self_task();
     LOGM("our_task: 0x%llx\n", our_task);
@@ -87,22 +87,22 @@
     uint64_t sandbox = rk64(cr_label + 0x10);
     LOGM("sandbox_slot: 0x%llx\n", sandbox);
     
-    LOG("Setting sandbox_slot to 0 \n");
+    LOG("Setting sandbox_slot to 0\n");
         // Set sandbox pointer to 0;
     wk64(cr_label + 0x10, 0);
         // Are we free?
     createFILE("/var/mobile/.elytest", nil);
     FILE *f = fopen("/var/mobile/.elytest", "w");
     if(!f){
-    LOG("Failed to Unsanbox \n");
+    LOG("Failed to Unsanbox\n");
      [JBButton setTitle:@"Unsanbox failed" forState:UIControlStateNormal];
      return;
     }
-    LOG("Successfully set sandbox_slot to 0 \n");
-    LOG("Escaped Sandbox \n");
+    LOG("Sandbox_slot is 0\n");
+    LOG("Escaped Sandbox\n");
     
     
-    LOG("Here comes the fun.. \n");
+    LOG("Here comes the fun..\n");
         // Initiate jelbrekLibE
     // There's also KRead error logs after initiating jelbrekLibE
     // I'm certain that has to do with it's kexec which we won't use, so
@@ -112,9 +112,9 @@
         LOG("Failed to initialize jelbrekLibE \n");
      [JBButton setTitle:@"Failed to initialize jelbrekLibE" forState:UIControlStateNormal];
     }
-    LOG("[*] Initialized jelbrekLibE \n");
+    LOG("[*] Initialized jelbrekLibE\n");
     
-    LOG("Exprting tfp0 as HSP4..\n ");
+    LOG("Exporting tfp0 to HSP4..\n ");
     
     // Export tfp0
     set_tfp0_hsp4(tfpzero);
@@ -122,15 +122,14 @@
     // ------------ Remount RootFS -------------- //
     
     // remount.m for code
-    remountFS();
+    int errs = remountFS();
+    ASSERTM(errs == 0, "Failed to Remount FS :/ \n", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal]);
     
-    // check if remount returned any of these errors
-    
-    
-    // terminate jelbrekLibE
-    term_jelbrek();
     
     out:
+    // terminate jelbrekLibE
+       term_jelbrek();
+    
     // Added so Elysian returns
     return;
 }
