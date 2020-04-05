@@ -31,11 +31,10 @@ int set_tfp0_hsp4(mach_port_t tfp0) {
     LOGM("hsp4: 0x%llx\n", hsp4);
     
     // Set hsp4
-    wk32(host_port + OFFSET(ipc_port, ip_bits), io_makebits(1, IOT_PORT, IKOT_HOST_PRIV));
-    uint64_t realhost = rk64(host_port + OFFSET(ipc_port, ip_kobject));
-    printf("realhost: 0x%llx\n", realhost); // just for debugging, will be removed
-    wk64(realhost + OFFSET(host, special) + 4 * sizeof(uint64_t),
-         hsp4);
+    wk32(host_port + koffset(KSTRUCT_OFFSET_IPC_PORT_IO_BITS), io_makebits(1, IOT_PORT, IKOT_HOST_PRIV));
+    uint64_t realhost = rk64(host_port + koffset(KSTRUCT_OFFSET_IPC_PORT_IP_KOBJECT));
+    LOGM("realhost: 0x%llx\n", realhost); // just for debugging, will be removed
+    wk64(realhost + 0x10 + 4 * sizeof(uint64_t), hsp4); // 0x10 = OFFSET(host, special)
     
     // check if we successfully set hsp4
     static task_t test = MACH_PORT_NULL;

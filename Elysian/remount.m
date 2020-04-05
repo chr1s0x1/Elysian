@@ -14,7 +14,6 @@
 #include "offsets.h"
   
 int remountFS() {
-    int err = 0;
     bool renamed_snap = NO;
     
     LOG("Remounting RootFS..\n");
@@ -23,18 +22,18 @@ int remountFS() {
         LOG("Snapshot already renamed\n");
         goto next_step;
     }
-    // check if we can open /
+    // check if we can open "/"
     int file = open("/", O_RDONLY, 0);
     if(file <= 0) {
         printf("Failed to open /, are we root?\n");
     }
-    const char **snaps = list_snapshots("/");
-    if(**snaps == 0) {
-        LOG("Failed to find snapshots");
+    
+    int snaps = list_snapshots("/");
+    if(snaps < 0) {
+        LOG("Failed to find snapshots\n");
         return _NOSNAPS;
     }
     LOG("Found System snapshot(s)\n");
-    
     
 next_step:
     return 0;
