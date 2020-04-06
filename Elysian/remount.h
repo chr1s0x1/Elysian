@@ -11,14 +11,15 @@
 
 #import "offsets.h"
 
-// remount return errors
-enum remount_err {
+// remount returns
+enum remount_ret {
     _NOLAUNCHDERR,
+    _RENAMEDSNAP,
     _NOSNAPS,
 };
 
 // remount for ios 13
 int remountFS(void);
-int remount(enum remount_err error);
+bool renameSnapRequired(void);
 #endif /* remount_h */
 

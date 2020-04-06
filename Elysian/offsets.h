@@ -53,44 +53,5 @@ enum kstruct_offset {
     OFFSET_GETFI,
 };
 
-enum vnode_offset {
-    VSTRUCT_VNODE_OFFSET_NCCHILD = 0x30,
-    VSTRUCT_VNODE_OFFSET_FLAGS = 0x54,
-    VSTRUCT_VNODE_OFFSET_TYPE = 0X70,
-    VSTRUCT_VNODE_OFFSET_ID = 0X74,
-    VSTRUCT_VNODE_OFFSET_UBCINFO = 0x78,
-    VSTRUCT_VNODE_OFFSET_SPECINFO = 0x78,
-    VSTRUCT_VNODE_OFFSET_NAME = 0xb8,
-    VSTRUCT_VNODE_OFFSET_PARENT = 0xc0,
-    VSTRUCT_VNODE_OFFSET_MOUNT = 0xd8,
-    VSTRUCT_VNODE_OFFSET_DATA = 0xe0,
-};
-
-enum mount_offset {
-    MSTRUCT_MOUNT_MNT_NEXT = 0x0,
-    MSTRUCT_MOUNT_VNODE_LIST = 0x40,
-    MSTRUCT_MOUNT_FLAG = 0x70,
-    MSTRUCT_MOUNT_DATA = 0x8f8,
-    MSTRUCT_MOUNT_DEVVP = 0x980,
-};
-
-enum proc_offset {
-    PSTRUCT_PROC_PID = 0x68,
-    PSTRUCT_PROC_TASK = 0x10,
-    PSTRUCT_PROC_UCRED = 0x100,
-    PSTRUCT_PROC_TEXTVP = 0x238,
-    PSTRUCT_PROC_TEXTOFF = 0x240,
-    PSTRUCT_PROC_NAME = 0x258,
-    PSTRUCT_PROC_CSFLAGS = 0x298,
-};
-
-enum apfs_offset {
-  APFS_OFFSET_FLAG = 0x31,
-};
-
 int koffset(enum kstruct_offset offset);
-int voffset(enum vnode_offset offset);
-int moffset(enum mount_offset offset);
-int apfsoffset(enum apfs_offset offset);
-int procoffset(enum proc_offset offset);
 int init_offsets(void);

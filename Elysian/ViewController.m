@@ -60,7 +60,7 @@
     __block mach_port_t tfpzero = MACH_PORT_NULL;
     tfpzero = get_tfp0();
     if(!MACH_PORT_VALID(tfpzero)){
-        LOG("Exploit Failed \n");
+        LOG("ERR: Exploit Failed \n");
         LOG("Please reboot and try again\n");
         [JBButton setTitle:@"Exploit Failed" forState:UIControlStateNormal];
         return;
@@ -94,7 +94,7 @@
     createFILE("/var/mobile/.elytest", nil);
     FILE *f = fopen("/var/mobile/.elytest", "w");
     if(!f){
-    LOG("Failed to Unsanbox\n");
+    LOG("ERR: Failed to Unsanbox\n");
      [JBButton setTitle:@"Unsanbox failed" forState:UIControlStateNormal];
      return;
     }
@@ -109,7 +109,7 @@
     // No serious error logs here
     int ret = init_with_kbase(tfpzero, KernelBase, NULL);
     if(ret != 0) {
-        LOG("Failed to initialize jelbrekLibE \n");
+        LOG("ERR: Failed to initialize jelbrekLibE \n");
      [JBButton setTitle:@"Failed to initialize jelbrekLibE" forState:UIControlStateNormal];
     }
     LOG("[*] Initialized jelbrekLibE\n");
@@ -123,7 +123,7 @@
     
     // remount.m for code
     int errs = remountFS();
-    ASSERTM(errs == 0, "Failed to Remount FS :/ \n", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal]);
+    ASSERTM(errs == 0, "ERR: Failed to Remount FS :/ \n", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal]);
     
     
     out:

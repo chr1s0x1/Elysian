@@ -115,41 +115,10 @@ int kstruct_offsets_12_0[] = {
     0xdd0, // IOSURFACE_CREATE_OUTSIZE
     
     0xb7,  // getExternalTrapForIndex
+    
 };
 
 int koffset(enum kstruct_offset offset) {
-    if (offsets == NULL) {
-        printf("[-] Please call init_offsets() prior to querying offsets\n");
-        return 0;
-    }
-    return offsets[offset];
-}
-
-int voffset(enum vnode_offset offset) {
-    if (offsets == NULL) {
-        printf("[-] Please call init_offsets() prior to querying offsets\n");
-        return 0;
-    }
-    return offsets[offset];
-}
-
-int moffset(enum mount_offset offset) {
-    if (offsets == NULL) {
-        printf("[-] Please call init_offsets() prior to querying offsets\n");
-        return 0;
-    }
-    return offsets[offset];
-}
-
-int apfsoffset(enum apfs_offset offset) {
-    if (offsets == NULL) {
-        printf("[-] Please call init_offsets() prior to querying offsets\n");
-        return 0;
-    }
-    return offsets[offset];
-}
-
-int procoffset(enum proc_offset offset) {
     if (offsets == NULL) {
         printf("[-] Please call init_offsets() prior to querying offsets\n");
         return 0;
