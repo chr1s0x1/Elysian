@@ -7,7 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#include <inttypes.h>
+#import <sys/mount.h>
+#include <sys/stat.h>
+#include "IOKit/IOKit.h"
+#import <sys/snapshot.h>
 #import "utils.h"
 #import "remount.h"
 #import "jelbrekLib.h"
@@ -16,11 +19,9 @@
 
 bool renameSnapRequired() {
     int fd = open("/", O_RDONLY, 0);
-    if(fd < 0) {
-        LOG("ERR: Failed to open /, are we root?");
-        return 1;
-    }
     int count = list_snapshots("/");
+    close(fd);
+    
     return count == -1 ? YES : NO;
 }
 
@@ -67,11 +68,41 @@ int remountFS() {
     }
     
     // find vnode flags
-    uint64_t vnodeflage = rk64(rootvnode + 0x54); // 0x54 = flags
-    LOGM("vnode flags: 0x%llx\n", vnodeflage);
+    uint64_t vnodeflags = rk32(rootvnode + 0x54); // 0x54 = flags
+    LOGM("vnode flags: 0x%llx\n", vnodeflags);
     
-    // Mount vnode
     
+    // Mount rootFS
+    
+    mkdir("/var/rootmnt", 0755);
+    chown("/var/rootmnt", 0, 0);
+    char path[20] = "/var/rootmnt";
+    uint64_t devmount = rk64(rootvnode + 0xd8); // 0xd8 = mount
+    uint64_t devvp = rk64(devmount + 0x980); // 0X980 = devvp
+    uint64_t devname = rk64(devvp + 0xb8);
+    kread(devname, name, 20);
+    LOGM("Found dev vnode name: %s\n", name);
+    
+    uint64_t spec = rk64(devvp + 0x78); // 0x78 = specinfo
+    uint64_t specflags = rk32(spec + 0x10); // 0x10 = specinfo flags
+    LOGM("Found dev flags: %llu\n", specflags);
+    
+    // setting spec flags to 0
+    wk32(spec + 0x10, 0);
+    // setup mount args
+    char *fspec = strdup("/dev/disk0s1s1");
+    struct hfs_mount_args mntargs;
+    mntargs.fspec = fspec;
+    mntargs.hfs_mask = 1;
+    gettimeofday(NULL, &mntargs.hfs_timezone);
+    
+    // Now for actual mounting of rootFS
+    kern_return_t retval = mount("apfs", path, 0, &mntargs);
+    if(retval != KERN_SUCCESS) {
+        LOG("ERR: Failed to mount rootFS\n");
+        return _MOUNTFAILED;
+    }
+    LOG("Successfully mounted rootFS\n");
     
     /*                                      will uncomment this later
     int snaps = list_snapshots("/");
