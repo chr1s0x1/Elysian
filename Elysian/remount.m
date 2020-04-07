@@ -17,6 +17,8 @@
 #import "kernel_memory.h"
 #include "offsets.h"
 
+char name[20];
+
 bool renameSnapRequired() {
     int fd = open("/", O_RDONLY, 0);
     int count = list_snapshots("/");
@@ -25,6 +27,42 @@ bool renameSnapRequired() {
     return count == -1 ? YES : NO;
 }
 
+int32_t MountFS(uint64_t vnode) {
+    // create dir for mounting & get dev vnode name
+    mkdir("/var/rootmnt", 0755);
+    chown("/var/rootmnt", 0, 0);
+    char *path = strdup("/var/rootmnt");
+    uint64_t devmount = rk64(vnode + 0xd8); // 0xd8 = mount
+    uint64_t devvp = rk64(devmount + 0x980); // 0X980 = devvp
+    uint64_t devname = rk64(devvp + 0xb8);
+    kread(devname, name, 20);
+    LOGM("Found dev vnode name: %s\n", name);
+    
+    // get dev flags
+    uint64_t spec = rk64(devvp + 0x78); // 0x78 = specinfo
+    uint64_t specflags = rk32(spec + 0x10); // 0x10 = specinfo flags
+    LOGM("Found dev flags: %llu\n", specflags);
+    
+    // setting spec flags to 0
+    wk32(spec + 0x10, 0);
+    
+    // setup mount args
+    char *fspec = strdup("/dev/disk0s1s1");
+    struct hfs_mount_args mntargs;
+    mntargs.fspec = fspec;
+    mntargs.hfs_mask = 1;
+    gettimeofday(NULL, &mntargs.hfs_timezone);
+    
+    // Now for actual mounting of rootFS
+    kern_return_t retval = mount("apfs", path, 0, &mntargs);
+    if(retval != KERN_SUCCESS) {
+        LOG("ERR: Failed to mount rootFS\n");
+        return _MOUNTFAILED;
+    }
+    LOG("Successfully mounted rootFS\n");
+    
+    return _MOUNTSUCCESS;
+}
 
 // Credit to Chimera13
   
@@ -47,7 +85,7 @@ int remountFS() {
     // find vnode
     uint64_t textvp = rk64(launchd_proc + 0x238); // 0x238 = textvp
     uint64_t nameptr = rk64(textvp + 0xb8); // 0xb8 = vnode name
-    char name[20];
+
     kread(nameptr, name, 20);
     
     LOGM("Got vnode: %s\n", name);
@@ -73,37 +111,11 @@ int remountFS() {
     
     
     // Mount rootFS
-    
-    mkdir("/var/rootmnt", 0755);
-    chown("/var/rootmnt", 0, 0);
-    char path[20] = "/var/rootmnt";
-    uint64_t devmount = rk64(rootvnode + 0xd8); // 0xd8 = mount
-    uint64_t devvp = rk64(devmount + 0x980); // 0X980 = devvp
-    uint64_t devname = rk64(devvp + 0xb8);
-    kread(devname, name, 20);
-    LOGM("Found dev vnode name: %s\n", name);
-    
-    uint64_t spec = rk64(devvp + 0x78); // 0x78 = specinfo
-    uint64_t specflags = rk32(spec + 0x10); // 0x10 = specinfo flags
-    LOGM("Found dev flags: %llu\n", specflags);
-    
-    // setting spec flags to 0
-    wk32(spec + 0x10, 0);
-    // setup mount args
-    char *fspec = strdup("/dev/disk0s1s1");
-    struct hfs_mount_args mntargs;
-    mntargs.fspec = fspec;
-    mntargs.hfs_mask = 1;
-    gettimeofday(NULL, &mntargs.hfs_timezone);
-    
-    // Now for actual mounting of rootFS
-    kern_return_t retval = mount("apfs", path, 0, &mntargs);
-    if(retval != KERN_SUCCESS) {
-        LOG("ERR: Failed to mount rootFS\n");
+    int mountret = MountFS(rootvnode);
+    if(mountret == _MOUNTFAILED) {
         return _MOUNTFAILED;
     }
-    LOG("Successfully mounted rootFS\n");
-    
+        
     /*                                      will uncomment this later
     int snaps = list_snapshots("/");
     if(snaps < 0) {

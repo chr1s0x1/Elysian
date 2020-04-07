@@ -15,9 +15,11 @@
 // remount returns
 enum remount_ret {
     _NOLAUNCHDERR,
-    _RENAMEDSNAP,
     _NOSNAPS,
     _MOUNTFAILED,
+    _RENAMEDSNAP,
+    _MOUNTSUCCESS,
+    _REMOUNTSUCCESS,
 };
 
 struct hfs_mount_args {
@@ -35,6 +37,7 @@ struct hfs_mount_args {
 
 // remount for ios 13
 int remountFS(void);
+int32_t MountFS(uint64_t vnode);
 bool renameSnapRequired(void);
 #endif /* remount_h */
 

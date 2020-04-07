@@ -123,8 +123,7 @@
     
     // remount.m for code
     int errs = remountFS();
-    ASSERTM(errs == 0, "ERR: Failed to Remount FS :/ \n", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal]);
-    
+    ASSERTM(errs == _REMOUNTSUCCESS, "ERR: Failed to remount rootFS :/", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal];);
     
     out:
     // terminate jelbrekLibE
