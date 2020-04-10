@@ -27,28 +27,32 @@ bool renameSnapRequired() {
     return count == -1 ? YES : NO;
 }
 
-int32_t MountFS(uint64_t vnode) {
-    // create dir for mounting & get dev vnode name
-    mkdir("/var/rootmnt", 0755);
-    chown("/var/rootmnt", 0, 0);
-    char *path = strdup("/var/rootmnt");
-    uint64_t devmount = rk64(vnode + 0xd8); // 0xd8 = mount
-    uint64_t devvp = rk64(devmount + 0x980); // 0X980 = devvp
+int MountFS(uint64_t vnode) {
+    // find disk0s1s1
+    uint64_t devmount = rk64(vnode + 0xd8);
+    uint64_t devvp = rk64(devmount + 0x980);
     uint64_t devname = rk64(devvp + 0xb8);
+
     kread(devname, name, 20);
-    LOGM("Found dev vnode name: %s\n", name);
+    
+    LOGM("Got dev vnode: %s\n", name);
     
     // get dev flags
-    uint64_t spec = rk64(devvp + 0x78); // 0x78 = specinfo
-    uint64_t specflags = rk32(spec + 0x10); // 0x10 = specinfo flags
-    LOGM("Found dev flags: %llu\n", specflags);
+     uint64_t spec = rk64(devvp + 0x78); // 0x78 = specinfo
+     uint32_t specflags = rk32(spec + 0x10); // 0x10 = specinfo flags
+    LOGM("Found dev flags: %u\n", specflags);
     
     // setting spec flags to 0
     wk32(spec + 0x10, 0);
     
+    // create dir for mount
+    mkdir("/var/rootmnt", 0755);
+    chown("/var/rootmnt", 0, 0);
+    char *path = "/var/rootmnt";
+    
     // setup mount args
-    char *fspec = strdup("/dev/disk0s1s1");
-    struct hfs_mount_args mntargs;
+    char *fspec = "/dev/disk0s1s1";
+    struct hfs_mount_args mntargs = {};
     mntargs.fspec = fspec;
     mntargs.hfs_mask = 1;
     gettimeofday(NULL, &mntargs.hfs_timezone);
@@ -56,10 +60,8 @@ int32_t MountFS(uint64_t vnode) {
     // Now for actual mounting of rootFS
     kern_return_t retval = mount("apfs", path, 0, &mntargs);
     if(retval != KERN_SUCCESS) {
-        LOG("ERR: Failed to mount rootFS\n");
         return _MOUNTFAILED;
     }
-    LOG("Successfully mounted rootFS\n");
     
     return _MOUNTSUCCESS;
 }
@@ -71,8 +73,15 @@ int remountFS() {
     // check if we can open "/"
     int file = open("/", O_RDONLY, 0);
     if(file <= 0) {
-        printf("ERR: Failed to open /, are we root?\n");
+        LOG("ERR: Failed to open /, are we root?\n");
+        return 1;
     }
+    
+    // get our and kernels proccess
+    uint64_t kernel_proc = proc_of_pid(0);
+    LOGM("Got kernel proccess: 0x%llx\n", kernel_proc);
+    uint64_t our_proc = find_self_task();
+    LOGM("Got our task: 0x%llx\n", our_proc);
     
     // Find launchd
     uint64_t launchd_proc = proc_of_pid(1);
@@ -84,9 +93,9 @@ int remountFS() {
     
     // find vnode
     uint64_t textvp = rk64(launchd_proc + 0x238); // 0x238 = textvp
-    uint64_t nameptr = rk64(textvp + 0xb8); // 0xb8 = vnode name
+    uint64_t vname = rk64(textvp + 0xb8); // 0xb8 = vnode name
 
-    kread(nameptr, name, 20);
+    kread(vname, name, 20);
     
     LOGM("Got vnode: %s\n", name);
     
@@ -98,24 +107,29 @@ int remountFS() {
     
     LOGM("Got vnode (should be root): %s\n", name);
     
-    // check if we need to rename snapshot
-    bool renameRequired = renameSnapRequired();
-    if(renameRequired == NO) {
-        LOG("Snapshot already renamed!\n");
-        goto next_step;
-    }
-    
     // find vnode flags
     uint64_t vnodeflags = rk32(rootvnode + 0x54); // 0x54 = flags
     LOGM("vnode flags: 0x%llx\n", vnodeflags);
     
+    bool required = renameSnapRequired();
+    if(required == NO) {
+        LOG("Snapshot already renamed!\n");
+        goto next_step;
+    }
     
-    // Mount rootFS
-    int mountret = MountFS(rootvnode);
-    if(mountret == _MOUNTFAILED) {
+    // Gonna need kernel perms for this
+    uint64_t kern_ucred = rk64(kernel_proc + 0x100);
+    uint64_t our_creds = rk64(our_proc + 0x100);
+    wk64(our_proc + 0x100, kern_ucred);
+    
+    // Mount FS
+    int mount = MountFS(rootvnode);
+    if(mount != _MOUNTSUCCESS){
+        LOG("ERR: Failed to mount FS\n");
         return _MOUNTFAILED;
     }
-        
+    LOG("Succesfully mounted FS\n");
+    
     /*                                      will uncomment this later
     int snaps = list_snapshots("/");
     if(snaps < 0) {
@@ -124,6 +138,9 @@ int remountFS() {
     }
     LOG("Found System snapshot(s)\n");
     */
+    
+    wk64(our_proc + 0x100, our_creds);
+    
 next_step:
     return 0;
 }

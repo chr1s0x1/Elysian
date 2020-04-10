@@ -69,7 +69,7 @@
     
 /* Start of Elysian Jailbreak ************************************/
    
-    LOG("Starting Jailbreak Process..\n");
+    LOG("Running Elysian..\n");
     
         // ------------ Unsandbox ------------ //
     
@@ -123,13 +123,12 @@
     
     // remount.m for code
     int errs = remountFS();
-    ASSERTM(errs == _REMOUNTSUCCESS, "ERR: Failed to remount rootFS :/", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal];);
+    ASSERTM(errs == _REMOUNTSUCCESS, "ERR: Failed to remount rootFS :/\n", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal];);
     
     out:
     // terminate jelbrekLibE
-       term_jelbrek();
+    term_jelbrek();
     
-    // Added so Elysian returns
     return;
 }
 
