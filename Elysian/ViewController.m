@@ -44,7 +44,7 @@
     
     // iOS Compatibility check
     if(SYSTEM_VERSION_GREATER_THAN(@"13.3") || SYSTEM_VERSION_LESS_THAN(@"13.0")){
-    printf("[-] Unsupported Firmware!\n");
+    printf("ERR: Unsupported Firmware\n");
     [JBButton setTitle:@"Unsupported" forState:UIControlStateNormal];
         JBButton.enabled = NO;
     }
@@ -70,7 +70,7 @@
 /* Start of Elysian Jailbreak ************************************/
    
     LOG("Running Elysian..\n");
-    
+
         // ------------ Unsandbox ------------ //
     
     LOG("Unsandboxing..\n");

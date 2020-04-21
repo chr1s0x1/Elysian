@@ -21,7 +21,6 @@ int set_tfp0_hsp4(mach_port_t tfp0) {
     if(MACH_PORT_VALID(okthen)) {
         LOG("[set hsp4] tfp0 already exported!\n");
         okthen = MACH_PORT_NULL;
-        mach_port_destroy(okthen, okthen);
         return 0;
     }
     

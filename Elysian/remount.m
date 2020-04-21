@@ -19,12 +19,26 @@
 
 char name[20];
 
-bool renameSnapRequired() {
+bool renameSnapRequired(void) {
     int fd = open("/", O_RDONLY, 0);
+    if(fd <= 0) {
+        close(fd);
+        LOG("ERR: Are we root?/n");
+        return 1;
+    }
     int count = list_snapshots("/");
-    close(fd);
-    
     return count == -1 ? YES : NO;
+}
+
+int find_boot_snap(void) {
+    // Get BootSnapshot... kinda hacky ngl
+    int chosen = IORegistryEntryFromPath(0, "IODeviceTree:/chosen");
+    CFTypeRef data = IORegistryEntryCreateCFProperty(chosen, (CFStringRef)"boot-manifest-hash", kCFAllocatorDefault, 0);
+    IOObjectRelease(chosen);
+    char ManifestHash = "";
+ 
+
+    return 0;
 }
 
 int MountFS(uint64_t vnode) {
@@ -38,8 +52,8 @@ int MountFS(uint64_t vnode) {
     LOGM("Got dev vnode: %s\n", name);
     
     // get dev flags
-     uint64_t spec = rk64(devvp + 0x78); // 0x78 = specinfo
-     uint32_t specflags = rk32(spec + 0x10); // 0x10 = specinfo flags
+    uint64_t spec = rk64(devvp + 0x78); // 0x78 = specinfo
+    uint32_t specflags = rk32(spec + 0x10); // 0x10 = specinfo flags
     LOGM("Found dev flags: %u\n", specflags);
     
     // setting spec flags to 0
@@ -48,21 +62,21 @@ int MountFS(uint64_t vnode) {
     // create dir for mount
     mkdir("/var/rootmnt", 0755);
     chown("/var/rootmnt", 0, 0);
-    char *path = "/var/rootmnt";
+    char *path = strdup("/var/rootmnt");
     
     // setup mount args
-    char *fspec = "/dev/disk0s1s1";
+    char *fspec = strdup("/dev/disk0s1s1");
     struct hfs_mount_args mntargs = {};
     mntargs.fspec = fspec;
     mntargs.hfs_mask = 1;
     gettimeofday(NULL, &mntargs.hfs_timezone);
     
     // Now for actual mounting of rootFS
-    kern_return_t retval = mount("apfs", path, 0, &mntargs);
-    if(retval != KERN_SUCCESS) {
+    int retval = mount("apfs", path, 0, &mntargs);
+    if(retval != 0) {
         return _MOUNTFAILED;
     }
-    
+    free(fspec);
     return _MOUNTSUCCESS;
 }
 
@@ -94,13 +108,18 @@ int remountFS() {
     // find vnode
     uint64_t textvp = rk64(launchd_proc + 0x238); // 0x238 = textvp
     uint64_t vname = rk64(textvp + 0xb8); // 0xb8 = vnode name
-
     kread(vname, name, 20);
     
     LOGM("Got vnode: %s\n", name);
     
-    // find rootvnode
+    // find sbin vnode
     uint64_t sbin = rk64(textvp + 0xc0); // 0xc0 = vnode parent
+    uint64_t sbinname = rk64(sbin + 0xb8);
+    kread(sbinname, name, 20);
+    
+    LOGM("Got vnode (should be sbin): %s\n", name);
+    
+    // find rootvnode
     uint64_t rootvnode = rk64(sbin + 0xc0);
     uint64_t rootname = rk64(rootvnode + 0xb8);
     kread(rootname, name, 20);
@@ -114,7 +133,7 @@ int remountFS() {
     bool required = renameSnapRequired();
     if(required == NO) {
         LOG("Snapshot already renamed!\n");
-        goto next_step;
+        goto renamed;
     }
     
     // Gonna need kernel perms for this
@@ -126,21 +145,14 @@ int remountFS() {
     int mount = MountFS(rootvnode);
     if(mount != _MOUNTSUCCESS){
         LOG("ERR: Failed to mount FS\n");
-        return _MOUNTFAILED;
+        
+        wk64(our_proc + 0x100, our_creds);
+        return mount;
     }
     LOG("Succesfully mounted FS\n");
     
-    /*                                      will uncomment this later
-    int snaps = list_snapshots("/");
-    if(snaps < 0) {
-        LOG("Failed to find snapshots\n");
-        return _NOSNAPS;
-    }
-    LOG("Found System snapshot(s)\n");
-    */
     
-    wk64(our_proc + 0x100, our_creds);
-    
-next_step:
+// jump here once we succesfully renamed snap (jump at line 117)
+renamed:
     return 0;
 }
