@@ -9,11 +9,15 @@
 #import <Foundation/Foundation.h>
 #import <sys/mount.h>
 #include <sys/stat.h>
+#include <dirent.h>
+#include <errno.h>
+
 #include "IOKit/IOKit.h"
 #import <sys/snapshot.h>
 #import "utils.h"
 #import "remount.h"
 #import "jelbrekLib.h"
+#import "jbtools.h"
 #import "kernel_memory.h"
 #include "offsets.h"
 
@@ -23,7 +27,7 @@ bool renameSnapRequired(void) {
     int fd = open("/", O_RDONLY, 0);
     if(fd <= 0) {
         close(fd);
-        LOG("ERR: Are we root?/n");
+        LOG("ERR: Can't open /, are we root?/n");
         return 1;
     }
     int count = list_snapshots("/");
@@ -31,52 +35,54 @@ bool renameSnapRequired(void) {
 }
 
 int find_boot_snap(void) {
-    // Get BootSnapshot... kinda hacky ngl
-    int chosen = IORegistryEntryFromPath(0, "IODeviceTree:/chosen");
-    CFTypeRef data = IORegistryEntryCreateCFProperty(chosen, (CFStringRef)"boot-manifest-hash", kCFAllocatorDefault, 0);
+    
+    // -- WIP & *currently* not finished *yet* --
+    let chosen = IORegistryEntryFromPath(0, "IODeviceTree:/chosen");
+    let data = IORegistryEntryCreateCFProperty(chosen, (CFStringRef)"boot-manifest-hash", kCFAllocatorDefault, 0);
     IOObjectRelease(chosen);
-    char ManifestHash = "";
- 
-
+    var ManifestHash = "";
+    let buf = (UInt8)(data);
+    
     return 0;
 }
 
 int MountFS(uint64_t vnode) {
+    
+    let mntpath = strdup("/var/rootfsmnt");
+    
     // find disk0s1s1
-    uint64_t devmount = rk64(vnode + 0xd8);
-    uint64_t devvp = rk64(devmount + 0x980);
-    uint64_t devname = rk64(devvp + 0xb8);
+    let devmount = rk64(vnode + 0xd8);
+    let devvp = rk64(devmount + 0x980);
+    let devname = rk64(devvp + 0xb8);
 
     kread(devname, name, 20);
     
     LOGM("Got dev vnode: %s\n", name);
     
     // get dev flags
-    uint64_t spec = rk64(devvp + 0x78); // 0x78 = specinfo
-    uint32_t specflags = rk32(spec + 0x10); // 0x10 = specinfo flags
-    LOGM("Found dev flags: %u\n", specflags);
+    let spec = rk64(devvp + 0x78); // 0x78 = specinfo
+    let specflags = rk32(spec + 0x10); // 0x10 = specinfo flags
+    LOGM("Found spec flags: %u\n", specflags);
     
     // setting spec flags to 0
     wk32(spec + 0x10, 0);
     
-    // create dir for mount
-    mkdir("/var/rootmnt", 0755);
-    chown("/var/rootmnt", 0, 0);
-    char *path = strdup("/var/rootmnt");
-    
     // setup mount args
-    char *fspec = strdup("/dev/disk0s1s1");
+    let fspec = strdup("/dev/disk0s1s1");
     struct hfs_mount_args mntargs = {};
     mntargs.fspec = fspec;
     mntargs.hfs_mask = 1;
     gettimeofday(NULL, &mntargs.hfs_timezone);
     
     // Now for actual mounting of rootFS
-    int retval = mount("apfs", path, 0, &mntargs);
+    int retval = mount("apfs", mntpath, 0, &mntargs);
     if(retval != 0) {
+        free(fspec);
+        LOGM("Mount finished with retval: %d\n", retval);
         return _MOUNTFAILED;
     }
     free(fspec);
+    LOGM("Mount finished with retval: %d\n", retval);
     return _MOUNTSUCCESS;
 }
 
@@ -87,7 +93,7 @@ int remountFS() {
     // check if we can open "/"
     int file = open("/", O_RDONLY, 0);
     if(file <= 0) {
-        LOG("ERR: Failed to open /, are we root?\n");
+        LOG("ERR: Can't to open /, are we root?\n");
         return 1;
     }
     
@@ -136,17 +142,42 @@ int remountFS() {
         goto renamed;
     }
     
+    // the dir is created in MountFS(uint64 vnode);
+    if((BOOL)fileExists("/var/rootfsmnt") == YES) {
+        LOG("(old) mount path exists, removing..\n");
+        rmdir("/var/rootfsmnt");
+        if(fileExists("/var/rootfsmnt")) {
+            LOG("ERR: Failed to remove (old) mount path\n");
+            return 1;
+            }
+       }
+    /*
+     
+    // create dir for mount
+    let mntpathSW = "/var/rootfsmnt";
+    kern_return_t dir = mkdir(mntpathSW, 0755);
+    if(dir != KERN_SUCCESS) {
+        LOG("ERR: Failed to create mount path\n");
+        return 1;
+    }
+    chown(mntpathSW, 0, 0);
+    
+     */
     // Gonna need kernel perms for this
-    uint64_t kern_ucred = rk64(kernel_proc + 0x100);
-    uint64_t our_creds = rk64(our_proc + 0x100);
-    wk64(our_proc + 0x100, kern_ucred);
+    int cred = todocreds(kernel_proc, 0);
+    if(cred == 1) {
+        LOG("ERR: Failed to get kernel creds\n");
+        return 1;
+    }
+    
+    // char *BootSnap = find_boot_snap();
     
     // Mount FS
     int mount = MountFS(rootvnode);
-    if(mount != _MOUNTSUCCESS){
+    if(mount != _MOUNTSUCCESS) {
         LOG("ERR: Failed to mount FS\n");
         
-        wk64(our_proc + 0x100, our_creds);
+        todocreds(0x0, 1);
         return mount;
     }
     LOG("Succesfully mounted FS\n");

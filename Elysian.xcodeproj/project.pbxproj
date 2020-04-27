@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1112737724576B07001EF237 /* jbtools.m in Sources */ = {isa = PBXBuildFile; fileRef = 1112737624576B07001EF237 /* jbtools.m */; };
 		112A60B52436589D00258F9C /* sethsp4.c in Sources */ = {isa = PBXBuildFile; fileRef = 112A60B42436589D00258F9C /* sethsp4.c */; };
 		1157CB492430355D00B8A0CA /* parameters.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB3A2430355B00B8A0CA /* parameters.c */; };
 		1157CB4A2430355D00B8A0CA /* kernel.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB3C2430355B00B8A0CA /* kernel.c */; };
@@ -80,6 +81,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1112737624576B07001EF237 /* jbtools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = jbtools.m; sourceTree = "<group>"; };
+		1112737824576B28001EF237 /* jbtools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jbtools.h; sourceTree = "<group>"; };
 		112A60B32436589D00258F9C /* sethsp4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sethsp4.h; sourceTree = "<group>"; };
 		112A60B42436589D00258F9C /* sethsp4.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = sethsp4.c; sourceTree = "<group>"; };
 		1157CB3A2430355B00B8A0CA /* parameters.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = parameters.c; sourceTree = "<group>"; };
@@ -245,6 +248,8 @@
 				1157CB582435864400B8A0CA /* remount.h */,
 				112A60B32436589D00258F9C /* sethsp4.h */,
 				112A60B42436589D00258F9C /* sethsp4.c */,
+				1112737624576B07001EF237 /* jbtools.m */,
+				1112737824576B28001EF237 /* jbtools.h */,
 			);
 			path = Elysian;
 			sourceTree = "<group>";
@@ -432,6 +437,7 @@
 				84E812F3240DE4860075AA3B /* IOSurface_stuff.c in Sources */,
 				1157CB572435857E00B8A0CA /* remount.m in Sources */,
 				846DD5EB240CE2930000D4AC /* ViewController.m in Sources */,
+				1112737724576B07001EF237 /* jbtools.m in Sources */,
 				846DD5E5240CE2920000D4AC /* AppDelegate.m in Sources */,
 				846DD5F6240CE29C0000D4AC /* main.m in Sources */,
 				84E812F1240DE4860075AA3B /* offsets.m in Sources */,

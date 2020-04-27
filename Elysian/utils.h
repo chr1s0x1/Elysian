@@ -11,6 +11,13 @@
 
 #include <stdio.h>
 
+// I love the "let" & "var" operator
+#ifndef let
+#define let __auto_type const
+#endif
+#ifndef var
+#define var __auto_type
+#endif
 
 
 #define ASSERT(stuff, error) do {\
@@ -21,6 +28,7 @@ LOG(error);\
 goto out;\
 }\
 } while(false)
+
 
 #define ASSERTM(stuff, error, more) do {\
 if(stuff){\
@@ -138,7 +146,7 @@ error = NULL; \
 #define createFILE(where, info) {\
     [[NSFileManager defaultManager] createFileAtPath:@(where) contents:info attributes:nil];\
     if(!fileExists(where)) {\
-        LOG("[-] File create failed \n");\
+        LOGM("ERR: Failed to create File at %s \n", where);\
         return;\
     }\
 }

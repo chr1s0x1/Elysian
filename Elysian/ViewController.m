@@ -104,9 +104,6 @@
     
     LOG("Here comes the fun..\n");
         // Initiate jelbrekLibE
-    // There's also KRead error logs after initiating jelbrekLibE
-    // I'm certain that has to do with it's kexec which we won't use, so
-    // No serious error logs here
     int ret = init_with_kbase(tfpzero, KernelBase, NULL);
     if(ret != 0) {
         LOG("ERR: Failed to initialize jelbrekLibE \n");
@@ -124,6 +121,12 @@
     // remount.m for code
     int errs = remountFS();
     ASSERTM(errs == _REMOUNTSUCCESS, "ERR: Failed to remount rootFS :/\n", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal];);
+    
+    /*
+     Now we have to nuke AMFI to allow us to run signed code using u0's cert
+     
+     I planned on trying it myself but Chimera13 has already succeeded in this so I will simply use their's :P
+     */
     
     out:
     // terminate jelbrekLibE
