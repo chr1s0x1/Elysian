@@ -145,7 +145,6 @@ uint64_t find_port(mach_port_name_t port) {
 uint64_t find_self_task() {
     uint64_t task_self = 0;
     uint64_t task_self_port = find_port(mach_task_self());
-    printf("our_task_port: 0x%llx\n", task_self_port);
     task_self = rk64(task_self_port + koffset(KSTRUCT_OFFSET_IPC_PORT_IP_KOBJECT));
     return task_self;
 }

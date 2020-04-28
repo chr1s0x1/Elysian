@@ -65,7 +65,7 @@ int MountFS(uint64_t vnode) {
     LOGM("Found spec flags: %u\n", specflags);
     
     // setting spec flags to 0
-    wk32(spec + 0x10, 0);
+    wk32(spec + 0x10, (UInt32)0);
     
     // setup mount args
     let fspec = strdup("/dev/disk0s1s1");
@@ -78,7 +78,6 @@ int MountFS(uint64_t vnode) {
     int retval = mount("apfs", mntpath, 0, &mntargs);
     if(retval != 0) {
         free(fspec);
-        LOGM("Mount finished with retval: %d\n", retval);
         return _MOUNTFAILED;
     }
     free(fspec);
@@ -100,8 +99,9 @@ int remountFS() {
     // get our and kernels proccess
     uint64_t kernel_proc = proc_of_pid(0);
     LOGM("Got kernel proccess: 0x%llx\n", kernel_proc);
-    uint64_t our_proc = find_self_task();
-    LOGM("Got our task: 0x%llx\n", our_proc);
+    uint64_t our_task = find_self_task();
+    uint64_t our_proc = rk64(our_task + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
+    LOGM("Got our proc: 0x%llx\n", our_proc);
     
     // Find launchd
     uint64_t launchd_proc = proc_of_pid(1);
@@ -144,33 +144,32 @@ int remountFS() {
     
     // the dir is created in MountFS(uint64 vnode);
     if((BOOL)fileExists("/var/rootfsmnt") == YES) {
-        LOG("(old) mount path exists, removing..\n");
-        rmdir("/var/rootfsmnt");
+        LOG("Found (old) mount path, removing..\n");
+    try: rmdir("/var/rootfsmnt");
         if(fileExists("/var/rootfsmnt")) {
             LOG("ERR: Failed to remove (old) mount path\n");
             return 1;
             }
        }
-    /*
-     
-    // create dir for mount
-    let mntpathSW = "/var/rootfsmnt";
-    kern_return_t dir = mkdir(mntpathSW, 0755);
-    if(dir != KERN_SUCCESS) {
-        LOG("ERR: Failed to create mount path\n");
-        return 1;
-    }
-    chown(mntpathSW, 0, 0);
     
-     */
     // Gonna need kernel perms for this
     int cred = todocreds(kernel_proc, 0);
     if(cred == 1) {
         LOG("ERR: Failed to get kernel creds\n");
+        todocreds(0x0, 1);
         return 1;
     }
     
     // char *BootSnap = find_boot_snap();
+    
+    // create dir for mount
+     let mntpathSW = "/var/rootfsmnt";
+     kern_return_t dir = mkdir(mntpathSW, 0755);
+     if(dir != KERN_SUCCESS) {
+         LOG("ERR: Failed to create mount path\n");
+         return 1;
+     }
+     chown(mntpathSW, 0, 0);
     
     // Mount FS
     int mount = MountFS(rootvnode);

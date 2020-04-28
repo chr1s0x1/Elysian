@@ -13,6 +13,7 @@
 #import "ViewController.h"
 #import "exploit.h"
 #import "jelbrekLib.h"
+#import "jbtools.h"
 #import "offsets.h"
 #import "sethsp4.h"
 #import "utils.h"
@@ -115,6 +116,9 @@
     
     // Export tfp0
     set_tfp0_hsp4(tfpzero);
+    
+    // Platform ourselves
+    platform_self(our_task);
     
     // ------------ Remount RootFS -------------- //
     

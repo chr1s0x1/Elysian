@@ -10,5 +10,15 @@
 #define jbtools_h
 
 
+/*
+ function: todocreds
+ 
+ Use:
+ 1. steal/borrow the kernel creds (todo = 0)
+ 2, revert our tasks creds to default
+ 
+ */
 int todocreds(uint64_t kernproc, int todo);
+
+int platform_self(uint64_t ourtask);
 #endif /* jbtools_h */
