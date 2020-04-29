@@ -11,14 +11,15 @@
 
 
 /*
- function: todocreds
+ function: credstool
  
  Use:
- 1. steal/borrow the kernel creds (todo = 0)
- 2, revert our tasks creds to default
+ 1. steal/borrow the kernel creds (todo = 0) & setuid to 0
+ 2, revert our tasks creds & uid to default
  
  */
-int todocreds(uint64_t kernproc, int todo);
+int credstool(uint64_t kernproc, int todo);
 
-int platform_self(uint64_t ourtask);
+
+int platform_task(uint64_t task);
 #endif /* jbtools_h */

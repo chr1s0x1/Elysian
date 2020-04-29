@@ -34,7 +34,7 @@ bool renameSnapRequired(void) {
     return count == -1 ? YES : NO;
 }
 
-int find_boot_snap(void) {
+char *find_boot_snap(void) {
     
     // -- WIP & *currently* not finished *yet* --
     let chosen = IORegistryEntryFromPath(0, "IODeviceTree:/chosen");
@@ -42,12 +42,12 @@ int find_boot_snap(void) {
     IOObjectRelease(chosen);
     var ManifestHash = "";
     let buf = (UInt8)(data);
+
     
-    return 0;
+    return ManifestHash;
 }
 
 int MountFS(uint64_t vnode) {
-    
     let mntpath = strdup("/var/rootfsmnt");
     
     // find disk0s1s1
@@ -65,23 +65,24 @@ int MountFS(uint64_t vnode) {
     LOGM("Found spec flags: %u\n", specflags);
     
     // setting spec flags to 0
-    wk32(spec + 0x10, (UInt32)0);
+    wk32(spec + 0x10, 0);
     
     // setup mount args
     let fspec = strdup("/dev/disk0s1s1");
     struct hfs_mount_args mntargs = {};
     mntargs.fspec = fspec;
     mntargs.hfs_mask = 1;
-    gettimeofday(NULL, &mntargs.hfs_timezone);
+    gettimeofday(nil, &mntargs.hfs_timezone);
     
     // Now for actual mounting of rootFS
-    int retval = mount("apfs", mntpath, 0, &mntargs);
+    let retval = mount("apfs", mntpath, 0, &mntargs);
+    
+    free(fspec);
+    
     if(retval != 0) {
-        free(fspec);
         return _MOUNTFAILED;
     }
-    free(fspec);
-    LOGM("Mount finished with retval: %d\n", retval);
+    LOGM("Mount finished with status: %d\n", retval);
     return _MOUNTSUCCESS;
 }
 
@@ -142,41 +143,44 @@ int remountFS() {
         goto renamed;
     }
     
-    // the dir is created in MountFS(uint64 vnode);
+    
+    // Gonna need kernel perms for this
+    int cred = credstool(kernel_proc, 0);
+    if(cred == 1) {
+        LOG("ERR: Failed to get kernel creds\n");
+        credstool(0, 1);
+        return 1;
+    }
+    
+    // const char *BootSnap = find_boot_snap();
+    // LOGM("Found System Snapshot: %s", BootSnap);
+    
+    // check if theres a old mount dir
     if((BOOL)fileExists("/var/rootfsmnt") == YES) {
         LOG("Found (old) mount path, removing..\n");
     try: rmdir("/var/rootfsmnt");
         if(fileExists("/var/rootfsmnt")) {
             LOG("ERR: Failed to remove (old) mount path\n");
-            return 1;
             }
        }
-    
-    // Gonna need kernel perms for this
-    int cred = todocreds(kernel_proc, 0);
-    if(cred == 1) {
-        LOG("ERR: Failed to get kernel creds\n");
-        todocreds(0x0, 1);
-        return 1;
-    }
-    
-    // char *BootSnap = find_boot_snap();
     
     // create dir for mount
      let mntpathSW = "/var/rootfsmnt";
      kern_return_t dir = mkdir(mntpathSW, 0755);
      if(dir != KERN_SUCCESS) {
          LOG("ERR: Failed to create mount path\n");
+         credstool(0, 1);
          return 1;
      }
-     chown(mntpathSW, 0, 0);
+    LOG("Created mount path\n");
+    chown(mntpathSW, 0, 0);
     
     // Mount FS
     int mount = MountFS(rootvnode);
     if(mount != _MOUNTSUCCESS) {
         LOG("ERR: Failed to mount FS\n");
         
-        todocreds(0x0, 1);
+        credstool(0x0, 1);
         return mount;
     }
     LOG("Succesfully mounted FS\n");

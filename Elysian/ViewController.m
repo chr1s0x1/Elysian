@@ -70,8 +70,11 @@
     
 /* Start of Elysian Jailbreak ************************************/
    
+    // used for checks
+   int errs;
+    
     LOG("Running Elysian..\n");
-
+    
         // ------------ Unsandbox ------------ //
     
     LOG("Unsandboxing..\n");
@@ -105,26 +108,26 @@
     
     LOG("Here comes the fun..\n");
         // Initiate jelbrekLibE
-    int ret = init_with_kbase(tfpzero, KernelBase, NULL);
-    if(ret != 0) {
+    errs = init_with_kbase(tfpzero, KernelBase, NULL);
+    if(errs != 0) {
         LOG("ERR: Failed to initialize jelbrekLibE \n");
      [JBButton setTitle:@"Failed to initialize jelbrekLibE" forState:UIControlStateNormal];
     }
     LOG("[*] Initialized jelbrekLibE\n");
     
     LOG("Exporting tfp0 to HSP4..\n ");
-    
     // Export tfp0
     set_tfp0_hsp4(tfpzero);
     
     // Platform ourselves
-    platform_self(our_task);
+    errs = platform_task(our_task);
+    ASSERTM(errs == 0, "ERR: Failed to platform ourselves\n", [JBButton setTitle:@"Platform Failed" forState:UIControlStateNormal]);
     
     // ------------ Remount RootFS -------------- //
     
     // remount.m for code
-    int errs = remountFS();
-    ASSERTM(errs == _REMOUNTSUCCESS, "ERR: Failed to remount rootFS :/\n", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal];);
+    errs = remountFS();
+    ASSERTM(errs == _REMOUNTSUCCESS, "ERR: Failed to remount rootFS :/\n", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal]);
     
     /*
      Now we have to nuke AMFI to allow us to run signed code using u0's cert

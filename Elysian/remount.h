@@ -10,6 +10,7 @@
 #define remount_h
 
 #import "offsets.h"
+#import "utils.h"
 #import <sys/mount.h>
 
 
@@ -41,6 +42,6 @@ struct hfs_mount_args {
 int remountFS(void);
 int32_t MountFS(uint64_t vnode);
 bool renameSnapRequired(void);
-int find_boot_snap(void);
+char *find_boot_snap(void);
 #endif /* remount_h */
 
