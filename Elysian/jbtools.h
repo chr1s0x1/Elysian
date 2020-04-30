@@ -18,8 +18,8 @@
  2, revert our tasks creds & uid to default
  
  */
-int credstool(uint64_t kernproc, int todo);
+int CredsTool(uint64_t kernproc, int todo);
 
 
-int platform_task(uint64_t task);
+int PlatformTask(uint64_t task);
 #endif /* jbtools_h */

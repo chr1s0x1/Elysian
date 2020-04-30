@@ -12,6 +12,7 @@
 #include <dirent.h>
 #include <errno.h>
 
+
 #include "IOKit/IOKit.h"
 #import <sys/snapshot.h>
 #import "utils.h"
@@ -23,7 +24,7 @@
 
 char name[20];
 
-bool renameSnapRequired(void) {
+bool RenameSnapRequired(void) {
     int fd = open("/", O_RDONLY, 0);
     if(fd <= 0) {
         close(fd);
@@ -34,15 +35,18 @@ bool renameSnapRequired(void) {
     return count == -1 ? YES : NO;
 }
 
-char *find_boot_snap(void) {
+char *FindBootSnap(void) {
     
     // -- WIP & *currently* not finished *yet* --
     let chosen = IORegistryEntryFromPath(0, "IODeviceTree:/chosen");
-    let data = IORegistryEntryCreateCFProperty(chosen, (CFStringRef)"boot-manifest-hash", kCFAllocatorDefault, 0);
+    let data = IORegistryEntryCreateCFProperty(chosen, CFSTR("boot-manifest-hash"), kCFAllocatorDefault, 0);
     IOObjectRelease(chosen);
+    let data_ns = (__bridge NSData*)data;
     var ManifestHash = "";
-    let buf = (UInt8)(data);
-
+    let buf = (UInt8)(data_ns);
+    // sizeof(char) = 1 Byte
+    let i = sizeof(char);
+    
     
     return ManifestHash;
 }
@@ -86,9 +90,14 @@ int MountFS(uint64_t vnode) {
     return _MOUNTSUCCESS;
 }
 
+uint64_t FindNewMountPath(uint64_t rootvnode) {
+    
+    return 0;
+}
+
 // Credit to Chimera13
   
-int remountFS() {
+int RemountFS() {
     LOG("Remounting RootFS..\n");
     // check if we can open "/"
     int file = open("/", O_RDONLY, 0);
@@ -137,7 +146,7 @@ int remountFS() {
     uint64_t vnodeflags = rk32(rootvnode + 0x54); // 0x54 = flags
     LOGM("vnode flags: 0x%llx\n", vnodeflags);
     
-    bool required = renameSnapRequired();
+    bool required = RenameSnapRequired();
     if(required == NO) {
         LOG("Snapshot already renamed!\n");
         goto renamed;
@@ -145,15 +154,15 @@ int remountFS() {
     
     
     // Gonna need kernel perms for this
-    int cred = credstool(kernel_proc, 0);
+    int cred = CredsTool(kernel_proc, 0);
     if(cred == 1) {
         LOG("ERR: Failed to get kernel creds\n");
-        credstool(0, 1);
+        CredsTool(0, 1);
         return 1;
     }
     
-    // const char *BootSnap = find_boot_snap();
-    // LOGM("Found System Snapshot: %s", BootSnap);
+    const char *BootSnap = FindBootSnap();
+    LOGM("Found System Snapshot: %s\n", BootSnap);
     
     // check if theres a old mount dir
     if((BOOL)fileExists("/var/rootfsmnt") == YES) {
@@ -169,7 +178,7 @@ int remountFS() {
      kern_return_t dir = mkdir(mntpathSW, 0755);
      if(dir != KERN_SUCCESS) {
          LOG("ERR: Failed to create mount path\n");
-         credstool(0, 1);
+         CredsTool(0, 1);
          return 1;
      }
     LOG("Created mount path\n");
@@ -179,8 +188,7 @@ int remountFS() {
     int mount = MountFS(rootvnode);
     if(mount != _MOUNTSUCCESS) {
         LOG("ERR: Failed to mount FS\n");
-        
-        credstool(0x0, 1);
+        CredsTool(0x0, 1);
         return mount;
     }
     LOG("Succesfully mounted FS\n");

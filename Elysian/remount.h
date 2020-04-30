@@ -39,9 +39,10 @@ struct hfs_mount_args {
 };
 
 // remount for ios 13
-int remountFS(void);
+int RemountFS(void);
 int32_t MountFS(uint64_t vnode);
-bool renameSnapRequired(void);
-char *find_boot_snap(void);
+bool RenameSnapRequired(void);
+char *FindBootSnap(void);
+uint64_t FindNewMountPath(uint64_t rootvnode);
 #endif /* remount_h */
 

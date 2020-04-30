@@ -116,18 +116,24 @@
     LOG("[*] Initialized jelbrekLibE\n");
     
     LOG("Exporting tfp0 to HSP4..\n ");
-    // Export tfp0
-    set_tfp0_hsp4(tfpzero);
     
+    // Export tfp0
+    Set_tfp0HSP4(tfpzero);
+    
+    // wait for export to finish
+    usleep(1000);
     // Platform ourselves
-    errs = platform_task(our_task);
-    ASSERTM(errs == 0, "ERR: Failed to platform ourselves\n", [JBButton setTitle:@"Platform Failed" forState:UIControlStateNormal]);
+    errs = PlatformTask(our_task);
+    ASSERTM(errs == 0, "ERR: Failed to platform ourselves\n", [JBButton setTitle:@"Platformize Failed" forState:UIControlStateNormal]);
     
     // ------------ Remount RootFS -------------- //
     
     // remount.m for code
-    errs = remountFS();
+    errs = RemountFS();
     ASSERTM(errs == _REMOUNTSUCCESS, "ERR: Failed to remount rootFS :/\n", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal]);
+    
+    
+    // ------------- Kernel Call ------------------ //
     
     /*
      Now we have to nuke AMFI to allow us to run signed code using u0's cert

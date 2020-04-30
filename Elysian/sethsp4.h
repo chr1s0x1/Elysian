@@ -18,5 +18,5 @@
 
 #define    IKOT_HOST_PRIV                4
 
-int set_tfp0_hsp4(mach_port_t tfp0);
+int Set_tfp0HSP4(mach_port_t tfp0);
 #endif /* sethsp4_h */

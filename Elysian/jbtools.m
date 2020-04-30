@@ -25,7 +25,7 @@ let CS_RESTRICT = (UInt32)(0x00000800);
 let CS_PLATFORM_BINARY = (UInt32)(0x04000000);
 let CS_DEBUGGED = (UInt32)(0x10000000);
 
-int credstool(uint64_t kernproc, int todo) {
+int CredsTool(uint64_t kernproc, int todo) {
     if(todo > 1 || todo < 0) {
         LOG("ERR: integer todo must be 0 or 1\n");
         return 1;
@@ -86,7 +86,7 @@ int credstool(uint64_t kernproc, int todo) {
     return 0;
 }
 
-int platform_task(uint64_t task) {
+int PlatformTask(uint64_t task) {
     if(task == 0) {
         LOG("[platform] ERR: Invalid task\n");
         return 1;
