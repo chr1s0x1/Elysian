@@ -133,13 +133,7 @@
     ASSERTM(errs == _REMOUNTSUCCESS, "ERR: Failed to remount rootFS :/\n", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal]);
     
     
-    // ------------- Kernel Call ------------------ //
-    
-    /*
-     Now we have to nuke AMFI to allow us to run signed code using u0's cert
-     
-     I planned on trying it myself but Chimera13 has already succeeded in this so I will simply use their's :P
-     */
+    // ------------- Kernel Call ----------------- //
     
     out:
     // terminate jelbrekLibE
