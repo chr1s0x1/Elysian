@@ -19,6 +19,7 @@
 #define var __auto_type
 #endif
 
+#define ADDRISVALID(val) ((val) >= 0xffff000000000000 && (val) != 0xffffffffffffffff)
 
 #define ASSERT(stuff, error) do {\
 if(stuff){\

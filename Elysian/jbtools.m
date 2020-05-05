@@ -78,7 +78,7 @@ int CredsTool(uint64_t kernproc, int todo) {
         let our_label = rk64(our_creds + 0x78);
         wk64(our_creds + 0x78, orig_label);
         let our_svuid = rk32(our_creds + 0x20);
-        wk32(our_label + 0x20, orig_svuid);
+        wk32(our_creds + 0x20, orig_svuid);
         setuid(501);
         LOG("[credstool] Reverted creds\n");
         return 0;

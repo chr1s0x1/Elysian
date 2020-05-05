@@ -46,7 +46,7 @@ char *FindBootSnap(void) {
     let buf = (UInt8)(data_ns);
     // sizeof(char) = 1 Byte
     let i = sizeof(char);
-    
+
     
     return ManifestHash;
 }
@@ -86,7 +86,7 @@ int MountFS(uint64_t vnode) {
     if(retval != 0) {
         return _MOUNTFAILED;
     }
-    LOGM("Mount finished with status: %d\n", retval);
+    LOGM("Mount returned: %d\n", retval);
     return _MOUNTSUCCESS;
 }
 
@@ -188,7 +188,7 @@ int RemountFS() {
     int mount = MountFS(rootvnode);
     if(mount != _MOUNTSUCCESS) {
         LOG("ERR: Failed to mount FS\n");
-        CredsTool(0x0, 1);
+        CredsTool(0, 1);
         return mount;
     }
     LOG("Succesfully mounted FS\n");
