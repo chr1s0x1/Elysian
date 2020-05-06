@@ -154,10 +154,10 @@ int RemountFS() {
     
     
     // Gonna need kernel perms for this
-    int cred = CredsTool(kernel_proc, 0);
+    int cred = CredsTool(kernel_proc, 0, YES);
     if(cred == 1) {
         LOG("ERR: Failed to get kernel creds\n");
-        CredsTool(0, 1);
+        CredsTool(0, 1, NO);
         return 1;
     }
     
@@ -178,7 +178,7 @@ int RemountFS() {
      kern_return_t dir = mkdir(mntpathSW, 0755);
      if(dir != KERN_SUCCESS) {
          LOG("ERR: Failed to create mount path\n");
-         CredsTool(0, 1);
+         CredsTool(0, 1, NO);
          return 1;
      }
     LOG("Created mount path\n");
@@ -188,11 +188,11 @@ int RemountFS() {
     int mount = MountFS(rootvnode);
     if(mount != _MOUNTSUCCESS) {
         LOG("ERR: Failed to mount FS\n");
-        CredsTool(0, 1);
+        CredsTool(0, 1, NO);
         return mount;
     }
     LOG("Succesfully mounted FS\n");
-    
+    CredsTool(0, 1, NO);
     
 // jump here once we succesfully renamed snap (jump at line 117)
 renamed:
