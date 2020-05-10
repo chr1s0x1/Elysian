@@ -19,7 +19,7 @@ int Set_tfp0HSP4(mach_port_t tfp0) {
     static task_t okthen = MACH_PORT_NULL;
     host_get_special_port(myself, HOST_LOCAL_NODE, 4, &okthen);
     if(MACH_PORT_VALID(okthen)) {
-        LOG("[set hsp4] tfp0 already exported!\n");
+        LOG("[set hsp4] tfp0 already exported!");
         okthen = MACH_PORT_NULL;
         return 0;
     }
@@ -28,7 +28,7 @@ int Set_tfp0HSP4(mach_port_t tfp0) {
     host_t host_self = mach_host_self();
     uint64_t host_port = find_port(host_self);
     uint64_t hsp4 = find_port(tfp0);
-    LOGM("[set hsp4] hsp4: 0x%llx\n", hsp4);
+    LOG("[set hsp4] hsp4: 0x%llx", hsp4);
     
     // Set hsp4
     wk32(host_port + koffset(KSTRUCT_OFFSET_IPC_PORT_IO_BITS), io_makebits(1, IOT_PORT, IKOT_HOST_PRIV));
@@ -39,11 +39,11 @@ int Set_tfp0HSP4(mach_port_t tfp0) {
     static task_t test = MACH_PORT_NULL;
     host_get_special_port(host_self, HOST_LOCAL_NODE, 4, &test);
     if(!MACH_PORT_VALID(test)) {
-        LOG("ERR: [set hsp4] Failed to set HSP4 port\n");
+        LOG("ERR: [set hsp4] Failed to set HSP4 port");
         return 1;
     }
     
-    LOG("[set hsp4] Exported tfp0 to HSP4\n");
+    LOG("[set hsp4] Exported tfp0 to HSP4");
     test = MACH_PORT_NULL;
     return 0;
 }

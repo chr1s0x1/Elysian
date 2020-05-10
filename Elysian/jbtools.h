@@ -28,4 +28,13 @@ int CredsTool(uint64_t kernproc, int todo, bool set);
  
  */
 int PlatformTask(uint64_t task);
+
+/*
+ function: lookup_rootvnode
+ 
+ Use:
+ Finds the root(i.e "/")vnode
+ 
+ */
+uint64_t lookup_rootvnode(void);
 #endif /* jbtools_h */

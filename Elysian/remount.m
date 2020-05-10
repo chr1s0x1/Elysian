@@ -28,7 +28,7 @@ bool RenameSnapRequired(void) {
     int fd = open("/", O_RDONLY, 0);
     if(fd <= 0) {
         close(fd);
-        LOG("ERR: Can't open /, are we root?/n");
+        LOG("ERR: Can't open /, are we root?");
         return 1;
     }
     int count = list_snapshots("/");
@@ -61,12 +61,12 @@ int MountFS(uint64_t vnode) {
 
     kread(devname, name, 20);
     
-    LOGM("Got dev vnode: %s\n", name);
+    LOG("Got dev vnode: %s", name);
     
     // get dev flags
     let spec = rk64(devvp + 0x78); // 0x78 = specinfo
     let specflags = rk32(spec + 0x10); // 0x10 = specinfo flags
-    LOGM("Found spec flags: %u\n", specflags);
+    LOG("Found spec flags: %u", specflags);
     
     // setting spec flags to 0
     wk32(spec + 0x10, 0);
@@ -86,7 +86,7 @@ int MountFS(uint64_t vnode) {
     if(retval != 0) {
         return _MOUNTFAILED;
     }
-    LOGM("Mount returned: %d\n", retval);
+    LOG("Mount returned: %d", retval);
     return _MOUNTSUCCESS;
 }
 
@@ -102,53 +102,53 @@ int RemountFS() {
     // check if we can open "/"
     int file = open("/", O_RDONLY, 0);
     if(file <= 0) {
-        LOG("ERR: Can't to open /, are we root?\n");
+        LOG("ERR: Can't to open /, are we root?");
         return 1;
     }
     
     // get our and kernels proccess
     uint64_t kernel_proc = proc_of_pid(0);
-    LOGM("Got kernel proccess: 0x%llx\n", kernel_proc);
+    LOG("Got kernel proccess: 0x%llx", kernel_proc);
     uint64_t our_task = find_self_task();
     uint64_t our_proc = rk64(our_task + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
-    LOGM("Got our proc: 0x%llx\n", our_proc);
+    LOG("Got our proc: 0x%llx", our_proc);
     
     // Find launchd
     uint64_t launchd_proc = proc_of_pid(1);
     if(launchd_proc == 0) {
-        LOG("ERR: Couldn't find launchd process\n");
+        LOG("ERR: Couldn't find launchd process");
         return _NOLAUNCHDERR;
     }
-    LOGM("Found launchd: 0x%llx\n", launchd_proc);
+    LOG("Found launchd: 0x%llx", launchd_proc);
     
     // find vnode
     uint64_t textvp = rk64(launchd_proc + 0x238); // 0x238 = textvp
     uint64_t vname = rk64(textvp + 0xb8); // 0xb8 = vnode name
     kread(vname, name, 20);
     
-    LOGM("Got vnode: %s\n", name);
+    LOG("Got vnode: %s", name);
     
     // find sbin vnode
     uint64_t sbin = rk64(textvp + 0xc0); // 0xc0 = vnode parent
     uint64_t sbinname = rk64(sbin + 0xb8);
     kread(sbinname, name, 20);
     
-    LOGM("Got vnode (should be sbin): %s\n", name);
+    LOG("Got vnode (should be sbin): %s", name);
     
     // find rootvnode
     uint64_t rootvnode = rk64(sbin + 0xc0);
     uint64_t rootname = rk64(rootvnode + 0xb8);
     kread(rootname, name, 20);
     
-    LOGM("Got vnode (should be root): %s\n", name);
+    LOG("Got vnode (should be root): %s", name);
     
     // find vnode flags
     uint64_t vnodeflags = rk32(rootvnode + 0x54); // 0x54 = flags
-    LOGM("vnode flags: 0x%llx\n", vnodeflags);
+    LOG("vnode flags: 0x%llx", vnodeflags);
     
     bool required = RenameSnapRequired();
     if(required == NO) {
-        LOG("Snapshot already renamed!\n");
+        LOG("Snapshot already renamed!");
         goto renamed;
     }
     
@@ -156,20 +156,20 @@ int RemountFS() {
     // Gonna need kernel perms for this
     int cred = CredsTool(kernel_proc, 0, YES);
     if(cred == 1) {
-        LOG("ERR: Failed to get kernel creds\n");
+        LOG("ERR: Failed to get kernel creds");
         CredsTool(0, 1, NO);
         return 1;
     }
     
     const char *BootSnap = FindBootSnap();
-    LOGM("Found System Snapshot: %s\n", BootSnap);
+    LOG("Found System Snapshot: %s", BootSnap);
     
     // check if theres a old mount dir
     if((BOOL)fileExists("/var/rootfsmnt") == YES) {
-        LOG("Found (old) mount path, removing..\n");
+        LOG("Found (old) mount path, removing..");
     try: rmdir("/var/rootfsmnt");
         if(fileExists("/var/rootfsmnt")) {
-            LOG("ERR: Failed to remove (old) mount path\n");
+            LOG("ERR: Failed to remove (old) mount path");
             }
        }
     
@@ -177,21 +177,21 @@ int RemountFS() {
      let mntpathSW = "/var/rootfsmnt";
      kern_return_t dir = mkdir(mntpathSW, 0755);
      if(dir != KERN_SUCCESS) {
-         LOG("ERR: Failed to create mount path\n");
+         LOG("ERR: Failed to create mount path");
          CredsTool(0, 1, NO);
          return 1;
      }
-    LOG("Created mount path\n");
+    LOG("Created mount path");
     chown(mntpathSW, 0, 0);
     
     // Mount FS
     int mount = MountFS(rootvnode);
     if(mount != _MOUNTSUCCESS) {
-        LOG("ERR: Failed to mount FS\n");
+        LOG("ERR: Failed to mount FS");
         CredsTool(0, 1, NO);
         return mount;
     }
-    LOG("Succesfully mounted FS\n");
+    LOG("Succesfully mounted FS");
     CredsTool(0, 1, NO);
     
 // jump here once we succesfully renamed snap (jump at line 117)

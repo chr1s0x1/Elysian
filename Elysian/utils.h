@@ -21,7 +21,7 @@
 
 #define ADDRISVALID(val) ((val) >= 0xffff000000000000 && (val) != 0xffffffffffffffff)
 
-#define ASSERT(stuff, error) do {\
+#define ASSERT(stuff, error...) do {\
 if(stuff){\
 break;\
 }else{\
@@ -46,26 +46,12 @@ goto out;\
  function : LOG
  
  Use:
- print "str" to log
+ print "str" to log with any ##__VA_ARGS__
  
  */
 
-#define LOG(str)\
-printf(str)
-
-
-
-/*
- 
- function : LOGM (Log (M)ore)
- 
- Use:
- Log "str" with additional info "more"
- */
-
-#define LOGM(str, more)\
-printf(str, more)
-
+#define LOG(str,...)\
+printf(str"\n", ##__VA_ARGS__)
 
 
 /*
@@ -147,7 +133,7 @@ error = NULL; \
 #define createFILE(where, info) {\
     [[NSFileManager defaultManager] createFileAtPath:@(where) contents:info attributes:nil];\
     if(!fileExists(where)) {\
-        LOGM("ERR: Failed to create File at %s \n", where);\
+        LOG("ERR: Failed to create File at %s", where);\
         return;\
     }\
 }
