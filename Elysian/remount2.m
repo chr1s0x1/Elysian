@@ -11,11 +11,10 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <errno.h>
-
-
+#include <sys/file.h>
+#include <sys/snapshot.h>
 
 #include "IOKit/IOKit.h"
-#import <sys/snapshot.h>
 #import "utils.h"
 #import "remount.h"
 #import "jelbrekLib.h"
@@ -46,12 +45,13 @@ int Remount13() {
     }
     LOG("Got kernproc: 0x%llx", kernproc);
         // get rootvnode
-        uint64_t rootvnode = Find_rootvnode();
+    uint64_t rootvnode = lookup_rootvnode();
         if(!ADDRISVALID(rootvnode)) {
-            LOG("Failed to find rootvnode");
+            LOG("ERR: Failed to find rootvnode");
             return 1;
         }
-    uint64_t vname = rk64(rootvnode + 0xb8);
+    uint64_t vtextvp = rk64(rootvnode + 0x980);
+    uint64_t vname = rk64(vtextvp + 0xb8);
     kread(vname, vnodename, 20);
     
     LOG("Got rootvnode: %s", vnodename);
@@ -64,7 +64,7 @@ int Remount13() {
     
     // check if mount path already exists and attempt to remove it
     if(fileExists("/var/rootmnt")) {
-        LOG("Found (old) mount path, removing..");
+        LOG("?: Found (old) mount path, removing..");
     try: rmdir("/var/rootmnt");
         if(fileExists("/var/rootmnt")) {
             LOG("ERR: Couldnt remove mount path");
@@ -97,7 +97,7 @@ int Remount13() {
     gettimeofday(nil, &mntargs.hfs_timezone);
     
     // Now for actual mounting of rootFS
-    let retval = mount("apfs", mntpath, 0, &mntargs);
+    int retval = mount("apfs", mntpath, 0, &mntargs);
     
     free(fspec);
     
@@ -109,15 +109,14 @@ int Remount13() {
     LOG("Succesfully Mounted FS");
 
     /* Now we need to find the BootSnapshot to rename */
-    uint64_t Snapshot = find_snapshot_string();
-    if(!ADDRISVALID(Snapshot)) {
-        LOG("ERR: Failed to get BootSnapshot");
-        return 1;
+    char *Snapshot = copyBootHash();
+    if(Snapshot == NULL) {
+        LOG("ERR: Failed to get Boot Snapshot");
+        return _NOSNAP;
     }
-    LOG("Got BootSnapshot");
+    LOG("Snapshot: %s", Snapshot);
     
     // patch snapshot so XNU can't boot from it
-    
     
     return 0;
 }

@@ -39,7 +39,7 @@ int Set_tfp0HSP4(mach_port_t tfp0) {
     static task_t test = MACH_PORT_NULL;
     host_get_special_port(host_self, HOST_LOCAL_NODE, 4, &test);
     if(!MACH_PORT_VALID(test)) {
-        LOG("ERR: [set hsp4] Failed to set HSP4 port");
+        LOG("[set hsp4] ERR: Failed to set HSP4 port");
         return 1;
     }
     
