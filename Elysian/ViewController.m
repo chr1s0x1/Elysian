@@ -19,7 +19,6 @@
 #import "sethsp4.h"
 #import "utils.h"
 #import "remount.h"
-#import "remount2.h"
 #include "pac/kernel_call.h"
 #include "pac/parameters.h"
 #include "pac/kernel.h"
@@ -156,13 +155,6 @@
     errs = Remount13();
     ASSERTM(errs == 0, "ERR: Failed to remount rootFS :/", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal]);
     
-    /*
-     
-    // remount.m for code
-    errs = RemountFS();
-    ASSERTM(errs == _REMOUNTSUCCESS, "ERR: Failed to remount rootFS :/\n", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal]);
-     
-    */
     
     out:
     // terminate jelbrekLibE

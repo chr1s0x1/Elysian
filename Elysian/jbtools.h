@@ -30,10 +30,19 @@ int CredsTool(uint64_t kernproc, int todo, bool set);
 int PlatformTask(uint64_t task);
 
 /*
+ function: Execute
+ 
+ Use:
+ A wrapper over posix_spawn that executes a file from "file" with the args "argv" unless argv == NULL
+ 
+ */
+int Execute(pid_t pid, const char *file, char * const* argv);
+
+/*
  function: lookup_rootvnode
  
  Use:
- Finds the root(i.e "/")vnode
+ Finds the root (i.e "/") vnode
  
  */
 uint64_t lookup_rootvnode(void);

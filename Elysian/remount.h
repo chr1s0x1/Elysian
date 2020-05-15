@@ -2,23 +2,17 @@
 //  remount.h
 //  Elysian
 //
-//  Created by chris  on 4/1/20.
+//  Created by chris  on 5/6/20.
 //  Copyright © 2020 chr1s_0x1. All rights reserved.
 //
 
-#ifndef remount_h
-#define remount_h
-
-#import "offsets.h"
-#import "utils.h"
-#import <sys/mount.h>
-
-
+#ifndef remount2_h
+#define remount2_h
 
 // remount returns
 enum remount_ret {
     _NOLAUNCHDERR,
-    _NOSNAPS,
+    _NOSNAP,
     _MOUNTFAILED,
     _RENAMEDSNAP,
     _MOUNTSUCCESS,
@@ -38,11 +32,12 @@ struct hfs_mount_args {
     int        journal_disable;        /* don't use journaling (potentially dangerous) */
 };
 
-// remount for ios 13
-int RemountFS(void);
-int32_t MountFS(uint64_t vnode);
-bool RenameSnapRequired(void);
-char *FindBootSnap(void);
-uint64_t FindNewMountPath(uint64_t rootvnode);
-#endif /* remount_h */
+/*
+ function : Remount13
+ 
+ Use:
+ New and improved remount code that remounts the RootFS. CoolStar wanted Elysian to have original Remount code, here you go CoolStar ;)
+ */
 
+int Remount13(void);
+#endif /* remount_h */
