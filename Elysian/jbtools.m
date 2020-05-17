@@ -41,7 +41,7 @@ int CredsTool(uint64_t proc, int todo, bool set) {
     }else if(proc == 0 && todo == 0) {
         LOG("[credstool] ERR: Stealing creds requires proc");
         return 1;
-    }else if(!ADDRISVALID(proc)) {
+    }else if(!ADDRISVALID(proc) && todo == 0) {
         LOG("[credstool] ERR: Proc given is invalid!");
         return 1;
     }
@@ -52,7 +52,7 @@ int CredsTool(uint64_t proc, int todo, bool set) {
     let orig_creds = rk64(our_orig_p + 0x100);
     // label
     let orig_label = rk64(orig_creds + 0x78);
-    //svuid
+    // svuid
     let orig_svuid = rk32(orig_creds + 0x20);
 
     if(todo == 0) {
@@ -80,9 +80,9 @@ int CredsTool(uint64_t proc, int todo, bool set) {
     setuid(0);
     setuid(0);
     wk64(our_creds + 0x78, our_label);
-        if(getuid() != 0) {
-            LOG("[credstool] ERR: Failed to set uid to 0");
-            return 1;
+    if(getuid() != 0) {
+    LOG("[credstool] ERR: Failed to set uid to 0");
+    return 1;
             }
     LOG("[credstool] Our uid is %d", getuid());
         }
@@ -112,7 +112,7 @@ int CredsTool(uint64_t proc, int todo, bool set) {
 }
 
 int PlatformTask(uint64_t task) {
-    if(task == 0) {
+    if(!ADDRISVALID(task)) {
         LOG("[platform] ERR: Invalid task");
         return 1;
     }
@@ -140,13 +140,14 @@ int Execute(pid_t pid, const char *file, char * const* argv) {
     waitpid(pid, &status, 0);
     if(status != 0) {
         LOG("ERR: Failed to run %s", file);
-            return status;
+        return status;
     }
     return status;
 }
 
 // took this from Apple, Ty Siguza for showing me this
 uint64_t lookup_rootvnode() {
+    LOG("Finding disk0s1s1..");
     uint64_t vnode = 0; // will store the vnode address
     char rootname[20]; // will store the vnode name
     
@@ -165,7 +166,7 @@ uint64_t lookup_rootvnode() {
     }
     LOG("Got the fdesc");
     uint64_t fofiles = rk64(fdesc + koffset(KSTRUCT_OFFSET_FILEDESC_FD_OFILES));
-    uint64_t fileproc = rk64(fofiles + fd * 8); // * 8 is a pointer
+    uint64_t fileproc = rk64(fofiles + fd * 8); // * 8 is a pointer in bytes
     uint64_t fglob = rk64(fileproc + koffset(KSTRUCT_OFFSET_FILEPROC_F_FGLOB));
     if(!ADDRISVALID(fglob)) {
         LOG("ERR: Couldn't get fglob");
@@ -182,20 +183,21 @@ uint64_t lookup_rootvnode() {
     // we need to check name of vnode first before we return
     uint64_t nodename = rk64(node + 0xb8);
     kread(nodename, rootname, 20);
-    LOG("Got vnode: %s", rootname);
+    LOG("Got vnode: %s", rootname); // The vnode should always be "System"
     if(strncmp(rootname, "System", 20) == 0) LOG("?: Going up a parent node..");
-    uint64_t rootnode = rk64(node + 0xd8); // 0xc0 = parent vnode
+    uint64_t rootnode = rk64(node + 0xd8); // 0xd8 = mount vnode
     uint64_t nodevp = rk64(rootnode + 0x980);
-    nodename = rk64(nodevp + 0xb8);
+    nodename = rk64(nodevp + 0xb8); // 0xb8 vnode name
     kread(nodename, rootname, 20);
     if(strncmp(rootname, "disk0s1s1", 20) != 0) {
         LOG("ERR: Couldn't find disk0s1s1!");
         close(fd);
         return 1;
     }
-
+    // We got disk0s1s1! now we return with the vnode
     LOG("Got vnode: %s", rootname);
-    vnode = rootnode;
+    vnode = nodevp;
     close(fd);
     return vnode;
 }
+

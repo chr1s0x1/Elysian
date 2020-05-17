@@ -6,8 +6,8 @@
 //  Copyright © 2020 chr1s_0x1. All rights reserved.
 //
 
-#ifndef remount2_h
-#define remount2_h
+#ifndef remount_h
+#define remount_h
 
 // remount returns
 enum remount_ret {
@@ -31,6 +31,18 @@ struct hfs_mount_args {
     int        journal_flags;          /* flags to pass to journal_open/create */
     int        journal_disable;        /* don't use journaling (potentially dangerous) */
 };
+
+/*
+ function: RenameSnapRequired
+ 
+ Use:
+ Checks if we already renamed the snapshot, if we did, it sens us to "renamed:"
+ */
+
+bool RenameSnapRequired(void);
+
+
+uint64_t FindNewMount(uint64_t vnode);
 
 /*
  function : Remount13

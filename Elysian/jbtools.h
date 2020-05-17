@@ -46,4 +46,7 @@ int Execute(pid_t pid, const char *file, char * const* argv);
  
  */
 uint64_t lookup_rootvnode(void);
+
+
+uint64_t findroot_mountpath(void);
 #endif /* jbtools_h */
