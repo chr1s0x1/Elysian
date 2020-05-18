@@ -41,8 +41,14 @@ struct hfs_mount_args {
 
 bool RenameSnapRequired(void);
 
+/*
+ function: FindNewMount
+ 
+ Use:
+ Finds disk0s1s1 after we have mounted it in "/var/rootmnt"
+ */
 
-uint64_t FindNewMount(uint64_t vnode);
+uint64_t FindNewMount(void);
 
 /*
  function : Remount13

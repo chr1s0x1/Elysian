@@ -104,7 +104,6 @@
      [JBButton setTitle:@"Unsanbox failed" forState:UIControlStateNormal];
      return;
     }
-    LOG("Sandbox_slot is 0");
     LOG("Escaped Sandbox");
     
     

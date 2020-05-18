@@ -147,8 +147,7 @@ int Execute(pid_t pid, const char *file, char * const* argv) {
 
 // took this from Apple, Ty Siguza for showing me this
 uint64_t lookup_rootvnode() {
-    LOG("Finding disk0s1s1..");
-    uint64_t vnode = 0; // will store the vnode address
+    LOG("Finding rootvnode..");
     char rootname[20]; // will store the vnode name
     
     int fd = open("/", O_RDONLY);
@@ -180,24 +179,16 @@ uint64_t lookup_rootvnode() {
         close(fd);
         return 1;
     }
-    // we need to check name of vnode first before we return
     uint64_t nodename = rk64(node + 0xb8);
     kread(nodename, rootname, 20);
-    LOG("Got vnode: %s", rootname); // The vnode should always be "System"
-    if(strncmp(rootname, "System", 20) == 0) LOG("?: Going up a parent node..");
-    uint64_t rootnode = rk64(node + 0xd8); // 0xd8 = mount vnode
-    uint64_t nodevp = rk64(rootnode + 0x980);
-    nodename = rk64(nodevp + 0xb8); // 0xb8 vnode name
-    kread(nodename, rootname, 20);
-    if(strncmp(rootname, "disk0s1s1", 20) != 0) {
-        LOG("ERR: Couldn't find disk0s1s1!");
-        close(fd);
-        return 1;
-    }
-    // We got disk0s1s1! now we return with the vnode
-    LOG("Got vnode: %s", rootname);
-    vnode = nodevp;
+    if(strncmp(rootname, "System", 20) == 0) {
+    LOG("Found vnode: %s", rootname);
+    LOG("Found rootvnode");
     close(fd);
-    return vnode;
+    return node;
+    }
+    LOG("ERR: Couldn't find rootvnode");
+    close(fd);
+    return 1;
 }
 

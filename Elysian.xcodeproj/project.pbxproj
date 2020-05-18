@@ -87,7 +87,7 @@
 		111EA28B2464FBA500C093B7 /* jboffsets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jboffsets.h; sourceTree = "<group>"; };
 		111EA28C2464FD0300C093B7 /* jboffsets.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = jboffsets.m; sourceTree = "<group>"; };
 		111EA2BF246A60C500C093B7 /* libAppleResources.dylib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAppleResources.dylib; sourceTree = "<group>"; };
-		11220283246284100053015A /* remount.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = remount.m; sourceTree = "<group>"; };
+		11220283246284100053015A /* remount.m */ = {isa = PBXFileReference; indentWidth = 3; lastKnownFileType = sourcecode.c.objc; path = remount.m; sourceTree = "<group>"; };
 		11220285246284220053015A /* remount.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = remount.h; sourceTree = "<group>"; };
 		112A60B32436589D00258F9C /* sethsp4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sethsp4.h; sourceTree = "<group>"; };
 		112A60B42436589D00258F9C /* sethsp4.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = sethsp4.c; sourceTree = "<group>"; };

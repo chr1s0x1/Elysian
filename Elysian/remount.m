@@ -45,20 +45,17 @@ bool RenameSnapRequired(void) {
     return count == -1 ? YES : NO;
 }
 
-uint64_t FindNewMount(uint64_t vnode) {
-    LOG("Finding disk0s1s1 in new mount path");
-    char checkname[20];
-    uint64_t vnodename = rk64(vnode + 0xb8);
-    kread(vnodename, checkname, 20);
-    LOG("Vnode: %s", checkname);
-    uint64_t mount = rk64(vnode + 0xd8);
+uint64_t FindNewMount(void) {
+   uint64_t launchd = proc_of_pid(1);
+   uint64_t textvp = rk64(launchd + 0x238);
+   uint64_t sbin = rk64(textvp + 0xc0);
+   uint64_t root = rk64(sbin + 0xc0);
+   uint64_t vmount = rk64(root + 0xd8);
+   uint64_t mount = rk64(vmount + 0x0);
     while(mount != 0) {
         char newmountname[20];
         uint64_t vp = rk64(mount + 0x980);
-        if(vp == 0 || !ADDRISVALID(vp)) {
-            LOG("ERR: Couldn't get vp");
-            return 1;
-        }
+        if(vp != 0) {
         uint64_t vp_name = rk64(vp + 0xb8);
         kread(vp_name, newmountname, 20);
         LOG("Got vnode: %s", newmountname);
@@ -66,8 +63,9 @@ uint64_t FindNewMount(uint64_t vnode) {
             LOG("Found disk0s1s1");
             return vp;
         }
+   }
         mount = rk64(mount + 0x0);
-    }
+}
     
     LOG("ERR: Couldn't find disk0s1s1");
     return 1;
@@ -84,22 +82,23 @@ int Remount13() {
         return 1;
     }
     LOG("Got kernproc: 0x%llx", kernproc);
-        // get rootvnode
+        // get disk0s1s1
     uint64_t rootvnode = lookup_rootvnode();
-    uint64_t rvnodename = rk64(rootvnode + 0xb8);
+    uint64_t vmount = rk64(rootvnode + 0xd8);
+    uint64_t dev = rk64(vmount + 0x980);
+    uint64_t rvnodename = rk64(dev + 0xb8);
     kread(rvnodename, vnodename, 20);
         if(!ADDRISVALID(rootvnode) || strncmp(vnodename, "disk0s1s1", 20) != 0) {
-            LOG("ERR: Failed to find rootvnode");
+            LOG("ERR: Failed to find disk0s1s1");
             return 1;
         }
-    LOG("Got rootvnode");
-    
+    LOG("Got vnode: %s", vnodename);
+   
     bool rename = RenameSnapRequired();
     if(rename == NO) {
         LOG("Snapshot already renamed");
         goto renamed;
     }
-
     // grab kern creds to mount RootFS
     int ret = CredsTool(kernproc, 0, YES);
     if(ret == 1) {
@@ -114,7 +113,7 @@ int Remount13() {
         LOG("ERR: Failed to get Boot Snapshot");
         return _NOSNAP;
     }
-    LOG("Snapshot: %s", Snapshot);
+    LOG("Got System Snapshot");
     
     // check if mount path already exists and attempt to remove it
     if(fileExists("/var/rootmnt")) {
@@ -131,13 +130,12 @@ int Remount13() {
         CredsTool(0, 1, NO);
         return 1;
     }
-    LOG("Created mount path");
     chown("/var/rootmnt", 0, 0);
     
     let mntpath = strdup("/var/rootmnt");
     
     // get dev flags
-    let spec = rk64(rootvnode + 0x78); // 0x78 = specinfo
+    let spec = rk64(dev + 0x78); // 0x78 = specinfo
     let specflags = rk32(spec + 0x10); // 0x10 = specinfo flags
     LOG("Found spec flags: %u", specflags);
     
@@ -157,15 +155,15 @@ int Remount13() {
     free(fspec);
     
     if(retval != 0) {
-        return _MOUNTFAILED;
+       LOG("ERR: MountFS failed!");
+       return _MOUNTFAILED;
     }
     LOG("Mount returned: %d", retval);
     
-    LOG("Succesfully Mounted FS");
-    
     int fd = open(mntpath, O_RDONLY);
-    if(fd < 0) {
-        LOG("ERR: Can't open mount path after mount");
+    kern_return_t revert = fs_snapshot_revert(fd, Snapshot, 0);
+    if(fd < 0 || revert != KERN_SUCCESS) {
+        LOG("ERR: Can't open or revert mount path after mount");
         CredsTool(0, 1, NO);
         return 1;
     }
@@ -182,10 +180,7 @@ int Remount13() {
         return 1;
     }
     LOG("Mount returned (2nd time): %d", retval);
-    uint64_t new_mount = lookup_rootvnode();
-    uint64_t drop1 = rk64(new_mount - 0xd8); // drop to System
-    uint64_t drop = rk64(drop1 - 0x980);
-    uint64_t newdisk = FindNewMount(drop);
+    uint64_t newdisk = FindNewMount();
     if(!ADDRISVALID(newdisk)) {
         LOG("ERR: Couldn't find disk0s1s1 in new mount path");
         return 1;
@@ -197,7 +192,7 @@ int Remount13() {
     /* Patch the snapshot so XNU can't boot from it */
     
     // 1. Remove snapshot flags
-    uint64_t nodelist = rk64(newdisk + (UInt64)0x40);
+    uint64_t nodelist = rk64(newdisk + 0x40);
     if(!ADDRISVALID(nodelist)) {
         LOG("ERR: Uh.. there's no vnodelist");
         return 1;
