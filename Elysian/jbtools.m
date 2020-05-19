@@ -71,7 +71,7 @@ int CredsTool(uint64_t proc, int todo, bool set) {
     let s_ucred = rk64(proc + 0x100);
     // steal >:)
     wk64(our_creds + 0x78, rk64(s_ucred + 0x78));
-    wk32(our_creds + 0x20, (UInt32)0);
+    wk32(our_creds + 0x20, (UInt32)(0));
     wk64(our_proc + 0x100, s_ucred);
     LOG("[credstool] Got given proc creds");
         // setuid ??

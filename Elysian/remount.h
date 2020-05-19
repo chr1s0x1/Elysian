@@ -48,7 +48,7 @@ bool RenameSnapRequired(void);
  Finds disk0s1s1 after we have mounted it in "/var/rootmnt"
  */
 
-uint64_t FindNewMount(void);
+uint64_t FindNewMount(uint64_t vnode);
 
 /*
  function : Remount13

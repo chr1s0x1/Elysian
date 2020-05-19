@@ -154,6 +154,7 @@
     errs = Remount13();
     ASSERTM(errs == 0, "ERR: Failed to remount rootFS :/", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal]);
     
+    LOG("Remounted RootFS");
     
     out:
     // terminate jelbrekLibE

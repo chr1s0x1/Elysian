@@ -13,6 +13,7 @@
 #include <errno.h>
 #include <sys/file.h>
 #include <sys/snapshot.h>
+#include <sys/attr.h>
 
 
 #include "IOKit/IOKit.h"
@@ -38,19 +39,20 @@ bool RenameSnapRequired(void) {
     int fd = open("/", O_RDONLY, 0);
     if(fd < 0) {
         close(fd);
-        LOG("ERR: Can't open /, are we root?");
+        LOG("ERR: Can't open '/'");
         return 1;
     }
-    int count = list_snapshots("/");
-    return count == -1 ? YES : NO;
+    struct attrlist alist = { 0 };
+    char abuf[2048];
+    alist.commonattr = ATTR_BULK_REQUIRED;
+    int count = fs_snapshot_list(fd, &alist, &abuf[0], 2048, 0);
+    close(fd);
+    LOG("RenameSnapRequired count: %d", count);
+    return count == -1;
 }
 
-uint64_t FindNewMount(void) {
-   uint64_t launchd = proc_of_pid(1);
-   uint64_t textvp = rk64(launchd + 0x238);
-   uint64_t sbin = rk64(textvp + 0xc0);
-   uint64_t root = rk64(sbin + 0xc0);
-   uint64_t vmount = rk64(root + 0xd8);
+uint64_t FindNewMount(uint64_t vnode) {
+   uint64_t vmount = rk64(vnode + 0xd8);
    uint64_t mount = rk64(vmount + 0x0);
     while(mount != 0) {
         char newmountname[20];
@@ -60,14 +62,12 @@ uint64_t FindNewMount(void) {
         kread(vp_name, newmountname, 20);
         LOG("Got vnode: %s", newmountname);
         if(strncmp(newmountname, "disk0s1s1", 20) == 0) {
-            LOG("Found disk0s1s1");
-            return vp;
+            return mount;
+            }
         }
-   }
         mount = rk64(mount + 0x0);
-}
+    }
     
-    LOG("ERR: Couldn't find disk0s1s1");
     return 1;
 }
 
@@ -82,6 +82,9 @@ int Remount13() {
         return 1;
     }
     LOG("Got kernproc: 0x%llx", kernproc);
+   
+    bool rename = RenameSnapRequired();
+    if(rename == YES) {
         // get disk0s1s1
     uint64_t rootvnode = lookup_rootvnode();
     uint64_t vmount = rk64(rootvnode + 0xd8);
@@ -94,11 +97,6 @@ int Remount13() {
         }
     LOG("Got vnode: %s", vnodename);
    
-    bool rename = RenameSnapRequired();
-    if(rename == NO) {
-        LOG("Snapshot already renamed");
-        goto renamed;
-    }
     // grab kern creds to mount RootFS
     int ret = CredsTool(kernproc, 0, YES);
     if(ret == 1) {
@@ -156,7 +154,7 @@ int Remount13() {
     
     if(retval != 0) {
        LOG("ERR: MountFS failed!");
-       return _MOUNTFAILED;
+       return 1;
     }
     LOG("Mount returned: %d", retval);
     
@@ -172,6 +170,8 @@ int Remount13() {
     unmount(mntpath, MNT_FORCE);
     fspec = strdup("/dev/disk0s1s1");
     mntargs.fspec = fspec;
+    mntargs.hfs_mask = 1;
+    gettimeofday(nil, &mntargs.hfs_timezone);
     retval = mount("apfs", mntpath, 0, &mntargs);
     free(fspec);
     if(retval != 0) {
@@ -180,50 +180,73 @@ int Remount13() {
         return 1;
     }
     LOG("Mount returned (2nd time): %d", retval);
-    uint64_t newdisk = FindNewMount();
+    uint64_t newdisk = FindNewMount(rootvnode);
     if(!ADDRISVALID(newdisk)) {
         LOG("ERR: Couldn't find disk0s1s1 in new mount path");
         return 1;
     }
-    uint64_t newname = rk64(newdisk + 0xb8);
-    kread(newname, vnodename, 20);
-    LOG("Found vnode (should be root): %s", vnodename);
+    LOG("Found disk0s1s1 in new mount path");
     
     /* Patch the snapshot so XNU can't boot from it */
     
-    // 1. Remove snapshot flags
+    // 1. Remove snapshot flags (loop over vnode list til we find snapshot's)
     uint64_t nodelist = rk64(newdisk + 0x40);
-    if(!ADDRISVALID(nodelist)) {
-        LOG("ERR: Uh.. there's no vnodelist");
-        return 1;
-    }
     while(nodelist != 0) {
     uint64_t nodename = rk64(nodelist + 0xb8);
-    let namelen = (int)(kstrlen(nodename));
-    let prefix = "com.apple.os.update-";
-    char name[sizeof(namelen)];
+    int namelen = (int)(kstrlen(nodename));
+    char prefix[20] = "com.apple.os.update-";
+    char name[namelen];
     kread(nodename, name, namelen);
-    LOG("Got vnode name: %s", name);
-    if(strncmp(prefix, name, 30) == 0) {
-        uint64_t vdata = rk64(nodelist + 0xe0);
-        let snapflag = rk32(vdata + 0x54);
+      LOG("Got vnode name: %s", name);
+       if(strncmp(name, prefix, sizeof(prefix)) == 0) {
+        let vdata = rk64(nodelist + 0xe0);
+        let snapflag = rk32(vdata + 0x31);
         LOG("Got Snapshot flags: %u", snapflag);
         // remove snap flags
-        wk32(vdata + 0x54, snapflag & ~0x40);
-        }
+        wk32(vdata + 0x31, snapflag & ~0x40);
+        LOG("Removed Snapshot flag");
+        // 2. rename the snapshot
+        int fd2 = open("/var/rootmnt", O_RDONLY);
+        kern_return_t rename = fs_snapshot_rename(fd2, Snapshot, "orig-fs", 0);
+        if(fd2 < 0 || rename != KERN_SUCCESS) {
+          LOG("ERR: Failed to rename Snapshot");
+          close(fd2);
+          return 1;
+               }
+        close(fd2);
+       // clean up and reboot
+        unmount(mntpath, 0);
+        rmdir(mntpath);
+        LOG("Renamed Snapshot, rebooting..");
+        usleep(2000);
+        reboot(0);
+            }
         usleep(1000);
-        nodelist = rk64(nodelist + (UInt64)0x20);
-        if(nodelist == 0 && strncmp(prefix, name, 30) != 0) {
+        nodelist = rk64(nodelist + (UInt64)(0x20));
+        if(nodelist == 0 && strncmp(prefix, name, sizeof(prefix)) != 0) {
             LOG("ERR: Failed to find snapshot for rename");
             return 1;
         }
     }
-    
-    // 2. rename the snapshot
-    
-    return 0;
-    
-renamed:
-    
-    return 0;
+return 0;
+} else {
+       
+// Should go here when we already renamed the snapshot
+   LOG("?: Snapshot already renamed");
+   LOG("Making RootFS r/w..");
+   uint64_t rootvnode = lookup_rootvnode();
+   uint64_t vmount = rk64(rootvnode + 0xd8);
+   let flag = rk32(vmount + 0x70);
+   wk32(vmount + 0x70, flag | ~(UInt32)(MNT_NOSUID) | (UInt32)(MNT_RDONLY) | ~(UInt32)(MNT_ROOTFS));
+   char *disk = strdup("/dev/disk0s1s1");
+   int update = mount("apfs", "/", MNT_UPDATE, &disk);
+   free(disk);
+   if(update != 0) {
+      LOG("ERR: Failed to update disk0s1s1 as r/w");
+      CredsTool(0, 1, NO);
+      return 1;
+      }
+   wk32(vmount + 0x70, flag);
+   return 0;
+   }
 }
