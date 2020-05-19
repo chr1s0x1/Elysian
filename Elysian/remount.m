@@ -24,16 +24,6 @@
 #import "kernel_memory.h"
 #include "offsets.h"
 
-/*
- 
- I've made this to work on remounting myself without using someone else's code.
- The more I do things myself, the more I learn
- 
- Here you go CoolStar ;)
- 
- It's not fully complete yet, there is still some things I need to fix & add beforehand.
-
- */
 
 bool RenameSnapRequired(void) {
     int fd = open("/", O_RDONLY, 0);
