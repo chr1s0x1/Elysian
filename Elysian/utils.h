@@ -134,7 +134,6 @@ error = NULL; \
     [[NSFileManager defaultManager] createFileAtPath:@(where) contents:info attributes:nil];\
     if(!fileExists(where)) {\
         LOG("ERR: Failed to create File at %s", where);\
-        return;\
     }\
 }
 

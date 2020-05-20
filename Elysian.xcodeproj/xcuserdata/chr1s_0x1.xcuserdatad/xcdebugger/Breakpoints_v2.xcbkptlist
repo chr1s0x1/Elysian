@@ -414,9 +414,9 @@
             filePath = "Elysian/remount.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
-            landmarkName = "RenameSnapRequired()"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "FindNewMount(vnode)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -430,9 +430,9 @@
             filePath = "Elysian/remount.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "52"
-            endingLineNumber = "52"
-            landmarkName = "RenameSnapRequired()"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
+            landmarkName = "FindNewMount(vnode)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>

@@ -28,19 +28,13 @@
 
 
 bool RenameSnapRequired(void) {
-    int fd = open("/", O_RDONLY, 0);
-    if(fd < 0) {
-        close(fd);
-        LOG("ERR: Can't open '/'");
-        return 1;
-    }
-    struct attrlist alist = { 0 };
-    char abuf[2048];
-    alist.commonattr = ATTR_BULK_REQUIRED;
-    int count = fs_snapshot_list(fd, &alist, &abuf[0], 2048, 0);
-    close(fd);
-    LOG("RenameSnapRequired count: %d", count);
-    return count == -1 ? YES : NO;
+   // After renaming the snapshot, trying to grab the disk0s1s1 name from the offset 0xd8 == an invalid address.. So we just check if the address is valid to tell us if we've renamed the snapshot
+   uint64_t rootvnode = lookup_rootvnode();
+   uint64_t vmount = rk64(rootvnode + 0xd8);
+   uint64_t dev = rk64(vmount + 0x980);
+   uint64_t rvnodename = rk64(dev + 0xb8);
+   
+   return ADDRISVALID(rvnodename) ? YES : NO;
 }
 
 uint64_t FindNewMount(uint64_t vnode) {
@@ -225,13 +219,14 @@ return 0;
        
 // Should go here when we already renamed the snapshot
    LOG("?: Snapshot already renamed");
-   LOG("Making RootFS r/w..");
+   LOG("Remounting RootFS as r/w..");
+   CredsTool(kernproc, 0, YES);
    uint64_t rootvnode = lookup_rootvnode();
-   uint64_t vmount = rk64(rootvnode + 0xd8);
-   let flag = rk32(vmount + 0x70);
-   wk32(vmount + 0x70, flag | ~(UInt32)(MNT_NOSUID) | (UInt32)(MNT_RDONLY) | ~(UInt32)(MNT_ROOTFS));
-   char *disk = strdup("/dev/disk0s1s1");
-   int update = mount("apfs", "/", MNT_UPDATE, &disk);
+   let vmount = rk64(rootvnode + 0xd8);
+   let flag = rk32(vmount + (UInt64)(0x70)) & ~((UInt32)(MNT_NOSUID) | (UInt32)(MNT_RDONLY));
+   wk32(vmount + (UInt64)(0x70), flag & ~((UInt32)(MNT_ROOTFS)));
+   var disk = strdup("/dev/disk0s1s1");
+   let update = mount("apfs", "/", MNT_UPDATE, &disk);
    free(disk);
    if(update != 0) {
       LOG("ERR: Failed to update disk0s1s1 as r/w");
@@ -239,7 +234,18 @@ return 0;
       return 1;
       }
    wk32(vmount + 0x70, flag);
+    // RootFS is r/w ???
+   createFILE("/.Elysian", nil);
+   FILE *f = fopen("/.Elysian", "w");
+   if(!fileExists("/.Elysian") && !f) {
+      LOG("ERR: Mount file doesn't exist");
+      fclose(f);
+      return 1;
+   }
+   
+   fclose(f);
    LOG("Remounted RootFS");
    return 0;
    }
+return 0;
 }

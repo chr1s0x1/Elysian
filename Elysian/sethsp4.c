@@ -20,7 +20,7 @@ int Set_tfp0HSP4(mach_port_t tfp0) {
     host_get_special_port(myself, HOST_LOCAL_NODE, 4, &okthen);
     if(MACH_PORT_VALID(okthen)) {
         LOG("[set hsp4] tfp0 already exported!");
-        okthen = MACH_PORT_NULL;
+        mach_port_destroy(mach_task_self_, okthen);
         return 0;
     }
     
@@ -44,6 +44,6 @@ int Set_tfp0HSP4(mach_port_t tfp0) {
     }
     
     LOG("[set hsp4] Exported tfp0 to HSP4");
-    test = MACH_PORT_NULL;
+    mach_port_destroy(mach_task_self_, test);
     return 0;
 }

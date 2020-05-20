@@ -32,6 +32,13 @@ struct hfs_mount_args {
     int        journal_disable;        /* don't use journaling (potentially dangerous) */
 };
 
+typedef struct val_attrs {
+    uint32_t        length;
+    attribute_set_t        returned;
+    attrreference_t        name_info;
+    char            name[MAXPATHLEN];
+} val_attrs_t;
+
 /*
  function: RenameSnapRequired
  

@@ -1,5 +1,5 @@
 //
-//  amfidestroyer.m
+//  bootstrap.m
 //  Elysian
 //
 //  Created by chris  on 5/19/20.
@@ -7,11 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "amfidestroyer.h"
+#include "bootstrap.h"
 
-uint64_t find_amfid() {
+bool createbootstrap() {
     
-    return 0;
+    return true;
 }
-
-

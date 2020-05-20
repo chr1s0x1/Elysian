@@ -11,7 +11,6 @@
 #include <spawn.h>
 
 #import "ViewController.h"
-#import "JBEssentials/amfidestroyer.h"
 #import "exploit.h"
 #import "jelbrekLib.h"
 #import "jbtools.h"
@@ -157,6 +156,13 @@
     ASSERTM(errs == 0, "ERR: Failed to remount rootFS :/", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal]);
     
     
+  /*
+    uint64_t patch = patchAMFID();
+    ASSERTM(patch != -1, "ERR: Failed to patch amfid", [JBButton setTitle:@"Failed Patching Amfid" forState:UIControlStateNormal]);
+    LOG("^^^^ Ignore these above"); // talking about the end of patchAMFID
+                                    // it mentions using Electra's tool which are deprecated for iOS 13 - 13.3
+    
+   */
     out:
     // terminate jelbrekLibE
     term_jelbrek();
