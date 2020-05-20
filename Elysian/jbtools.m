@@ -133,12 +133,12 @@ int PlatformTask(uint64_t task) {
     return 0;
 }
 
-int Execute(pid_t pid, const char *file, char * const* argv) {
+int Execute(const char *file, char * const* args, ...) {
     int status;
-    if(!pid) pid = getpid();
-    posix_spawn(&pid, file, NULL, NULL, argv, NULL);
+    pid_t pid;
+    kern_return_t run = posix_spawn(&pid, file, NULL, NULL, (char**)args, NULL);
     waitpid(pid, &status, 0);
-    if(status != 0) {
+    if(run != KERN_SUCCESS) {
         LOG("ERR: Failed to run %s", file);
         return status;
     }

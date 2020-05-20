@@ -19,6 +19,7 @@
 		1157CB4E2430355D00B8A0CA /* platform.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB472430355D00B8A0CA /* platform.c */; };
 		1157CB4F2430355D00B8A0CA /* kernel_call.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB482430355D00B8A0CA /* kernel_call.c */; };
 		1157CB52243038B500B8A0CA /* platform_match.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB50243038B400B8A0CA /* platform_match.c */; };
+		11CA45A22473947E00B93462 /* amfidestroyer.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CA45A12473947E00B93462 /* amfidestroyer.m */; };
 		8439DB3024296CDC003403BA /* jelbrekLibE.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 84FFBB482422E816005A9392 /* jelbrekLibE.dylib */; };
 		8439DB3124296CE5003403BA /* jelbrekLibE.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 84FFBB482422E816005A9392 /* jelbrekLibE.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		8439DB3224296CF1003403BA /* jelbrekLibE.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 84FFBB482422E816005A9392 /* jelbrekLibE.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -87,7 +88,7 @@
 		111EA28B2464FBA500C093B7 /* jboffsets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jboffsets.h; sourceTree = "<group>"; };
 		111EA28C2464FD0300C093B7 /* jboffsets.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = jboffsets.m; sourceTree = "<group>"; };
 		111EA2BF246A60C500C093B7 /* libAppleResources.dylib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAppleResources.dylib; sourceTree = "<group>"; };
-		11220283246284100053015A /* remount.m */ = {isa = PBXFileReference; indentWidth = 3; lastKnownFileType = sourcecode.c.objc; path = remount.m; sourceTree = "<group>"; };
+		11220283246284100053015A /* remount.m */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = remount.m; sourceTree = "<group>"; };
 		11220285246284220053015A /* remount.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = remount.h; sourceTree = "<group>"; };
 		112A60B32436589D00258F9C /* sethsp4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sethsp4.h; sourceTree = "<group>"; };
 		112A60B42436589D00258F9C /* sethsp4.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = sethsp4.c; sourceTree = "<group>"; };
@@ -108,6 +109,8 @@
 		1157CB482430355D00B8A0CA /* kernel_call.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kernel_call.c; sourceTree = "<group>"; };
 		1157CB50243038B400B8A0CA /* platform_match.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = platform_match.c; sourceTree = "<group>"; };
 		1157CB51243038B500B8A0CA /* platform_match.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform_match.h; sourceTree = "<group>"; };
+		11CA45A12473947E00B93462 /* amfidestroyer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = amfidestroyer.m; sourceTree = "<group>"; };
+		11CA45A32473948F00B93462 /* amfidestroyer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = amfidestroyer.h; sourceTree = "<group>"; };
 		8404F80D241A881C00A6B47A /* jelbrekLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jelbrekLib.h; sourceTree = "<group>"; };
 		8404F80E241A894800A6B47A /* offsets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = offsets.h; sourceTree = "<group>"; };
 		846DD5E0240CE2920000D4AC /* Elysian.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Elysian.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -196,6 +199,15 @@
 			path = pac;
 			sourceTree = "<group>";
 		};
+		11CA45A02473944000B93462 /* JBEssentials */ = {
+			isa = PBXGroup;
+			children = (
+				11CA45A12473947E00B93462 /* amfidestroyer.m */,
+				11CA45A32473948F00B93462 /* amfidestroyer.h */,
+			);
+			path = JBEssentials;
+			sourceTree = "<group>";
+		};
 		846DD5D7240CE2920000D4AC = {
 			isa = PBXGroup;
 			children = (
@@ -220,6 +232,7 @@
 		846DD5E2240CE2920000D4AC /* Elysian */ = {
 			isa = PBXGroup;
 			children = (
+				11CA45A02473944000B93462 /* JBEssentials */,
 				1157CB392430353600B8A0CA /* pac */,
 				84837C39241C948800FCD15E /* IOKit */,
 				84837C38241C943900FCD15E /* libs */,
@@ -441,6 +454,7 @@
 				1157CB52243038B500B8A0CA /* platform_match.c in Sources */,
 				1157CB4B2430355D00B8A0CA /* kernel_memory.c in Sources */,
 				84E812F4240DE4860075AA3B /* IOAccelerator_stuff.c in Sources */,
+				11CA45A22473947E00B93462 /* amfidestroyer.m in Sources */,
 				84E812EF240DE4860075AA3B /* kernel_memory.c in Sources */,
 				84E812F3240DE4860075AA3B /* IOSurface_stuff.c in Sources */,
 				846DD5EB240CE2930000D4AC /* ViewController.m in Sources */,

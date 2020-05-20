@@ -14,7 +14,9 @@
 #include <sys/file.h>
 #include <sys/snapshot.h>
 #include <sys/attr.h>
+#include <errno.h>
 
+#include <spawn.h> // will remove this soon
 
 #include "IOKit/IOKit.h"
 #import "utils.h"
@@ -48,7 +50,7 @@ bool RenameSnapRequired(void) {
     int count = fs_snapshot_list(fd, &alist, &abuf[0], 2048, 0);
     close(fd);
     LOG("RenameSnapRequired count: %d", count);
-    return count == -1;
+    return count == -1 ? YES : NO;
 }
 
 uint64_t FindNewMount(uint64_t vnode) {
@@ -213,8 +215,8 @@ int Remount13() {
           close(fd2);
           return 1;
                }
+      // clean up and reboot
         close(fd2);
-       // clean up and reboot
         unmount(mntpath, 0);
         rmdir(mntpath);
         LOG("Renamed Snapshot, rebooting..");
@@ -247,6 +249,7 @@ return 0;
       return 1;
       }
    wk32(vmount + 0x70, flag);
+   LOG("Remounted RootFS");
    return 0;
    }
 }

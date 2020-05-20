@@ -11,6 +11,7 @@
 #include <spawn.h>
 
 #import "ViewController.h"
+#import "JBEssentials/amfidestroyer.h"
 #import "exploit.h"
 #import "jelbrekLib.h"
 #import "jbtools.h"
@@ -143,6 +144,7 @@
     ASSERTM(call == KERN_SUCCESS, "Failed to init kernel call\n", [JBButton setTitle:@"Kernel Call Failed" forState:UIControlStateNormal]);
     */
     
+    
     // Get offsets to kernel functions
     errs = GatherOffsets();
     ASSERTM(errs == 0, "ERR: Failed to get offsets", [JBButton setTitle:@"Offsets Gather Failed" forState:UIControlStateNormal]);
@@ -154,7 +156,6 @@
     errs = Remount13();
     ASSERTM(errs == 0, "ERR: Failed to remount rootFS :/", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal]);
     
-    LOG("Remounted RootFS");
     
     out:
     // terminate jelbrekLibE

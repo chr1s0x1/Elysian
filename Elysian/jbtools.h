@@ -36,13 +36,13 @@ int PlatformTask(uint64_t task);
  A wrapper over posix_spawn that executes a file from "file" with the args "argv" unless argv == NULL
  
  */
-int Execute(pid_t pid, const char *file, char * const* argv);
+int Execute(const char *file, char * const* argv,...);
 
 /*
  function: lookup_rootvnode
  
  Use:
- Finds the root (i.e "/") vnode in given path
+ Finds the root (i.e "/") vnode
  
  */
 uint64_t lookup_rootvnode(void);
