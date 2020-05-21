@@ -7,9 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "utils.h"
 #include "bootstrap.h"
 
 bool createbootstrap() {
-    
+    LOG("[bootstrap] Setting up Bootstrap..");
     return true;
 }

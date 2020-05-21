@@ -13,10 +13,6 @@
 #include <errno.h>
 #include <sys/file.h>
 #include <sys/snapshot.h>
-#include <sys/attr.h>
-#include <errno.h>
-
-#include <spawn.h> // will remove this soon
 
 #include "IOKit/IOKit.h"
 #import "utils.h"
@@ -26,9 +22,10 @@
 #import "kernel_memory.h"
 #include "offsets.h"
 
-
+// After renaming the snapshot, trying to grab the disk0s1s1 name from the offset
+// 0xb8 = an invalid address.. So we just check if the address is valid to tell
+// us if we've renamed the snapshot (valid = NO) (invalid = YES)
 bool RenameSnapRequired(void) {
-   // After renaming the snapshot, trying to grab the disk0s1s1 name from the offset 0xd8 == an invalid address.. So we just check if the address is valid to tell us if we've renamed the snapshot
    uint64_t rootvnode = lookup_rootvnode();
    uint64_t vmount = rk64(rootvnode + 0xd8);
    uint64_t dev = rk64(vmount + 0x980);
@@ -59,7 +56,7 @@ uint64_t FindNewMount(uint64_t vnode) {
 
 char vnodename[20];
 
-int Remount13() {
+int RemountFS() {
     LOG("Remounting RootFS..");
     // grab kernproc for CredsTool
     uint64_t kernproc = proc_of_pid(0);
@@ -95,7 +92,7 @@ int Remount13() {
     char *Snapshot = find_system_snapshot();
     if(Snapshot == NULL) {
         LOG("ERR: Failed to get Boot Snapshot");
-        return _NOSNAP;
+        return 1;
     }
     LOG("Got System Snapshot");
     
@@ -140,6 +137,7 @@ int Remount13() {
     
     if(retval != 0) {
        LOG("ERR: MountFS failed!");
+       CredsTool(0, 1, NO);
        return 1;
     }
     LOG("Mount returned: %d", retval);
@@ -196,6 +194,7 @@ int Remount13() {
         kern_return_t rename = fs_snapshot_rename(fd2, Snapshot, "orig-fs", 0);
         if(fd2 < 0 || rename != KERN_SUCCESS) {
           LOG("ERR: Failed to rename Snapshot");
+          CredsTool(0, 1, NO);
           close(fd2);
           return 1;
                }
@@ -211,6 +210,7 @@ int Remount13() {
         nodelist = rk64(nodelist + (UInt64)(0x20));
         if(nodelist == 0 && strncmp(prefix, name, sizeof(prefix)) != 0) {
             LOG("ERR: Failed to find snapshot for rename");
+            CredsTool(0, 1, NO);
             return 1;
         }
     }
@@ -225,6 +225,7 @@ return 0;
    let vmount = rk64(rootvnode + 0xd8);
    let flag = rk32(vmount + (UInt64)(0x70)) & ~((UInt32)(MNT_NOSUID) | (UInt32)(MNT_RDONLY));
    wk32(vmount + (UInt64)(0x70), flag & ~((UInt32)(MNT_ROOTFS)));
+   LOG("Removed mount flags");
    var disk = strdup("/dev/disk0s1s1");
    let update = mount("apfs", "/", MNT_UPDATE, &disk);
    free(disk);
@@ -233,16 +234,18 @@ return 0;
       CredsTool(0, 1, NO);
       return 1;
       }
+   LOG("Updated mount as r/w? testing..");
    wk32(vmount + 0x70, flag);
     // RootFS is r/w ???
    createFILE("/.Elysian", nil);
-   FILE *f = fopen("/.Elysian", "w");
-   if(!fileExists("/.Elysian") && !f) {
-      LOG("ERR: Mount file doesn't exist");
+   FILE *f = fopen("/.Elysian", "rw");
+   if(!fileExists("/.Elysian") || !f) {
+      LOG("ERR: Test file doesn't exist or we have no r/w");
       fclose(f);
+      CredsTool(0, 1, NO);
       return 1;
    }
-   
+   LOG("Created '.Elysian' at '/'");
    fclose(f);
    LOG("Remounted RootFS");
    return 0;

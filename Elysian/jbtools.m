@@ -111,7 +111,7 @@ int CredsTool(uint64_t proc, int todo, bool set) {
     return 0;
 }
 
-int PlatformTask(uint64_t task) {
+int EscalateTask(uint64_t task) {
     if(!ADDRISVALID(task)) {
         LOG("[platform] ERR: Invalid task");
         return 1;

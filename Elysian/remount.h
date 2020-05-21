@@ -9,16 +9,6 @@
 #ifndef remount_h
 #define remount_h
 
-// remount returns
-enum remount_ret {
-    _NOLAUNCHDERR,
-    _NOSNAP,
-    _MOUNTFAILED,
-    _RENAMEDSNAP,
-    _MOUNTSUCCESS,
-    _REMOUNTSUCCESS,
-};
-
 struct hfs_mount_args {
     char    *fspec;            /* block special device to mount */
     uid_t    hfs_uid;        /* uid that owns hfs files (standard HFS only) */
@@ -32,18 +22,12 @@ struct hfs_mount_args {
     int        journal_disable;        /* don't use journaling (potentially dangerous) */
 };
 
-typedef struct val_attrs {
-    uint32_t        length;
-    attribute_set_t        returned;
-    attrreference_t        name_info;
-    char            name[MAXPATHLEN];
-} val_attrs_t;
 
 /*
  function: RenameSnapRequired
  
  Use:
- Checks if we already renamed the snapshot, if we did, it sens us to "renamed:"
+ Checks if we already renamed the snapshot, if we did, it executes the "else" statement
  */
 
 bool RenameSnapRequired(void);
@@ -61,8 +45,8 @@ uint64_t FindNewMount(uint64_t vnode);
  function : Remount13
  
  Use:
- New and improved remount code that remounts the RootFS. CoolStar wanted Elysian to have original Remount code, here you go CoolStar ;)
+ New and improved remount code that remounts the RootFS.
  */
 
-int Remount13(void);
+int RemountFS(void);
 #endif /* remount_h */

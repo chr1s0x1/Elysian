@@ -19,6 +19,7 @@
 #import "sethsp4.h"
 #import "utils.h"
 #import "remount.h"
+#import "amfidestroyer.h"
 #include "pac/kernel_call.h"
 #include "pac/parameters.h"
 #include "pac/kernel.h"
@@ -124,7 +125,7 @@
     // wait for export to finish
     usleep(1000);
     // Platform ourselves
-    errs = PlatformTask(our_task);
+    errs = EscalateTask(our_task);
     ASSERTM(errs == 0, "ERR: Failed to platform ourselves", [JBButton setTitle:@"Platformize Failed" forState:UIControlStateNormal]);
     
         // ------------- Kernel Call ----------------- //
@@ -152,21 +153,17 @@
     // ------------ Remount RootFS -------------- //
     
     // remount.m for code
-    errs = Remount13();
+    errs = RemountFS();
     ASSERTM(errs == 0, "ERR: Failed to remount rootFS :/", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal]);
     
+    errs = amfidestroyer();
+     ASSERTM(errs == 0, "ERR: Failed to patch amfid!", [JBButton setTitle:@"Patching amfid failed" forState:UIControlStateNormal]);
     
-  /*
-    uint64_t patch = patchAMFID();
-    ASSERTM(patch != -1, "ERR: Failed to patch amfid", [JBButton setTitle:@"Failed Patching Amfid" forState:UIControlStateNormal]);
-    LOG("^^^^ Ignore these above"); // talking about the end of patchAMFID
-                                    // it mentions using Electra's tool which are deprecated for iOS 13 - 13.3
-    
-   */
     out:
     // terminate jelbrekLibE
     term_jelbrek();
-    
+    // clean our creds
+    CredsTool(0, 1, NO);
     return;
 }
 
