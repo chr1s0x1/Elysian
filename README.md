@@ -9,9 +9,9 @@ JB ETA????
 
 # TODO :
 - Remount: **Done**
-- Kernel Call: After Remount
-- Code Signing (amfid patching): Next
-- TC Injection
+- Code Signing (amfid patching): In Progress
+- Kernel Call: (Undefined)
+- TC Injection: (Undefined)
 - (More added later) 
 
 # Credits ( so far )
