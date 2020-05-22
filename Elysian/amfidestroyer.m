@@ -7,11 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#include <spawn.h>
 
 #import "jelbrekLib.h"
 #import "amfidestroyer.h"
 #import "kernel_memory.h"
-
+#import "jbtools.h"
 #import "utils.h"
 
 static mach_port_t amfid_task_port;
@@ -83,6 +84,27 @@ int find_amfid() {
     return 1;
 }
 
+bool hijacksysdiagnose() {
+    LOG("[sys] Hijacking sysdiagnose..");
+    // find sysdiagnose pid
+    pid_t syspid;
+    char const *argv[] = {"sysdiagnose", NULL};
+    posix_spawn(&syspid, "/usr/bin/sysdiagnose", NULL, NULL, argv, NULL);
+    uint64_t sysproc = proc_of_pid(syspid);
+    if(!ADDRISVALID(sysproc)) {
+        LOG("[sys] ERR: sysdiagnose proc is invalid");
+        return false;
+    }
+    LOG("[sys] Got sysdiagnose proc: 0x%llx", sysproc);
+    // grab its creds and entitlements
+    int ents = CredsTool(sysproc, 0, YES, NO);
+    if(ents != 0) {
+        return false;
+    }
+    LOG("[sys] Got sysdiagnose creds, returning..");
+    return true;
+}
+
 int amfidestroyer() {
     LOG("[amfid] Let's do this..");
     mach_port_t amfid_task_port = MACH_PORT_NULL;
@@ -90,6 +112,13 @@ int amfidestroyer() {
     pid_t amfipid = find_amfid();
     if(amfipid == 1) return 1; // find_amfid() returns "1" if it fails
     LOG("[amfid] Got amfid pid: %d", amfipid);
+    // hijack sysdiagnose so we can get the amfi task port
+    bool sys = hijacksysdiagnose();
+    if(sys != true) {
+        LOG("[amfid] ERR: Couldn't get sysdiagnose creds");
+        CredsTool(0, 1, NO, NO);
+        return 1;
+    }
     // Grab amfid's task port
     task_for_pid(mach_task_self_, amfipid, &amfid_task_port);
     if(!MACH_PORT_VALID(amfid_task_port)) {
@@ -99,6 +128,7 @@ int amfidestroyer() {
     }
     LOG("[amfid] Got amfid task port");
     
+    // for AmfidWrite, AmfidRead etc.
     init_amfid_mem(amfid_task_port);
     
     

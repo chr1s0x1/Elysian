@@ -18,7 +18,7 @@
  2. revert our tasks creds & uid to default (proc = 0 && todo = 1)
  
  */
-int CredsTool(uint64_t proc, int todo, bool set);
+int CredsTool(uint64_t proc, int todo, bool ents, bool set);
 
 /*
  function: EscalateTask

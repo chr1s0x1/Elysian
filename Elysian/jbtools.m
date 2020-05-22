@@ -34,7 +34,7 @@ let CS_PLATFORM_BINARY = (UInt32)(0x04000000);
 let CS_DEBUGGED = (UInt32)(0x10000000);
 
 
-int CredsTool(uint64_t proc, int todo, bool set) {
+int CredsTool(uint64_t proc, int todo, bool ents, bool set) {
     if(todo > 1 || todo < 0) {
         LOG("[credstool] ERR: Integer 'todo' must be 0 or 1");
         return 1;
@@ -43,6 +43,9 @@ int CredsTool(uint64_t proc, int todo, bool set) {
         return 1;
     }else if(!ADDRISVALID(proc) && todo == 0) {
         LOG("[credstool] ERR: Proc given is invalid!");
+        return 1;
+    } else if(todo == 1 && ents == YES) {
+        LOG("[credstool] ERR: Can't revert and get entitlements at once");
         return 1;
     }
     //------- for reverting creds -------\\
@@ -54,6 +57,8 @@ int CredsTool(uint64_t proc, int todo, bool set) {
     let orig_label = rk64(orig_creds + 0x78);
     // svuid
     let orig_svuid = rk32(orig_creds + 0x20);
+    // entitlements
+    let orig_ents = rk64(rk64(orig_creds + 0x78) + 0x8);
 
     if(todo == 0) {
         // find creds..
@@ -74,6 +79,14 @@ int CredsTool(uint64_t proc, int todo, bool set) {
     wk32(our_creds + 0x20, (UInt32)(0));
     wk64(our_proc + 0x100, s_ucred);
     LOG("[credstool] Got given proc creds");
+        // entitlements ??
+        if(ents == YES) {
+    LOG("[credstool] Grabbing entitlements..");
+    let ourents = rk64(rk64(our_creds + 0x78) + 0x8);
+    let s_ents = rk64(rk64(s_ucred + 0x78) + 0x8);
+    wk64(rk64(our_creds + 0x78) + 0x8, s_ents);
+    LOG("[credstool] Got entitlements");
+        }
         // setuid ??
         if(set == YES) {
     LOG("[credstool] Setting uid to 0..");
@@ -100,6 +113,8 @@ int CredsTool(uint64_t proc, int todo, bool set) {
         wk64(our_creds + 0x78, orig_label);
         let our_svuid = rk32(our_creds + 0x20);
         wk32(our_creds + 0x20, orig_svuid);
+        let our_ents = rk64(rk64(our_creds + 0x78) + 0x8);
+        wk64(rk64(our_creds + 0x78) + 0x8, orig_ents);
         setuid(501);
         if(getuid() != 501) {
             LOG("[credstool] ERR: Failed to revert our uid");

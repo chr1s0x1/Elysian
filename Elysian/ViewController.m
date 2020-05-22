@@ -163,7 +163,7 @@
     // terminate jelbrekLibE
     term_jelbrek();
     // clean our creds
-    CredsTool(0, 1, NO);
+    CredsTool(0, 1, NO, NO);
     return;
 }
 
