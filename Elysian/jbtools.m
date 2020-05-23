@@ -207,3 +207,116 @@ uint64_t lookup_rootvnode() {
     return 1;
 }
 
+// similar to lookup_rootvnode, although we have an option for mount types
+uint64_t vnode_finder(const char *dir, const char *nodename, BOOL mountype) {
+    LOG("[vnode] Looking for %s..", nodename);
+    char nodeidentity[20];
+    
+    int fd = open(dir, O_RDONLY);
+    if(fd < 0) {
+        LOG("[vnode] ERR: Can't open %s", dir);
+        return 1;
+    }
+    uint64_t proc = proc_of_pid(getpid());
+    uint64_t fdesc = rk64(proc + koffset(KSTRUCT_OFFSET_PROC_P_FD));
+    if(!ADDRISVALID(fdesc)) {
+        LOG("[vnode] ERR: Failed to get fdesc");
+        close(fd);
+        return 1;
+    }
+    LOG("[vnode] Got the fdesc");
+    
+    uint64_t fofiles = rk64(fdesc + koffset(KSTRUCT_OFFSET_FILEDESC_FD_OFILES));
+    uint64_t fileproc = rk64(fofiles + fd * 8); // * 8 is a pointer in bytes
+    uint64_t fglob = rk64(fileproc + koffset(KSTRUCT_OFFSET_FILEPROC_F_FGLOB));
+    if(!ADDRISVALID(fglob)) {
+        LOG("[vnode] ERR: Couldn't get fglob");
+        close(fd);
+        return 1;
+    }
+    LOG("[vnode] Got the fglob");
+    
+    uint64_t node = rk64(fglob + koffset(KSTRUCT_OFFSET_FILEGLOB_FG_DATA));
+    if(!ADDRISVALID(node)) {
+        LOG("[vnode] ERR: Didn't get a vnode from fglob");
+        close(fd);
+        return 1;
+    }
+    LOG("[vnode] Got a vnode, is it the right one?");
+    
+    // plz don't do this to me
+    if(nodename == NULL && mountype == NO) {
+        LOG("[vnode] No vnode specified");
+        LOG("[vnode] Returning with the one we have");
+        close(fd);
+        return node;
+    }
+    
+    // Are we looking for a mount type??
+    if(mountype == YES) {
+        LOG("[vnode] ?: Looping over mount vnodes..");
+        uint64_t vmount = rk64(node + 0xd8);
+        uint64_t mount = rk64(vmount + 0x0);
+         while(mount != 0) {
+             char mountname[20];
+             uint64_t vp = rk64(mount + 0x980);
+             if(vp != 0) {
+             uint64_t vp_name = rk64(vp + 0xb8);
+             kread(vp_name, mountname, 20);
+             if(strncmp(mountname, nodename, 20) == 0) {
+                 LOG("[vnode] Found vnode: %s", mountname);
+                 close(fd);
+                 return mount;
+                 }
+             }
+             mount = rk64(mount + 0x0);
+         }
+        LOG("[vnode] ERR: Couldn't find mount vnode");
+        close(fd);
+        return 1;
+    }
+        // plz don't do this x2
+    if(nodename == NULL && mountype == NO) {
+        LOG("[vnode] Uh.. mountype sure, but what exact vnode??");
+        LOG("[vnode] ?: Will go up one mount vnode..");
+        uint64_t vmount = rk64(node + 0xd8);
+        if(vmount != 0) {
+            uint64_t vp = rk64(vmount + 0x980);
+            if(vp != 0) {
+                uint64_t vname = rk64(vp + 0xb8);
+                kread(vname, nodeidentity, 20);
+                LOG("[vnode] Got vnode: %s", nodeidentity);
+                close(fd);
+                return vp;
+            }
+            LOG("[vnode] ERR: vp is invalid");
+            close(fd);
+            return 1;
+        }
+        LOG("[vnode] ERR: vmount is invalid");
+        close(fd);
+        return 1;
+    } // Loop over parent nodes if the one we have isn't the one we wanted
+    uint64_t vname = rk64(node + 0xb8);
+    kread(vname, nodeidentity, 20);
+    if(strncmp(nodeidentity, nodename, 20) != 0) {
+        LOG("[vnode] ?: Looping parent nodes..");
+        uint64_t parentnode = rk64(node + 0xc0);
+        while (parentnode != 0) {
+        uint64_t parentname = rk64(parentnode + 0xb8);
+        kread(parentname, nodeidentity, 20);
+            if(strncmp(nodeidentity, nodename, 20) == 0) {
+                LOG("[vnode] Got vnode: %s", nodeidentity);
+                close(fd);
+                return parentnode;
+            }
+            parentnode = rk64(parentnode + 0xc0);
+        }
+        LOG("[vnode] ERR: Couldn't find vnode");
+        close(fd);
+        return 1;
+    }
+    LOG("[vnode] Got vnode: %s", nodeidentity);
+    close(fd);
+    return node;
+}

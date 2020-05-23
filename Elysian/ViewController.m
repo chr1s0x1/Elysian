@@ -20,6 +20,7 @@
 #import "utils.h"
 #import "remount.h"
 #import "amfidestroyer.h"
+#import "bootstrap.h"
 #include "pac/kernel_call.h"
 #include "pac/parameters.h"
 #include "pac/kernel.h"
@@ -156,8 +157,13 @@
     errs = RemountFS();
     ASSERTM(errs == 0, "ERR: Failed to remount rootFS :/", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal]);
     
+    // Nuke AMFI >:)
     errs = amfidestroyer();
      ASSERTM(errs == 0, "ERR: Failed to patch amfid!", [JBButton setTitle:@"Patching amfid failed" forState:UIControlStateNormal]);
+    
+    
+    errs = createbootstrap();
+    ASSERTM((bool)errs == true, "ERR: Failed create bootstrap!", [JBButton setTitle:@"Failed Creating Bootstrap" forState:UIControlStateNormal]);
     
     out:
     // terminate jelbrekLibE

@@ -23,7 +23,7 @@ int find_amfid(void);
  Use:
  borrows/steals the sysdiagnose creds to get the amfid task port
  */
-bool hijacksysdiagnose(void);
+pid_t hijacksysdiagnose(void);
 
 /*
  function: amfidestroyer

