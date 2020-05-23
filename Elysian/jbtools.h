@@ -51,13 +51,13 @@ uint64_t lookup_rootvnode(void);
  function: vnode_finder
  
  Use:
- Finds the vnode "nodename" in "dir"
+ Finds the vnode "nodename" in "path"
  
  - if mountype == YES (loops over mount vnodes til it finds the right vnode or fails)
  
  - if mountype == NO (checks if we have the right node from fglob then loops over parent nodes til it finds the right vnode or fails)
  
  */
-uint64_t vnode_finder(const char *dir, const char *nodename, BOOL mountype);
+uint64_t vnode_finder(const char *path, const char *nodename, BOOL mountype);
 
 #endif /* jbtools_h */

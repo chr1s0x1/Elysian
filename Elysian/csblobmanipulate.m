@@ -18,5 +18,11 @@
 
 int csblobmanipulate(const char *macho) {
     LOG("[csblob] Setting gen count for %s..", macho);
+    // find the vnode
+    uint64_t vnode = vnode_finder(macho, NULL, NO);
+    if(!ADDRISVALID(vnode)) {
+        return 1;
+    }
+    
     return 0;
 }

@@ -161,9 +161,8 @@
     errs = amfidestroyer();
      ASSERTM(errs == 0, "ERR: Failed to patch amfid!", [JBButton setTitle:@"Patching amfid failed" forState:UIControlStateNormal]);
     
-    
     errs = createbootstrap();
-    ASSERTM((bool)errs == true, "ERR: Failed create bootstrap!", [JBButton setTitle:@"Failed Creating Bootstrap" forState:UIControlStateNormal]);
+    ASSERTM((bool)errs == true, "ERR: Failed creating bootstrap!", [JBButton setTitle:@"Failed Creating Bootstrap" forState:UIControlStateNormal]);
     
     out:
     // terminate jelbrekLibE

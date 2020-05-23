@@ -85,8 +85,9 @@ int amfidestroyer() {
     // for AmfidWrite, AmfidRead etc.
     init_amfid_mem(amfid_task_port);
     
-    
+    LOG("[amfid] Mission complete, cleaning up..");
     // clean up
     kill(syspid, SIGKILL);
+    CredsTool(0, 1, NO, NO);
     return 0;
 }

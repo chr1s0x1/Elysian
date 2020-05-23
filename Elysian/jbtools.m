@@ -208,13 +208,13 @@ uint64_t lookup_rootvnode() {
 }
 
 // similar to lookup_rootvnode, although we have an option for mount types
-uint64_t vnode_finder(const char *dir, const char *nodename, BOOL mountype) {
-    LOG("[vnode] Looking for %s..", nodename);
+uint64_t vnode_finder(const char *path, const char *nodename, BOOL mountype) {
+    LOG("[vnode] Looking for %s in %s..", nodename, path);
     char nodeidentity[20];
     
-    int fd = open(dir, O_RDONLY);
+    int fd = open(path, O_RDONLY);
     if(fd < 0) {
-        LOG("[vnode] ERR: Can't open %s", dir);
+        LOG("[vnode] ERR: Can't open %s", path);
         return 1;
     }
     uint64_t proc = proc_of_pid(getpid());
