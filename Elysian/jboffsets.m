@@ -15,7 +15,7 @@
 
 int GatherOffsets() {    
 LOG("[offsets] Getting offsets..");
-    int offset = 0;
+int offset = 0;
     
 uint64_t vnode_lookup = Find_vnode_lookup();
     if(!ADDRISVALID(vnode_lookup)) {

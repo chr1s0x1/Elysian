@@ -12,17 +12,32 @@
 
 #import "utils.h"
 #import "jbtools.h"
+#import "jelbrekLib.h"
 #import "kernel_memory.h"
 #import "csblobmanipulate.h"
 
 
 int csblobmanipulate(const char *macho) {
+    
     LOG("[csblob] Setting gen count for %s..", macho);
-    // find the vnode
+    
+    // grab machO vnode, vnode_finder works on binaries ;)
     uint64_t vnode = vnode_finder(macho, NULL, NO);
     if(!ADDRISVALID(vnode)) {
+        LOG("[csblob] ERR: Failed to get vnode for %s", macho);
         return 1;
     }
+    LOG("[csblob] Got binary vnode");
+    
+    // is a csblob already loaded?
+    LOG("[csblob] ?: Checking if a csblob exists..");
+    uint64_t cs_blob = rk64(vnode + 0x78);
+    if(cs_blob != 0) {
+        LOG("[csblob] ?: %s already has a blob, setting gen count..", macho);
+        wk64(cs_blob + 44, rk32(Find_cs_gen_count()));
+        return 0;
+    }
+    LOG("[csblob] ?: Creating a valid blob..");
     
     return 0;
 }

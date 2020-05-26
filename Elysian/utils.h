@@ -21,7 +21,7 @@
 
 #define ADDRISVALID(val) ((val) >= 0xffff000000000000 && (val) != 0xffffffffffffffff)
 
-#define ASSERT(stuff, error...) do {\
+#define ASSERTs(stuff, error...) do {\
 if(stuff){\
 break;\
 }else{\
@@ -37,6 +37,14 @@ break;\
 }else{\
 LOG(error);\
 more;\
+goto out;\
+}\
+} while(false)
+
+#define ASSERT(stuff, error, text) do {\
+if(stuff != true){\
+LOG(error);\
+SetButtonText(text);\
 goto out;\
 }\
 } while(false)
@@ -137,4 +145,6 @@ error = NULL; \
     }\
 }
 
+#define in_bundle(obj) strdup([[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@obj] UTF8String])
 #endif /* utils_h */
+

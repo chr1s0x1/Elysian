@@ -29,6 +29,10 @@
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
+#define SetButtonText(what)\
+[self->JBButton setTitle:@(what) forState:UIControlStateNormal];
+
+
 
 @interface ViewController ()
 
@@ -40,8 +44,6 @@
 
 
 @implementation ViewController
-
-
 
 
 - (void)viewDidLoad {
@@ -59,117 +61,164 @@
 
 
 - (IBAction)JBGo:(id)sender {
-    [JBButton setEnabled:NO];
-    LOG("[*] Starting Exploit");
-    __block mach_port_t tfpzero = MACH_PORT_NULL;
-    tfpzero = get_tfp0();
-    if(!MACH_PORT_VALID(tfpzero)){
-        LOG("ERR: Exploit Failed");
-        LOG("Please reboot and try again");
-        [JBButton setTitle:@"Exploit Failed" forState:UIControlStateNormal];
+    [self->JBButton setEnabled:NO];
+        LOG("[*] Starting Exploit");
+        __block mach_port_t tfpzero = MACH_PORT_NULL;
+        tfpzero = get_tfp0();
+        if(!MACH_PORT_VALID(tfpzero)){
+            LOG("ERR: Exploit Failed");
+            LOG("Please reboot and try again");
+            SetButtonText("Error: Exploiting kernel");
+            return;
+        }
+        LOG("[i] tfp0: 0x%x", tfpzero);
+        
+    /* Start of Elysian Jailbreak ************************************/
+       
+        // used for checks
+       int errs;
+        
+        LOG("Starting Jailbreak Process..");
+        
+            // ------------ Unsandbox ------------ //
+        
+        LOG("Unsandboxing..");
+            // find our task
+        uint64_t our_task = find_self_task();
+        LOG("our_task: 0x%llx", our_task);
+            // find the sandbox slot
+        uint64_t our_proc = rk64(our_task + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
+        LOG("our_proc: 0x%llx", our_proc);
+        uint64_t our_ucred = rk64(our_proc + 0x100); // 0x100 - off_p_ucred
+        LOG("ucred: 0x%llx", our_ucred);
+        uint64_t cr_label = rk64(our_ucred + 0x78); // 0x78 - off_ucred_cr_label
+        LOG("cr_label: 0x%llx", cr_label);
+        uint64_t sandbox = rk64(cr_label + 0x10);
+        LOG("sandbox_slot: 0x%llx", sandbox);
+        
+        LOG("Setting sandbox_slot to 0");
+            // Set sandbox pointer to 0;
+        wk64(cr_label + 0x10, 0);
+            // Are we free?
+        createFILE("/var/mobile/.elytest", nil);
+        FILE *f = fopen("/var/mobile/.elytest", "w");
+        if(!f){
+        LOG("ERR: Failed to set Sandbox_slot to 0");
+        LOG("ERR: Failed to Unsanbox");
+        SetButtonText("Error: Escaping Sandbox");
+         return;
+        }
+        LOG("Escaped Sandbox");
+        
+        
+        LOG("Here comes the fun..");
+            // Initiate jelbrekLibE
+        errs = init_with_kbase(tfpzero, KernelBase, kernel_exec);
+        if(errs != 0) {
+        LOG("ERR: Failed to initialize jelbrekLibE");
+        SetButtonText("Error: Initializing jelbrekLibE");
+        goto out;
+        }
+        LOG("[*] Initialized jelbrekLibE");
+        
+        LOG("Exporting tfp0 to HSP4..");
+        
+        // Export tfp0
+        Set_tfp0HSP4(tfpzero);
+        
+        // wait for export to finish
+        usleep(1000);
+        
+        // Platform ourselves
+        errs = EscalateTask(our_task);
+        ASSERT(errs == 0, "ERR: Failed to platform ourselves", "Error: Platformizing task");
+        
+            // ------------- Kernel Call ----------------- //
+              
+        /*
+         
+         So, we need kernel call to execute kernel functions
+         (in GatherOffsets() function)
+         
+         */
+        
+        // Currently this code doesn't work, we need to add offsets for kernel_call in parameters.m
+        
+        /*
+        kern_return_t call = kernel_call_init();
+        ASSERTM(call == KERN_SUCCESS, "Failed to init kernel call\n", [JBButton setTitle:@"Kernel Call Failed" forState:UIControlStateNormal]);
+        */
+        
+        
+        // Get offsets to kernel functions
+        errs = GatherOffsets();
+        ASSERT(errs == 0, "ERR: Failed to get offsets", "Error: Gathering offsets");
+        
+        
+        // ------------ Remount RootFS -------------- //
+        
+        // remount.m for code
+        errs = RemountFS();
+        
+    /* error checks in remount - its not pretty but "it's honest work" */
+        
+        if (errs == _NOKERNPROC) {
+            SetButtonText("Error: Finding Kernel process");
+            goto out;
+        } else if (errs == _NODISK) {
+            SetButtonText("Error: Finding disk0s1s1");
+            goto out;
+        } else if (errs == _NOKERNCREDS) {
+            SetButtonText("Error: Finding Kerncreds");
+            goto out;
+        } else if (errs == _NOMNTPATH) {
+            SetButtonText("Error: Creating mount path");
+            goto out;
+        } else if (errs == _MOUNTFAILED) {
+            SetButtonText("Error: Mounting FS");
+            goto out;
+        } else if (errs == _MOUNTFAILED2) {
+            SetButtonText("Error: Mounting FS in new path");
+            goto out;
+        } else if (errs == _RENAMEFAILED) {
+            SetButtonText("Error: Renaming Snapshot");
+            goto out;
+        }
+        
+        // After renaming the snapshot
+        if (errs == _RENAMEDSNAP) {
+            MESSAGE("Snapshot successfully renamed, device will be rebooted. Run Elysian again to finish Jailbreaking", true);
+            usleep(2000);
+            reboot(0);
+        } else if (errs == _NOSNAP) {
+            SetButtonText("Error: Finding BootSnapshot");
+            goto out;
+        } else if (errs == _NOUPDATEDDISK) {
+            SetButtonText("Error: Updating disk01s1");
+            goto out;
+        } else if (errs == _TESTFAILED){
+            SetButtonText("Error: Test file");
+            goto out;
+        } else if (errs == _REMOUNTSUCCESS) {
+            LOG("Remounted RootFS");
+        } else { // idk how this would happen
+            SetButtonText("Error: Remount");
+        }
+        
+        // Nuke AMFI >:)
+        errs = amfidestroyer();
+        ASSERT(errs == 0, "ERR: Failed to patch amfid!", "Error: Patching amfid");
+        
+        // setup bootstrap
+        errs = createbootstrap();
+        ASSERT((bool)errs == true, "ERR: Failed creating bootstrap!", "Error: Creating Bootstrap");
+        
+        out:
+        // terminate jelbrekLibE
+        term_jelbrek();
+        // clean our creds
+        CredsTool(0, 1, NO, NO);
         return;
-    }
-    LOG("[i] tfp0: 0x%x", tfpzero);
-    
-/* Start of Elysian Jailbreak ************************************/
-   
-    // used for checks
-   int errs;
-    
-    LOG("Running Elysian..");
-    
-        // ------------ Unsandbox ------------ //
-    
-    LOG("Unsandboxing..");
-        // find our task
-    uint64_t our_task = find_self_task();
-    LOG("our_task: 0x%llx", our_task);
-        // find the sandbox slot
-    uint64_t our_proc = rk64(our_task + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
-    LOG("our_proc: 0x%llx", our_proc);
-    uint64_t our_ucred = rk64(our_proc + 0x100); // 0x100 - off_p_ucred
-    LOG("ucred: 0x%llx", our_ucred);
-    uint64_t cr_label = rk64(our_ucred + 0x78); // 0x78 - off_ucred_cr_label
-    LOG("cr_label: 0x%llx", cr_label);
-    uint64_t sandbox = rk64(cr_label + 0x10);
-    LOG("sandbox_slot: 0x%llx", sandbox);
-    
-    LOG("Setting sandbox_slot to 0");
-        // Set sandbox pointer to 0;
-    wk64(cr_label + 0x10, 0);
-        // Are we free?
-    createFILE("/var/mobile/.elytest", nil);
-    FILE *f = fopen("/var/mobile/.elytest", "w");
-    if(!f){
-    LOG("ERR: Failed to set Sandbox_slot to 0");
-    LOG("ERR: Failed to Unsanbox");
-     [JBButton setTitle:@"Unsanbox failed" forState:UIControlStateNormal];
-     return;
-    }
-    LOG("Escaped Sandbox");
-    
-    
-    LOG("Here comes the fun..");
-        // Initiate jelbrekLibE
-    errs = init_with_kbase(tfpzero, KernelBase, NULL);
-    if(errs != 0) {
-    LOG("ERR: Failed to initialize jelbrekLibE");
-     [JBButton setTitle:@"Failed to initialize jelbrekLibE" forState:UIControlStateNormal];
-    }
-    LOG("[*] Initialized jelbrekLibE");
-    
-    LOG("Exporting tfp0 to HSP4..");
-    
-    // Export tfp0
-    Set_tfp0HSP4(tfpzero);
-    
-    // wait for export to finish
-    usleep(1000);
-    // Platform ourselves
-    errs = EscalateTask(our_task);
-    ASSERTM(errs == 0, "ERR: Failed to platform ourselves", [JBButton setTitle:@"Platformize Failed" forState:UIControlStateNormal]);
-    
-        // ------------- Kernel Call ----------------- //
-            
-    /*
-     
-     So, we need kernel call to execute kernel functions
-     (in GatherOffsets() function)
-     
-     */
-    
-    // Currently this code doesn't work, we need to add offsets for kernel_call in parameters.m
-    
-    /*
-    kern_return_t call = kernel_call_init();
-    ASSERTM(call == KERN_SUCCESS, "Failed to init kernel call\n", [JBButton setTitle:@"Kernel Call Failed" forState:UIControlStateNormal]);
-    */
-    
-    
-    // Get offsets to kernel functions
-    errs = GatherOffsets();
-    ASSERTM(errs == 0, "ERR: Failed to get offsets", [JBButton setTitle:@"Offsets Gather Failed" forState:UIControlStateNormal]);
-    
-    
-    // ------------ Remount RootFS -------------- //
-    
-    // remount.m for code
-    errs = RemountFS();
-    ASSERTM(errs == 0, "ERR: Failed to remount rootFS :/", [JBButton setTitle:@"Remount Failed" forState:UIControlStateNormal]);
-    
-    // Nuke AMFI >:)
-    errs = amfidestroyer();
-     ASSERTM(errs == 0, "ERR: Failed to patch amfid!", [JBButton setTitle:@"Patching amfid failed" forState:UIControlStateNormal]);
-    
-    errs = createbootstrap();
-    ASSERTM((bool)errs == true, "ERR: Failed creating bootstrap!", [JBButton setTitle:@"Failed Creating Bootstrap" forState:UIControlStateNormal]);
-    
-    out:
-    // terminate jelbrekLibE
-    term_jelbrek();
-    // clean our creds
-    CredsTool(0, 1, NO, NO);
-    return;
 }
 
 @end

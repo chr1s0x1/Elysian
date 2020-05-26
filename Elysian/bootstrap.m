@@ -17,12 +17,13 @@
 
 bool createbootstrap() {
     int retval = 0;
+    
     // need perms for mkdir
     if(getuid() != 0) {
-        LOG("[boostrap] ?: Getting perms..");
+        LOG("[bootstrap] ?: Getting perms..");
         uint64_t kernproc = proc_of_pid(0);
         if(!ADDRISVALID(kernproc)) {
-            LOG("[boostrap] ERR: Couldn't get kernproc for perms");
+            LOG("[bootstrap] ERR: Couldn't get kernproc for perms");
             retval = 1;
             goto out;
         }
@@ -35,18 +36,30 @@ bool createbootstrap() {
         retval = 2;
         goto out;
     }
+    LOG("[bootstrap] Created JB folder");
     chown("/Elysian", 0, 0);
-    // bin
+    
+    // create bin folder
+    
     mkdir("/Elysian/bin", 0755);
+    if(!fileExists("/Elysian/bin")) {
+        LOG("[bootstrap] ERR: Failed to create bin foler");
+        retval = 3;
+        goto out;
+    }
+    LOG("[bootstrap] Created bin folder");
     chown("Elysian/bin", 0, 0);
     
-    // copy over SSH files
+    LOG("[bootstrap] ?: Copying over JB files..");
     
+    // copy over SSH files
+
+
     LOG("[bootstrap] Bootstrap returned: %d", retval);
     return true;
     
     out:
-    LOG("[bootstrap] Bootstrap returned: %d", retval);
+    LOG("[bootstrap] Bootstrap returned with error: %d", retval);
     CredsTool(0, 1, NO, NO);
     return false;
 }

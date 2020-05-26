@@ -32,4 +32,5 @@ pid_t hijacksysdiagnose(void);
  Patches amfid so we can run fakesigned binaries
  */
 int amfidestroyer(void);
+
 #endif /* amfidestroyer_h */

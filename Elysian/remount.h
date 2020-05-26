@@ -9,6 +9,23 @@
 #ifndef remount_h
 #define remount_h
 
+
+// remount returns
+enum remount_ret {
+    _NOKERNPROC,
+    _NODISK,
+    _NOKERNCREDS,
+    _NOSNAP,
+    _NOMNTPATH,
+    _MOUNTFAILED,
+    _MOUNTFAILED2,
+    _RENAMEFAILED,
+    _NOUPDATEDDISK,
+    _TESTFAILED,
+    _RENAMEDSNAP,
+    _REMOUNTSUCCESS,
+};
+
 struct hfs_mount_args {
     char    *fspec;            /* block special device to mount */
     uid_t    hfs_uid;        /* uid that owns hfs files (standard HFS only) */

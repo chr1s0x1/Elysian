@@ -387,8 +387,6 @@ uint64_t Find_smalloc(void);
 uint64_t Find_sbops(void);
 uint64_t find_str(const char *string);
 uint64_t FindSymbol(const char *symbol);
-uint64_t find_snapshot_string(void);
-int patch_snapshot_string(void);
 uint64_t Find_bootargs(void);
 uint64_t Find_vfs_context_current(void);
 uint64_t Find_vnode_lookup(void);

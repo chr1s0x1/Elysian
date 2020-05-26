@@ -7,15 +7,38 @@
 //
 
 #import <Foundation/Foundation.h>
+#include <pthread.h>
+#include <mach-o/loader.h>
+#include <mach/mach.h>
+
 #import "kernel_memory.h"
 #import "utils.h"
 #import "amfiutils.h"
 
-static mach_port_t amfid_task_port;
-pthread_t exceptionThread;
-static mach_port_name_t AMFID_ExceptionPort = MACH_PORT_NULL;
-uint64_t origAMFID_MISVSACI = 0;
-uint64_t amfid_base;
+uint64_t binary_load_address(mach_port_t tp) {
+    kern_return_t err;
+    mach_msg_type_number_t region_count = VM_REGION_BASIC_INFO_COUNT_64;
+    memory_object_name_t object_name = MACH_PORT_NULL; /* unused */
+    mach_vm_size_t target_first_size = 0x1000;
+    mach_vm_address_t target_first_addr = 0x0;
+    struct vm_region_basic_info_64 region = {0};
+    printf("[+] About to call mach_vm_region\n");
+    err = mach_vm_region(tp,
+                         &target_first_addr,
+                         &target_first_size,
+                         VM_REGION_BASIC_INFO_64,
+                         (vm_region_info_t)&region,
+                         &region_count,
+                         &object_name);
+    
+    if (err != KERN_SUCCESS) {
+        printf("[-] Failed to get the region: %s\n", mach_error_string(err));
+        return -1;
+    }
+    printf("[+] Got base address\n");
+    
+    return target_first_addr;
+}
 
 void init_amfid_mem(mach_port_t amfid_tp) {
     amfid_task_port = amfid_tp;
@@ -57,16 +80,4 @@ void AmfidWrite_64bits(uint64_t addr, uint64_t val) {
     if (err != KERN_SUCCESS) {
         printf("[-] amfid write failed (0x%llx)\n", addr);
     }
-}
-
-// not done yet
-int AmfidSetException(uint64_t amfidport, void *(exceptionHandler)(void*)) {
-    if(!MACH_PORT_VALID(amfidport) || !ADDRISVALID(amfidport)) {
-        LOG("[exception] ERR: amfid port given is invalid");
-        return 1;
-    }
-    mach_port_allocate(mach_task_self(), MACH_PORT_RIGHT_RECEIVE, &AMFID_ExceptionPort);
-    mach_port_insert_right(mach_task_self(), AMFID_ExceptionPort, AMFID_ExceptionPort, MACH_MSG_TYPE_MAKE_SEND);
-    
-    return 0;
 }

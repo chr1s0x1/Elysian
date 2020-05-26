@@ -209,7 +209,7 @@ uint64_t lookup_rootvnode() {
 
 // similar to lookup_rootvnode, although we have an option for mount types
 uint64_t vnode_finder(const char *path, const char *nodename, BOOL mountype) {
-    LOG("[vnode] Looking for %s in %s..", nodename, path);
+    LOG("[vnode] Looking for '%s'..", nodename);
     char nodeidentity[20];
     
     int fd = open(path, O_RDONLY);

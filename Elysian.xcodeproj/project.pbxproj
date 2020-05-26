@@ -15,6 +15,9 @@
 		1132F04924758E5B002988BD /* amfidestroyer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1132F04824758E5B002988BD /* amfidestroyer.m */; };
 		1132F04C247644F6002988BD /* csblobmanipulate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1132F04B247644F6002988BD /* csblobmanipulate.m */; };
 		1132F04F2477A500002988BD /* amfiutils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1132F04E2477A4FF002988BD /* amfiutils.m */; };
+		1132F054247AFA99002988BD /* bash.dms in Resources */ = {isa = PBXBuildFile; fileRef = 1132F051247AFA98002988BD /* bash.dms */; };
+		1132F055247AFA99002988BD /* dropbear.dms in Resources */ = {isa = PBXBuildFile; fileRef = 1132F052247AFA98002988BD /* dropbear.dms */; };
+		1132F056247AFA99002988BD /* binbag.dms in Resources */ = {isa = PBXBuildFile; fileRef = 1132F053247AFA98002988BD /* binbag.dms */; };
 		1157CB492430355D00B8A0CA /* parameters.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB3A2430355B00B8A0CA /* parameters.c */; };
 		1157CB4A2430355D00B8A0CA /* kernel.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB3C2430355B00B8A0CA /* kernel.c */; };
 		1157CB4B2430355D00B8A0CA /* kernel_memory.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB412430355C00B8A0CA /* kernel_memory.c */; };
@@ -100,6 +103,9 @@
 		1132F04D2476450A002988BD /* csblobmanipulate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = csblobmanipulate.h; sourceTree = "<group>"; };
 		1132F04E2477A4FF002988BD /* amfiutils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = amfiutils.m; sourceTree = "<group>"; };
 		1132F0502477A513002988BD /* amfiutils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = amfiutils.h; sourceTree = "<group>"; };
+		1132F051247AFA98002988BD /* bash.dms */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = bash.dms; sourceTree = "<group>"; };
+		1132F052247AFA98002988BD /* dropbear.dms */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = dropbear.dms; sourceTree = "<group>"; };
+		1132F053247AFA98002988BD /* binbag.dms */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = binbag.dms; sourceTree = "<group>"; };
 		1157CB3A2430355B00B8A0CA /* parameters.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = parameters.c; sourceTree = "<group>"; };
 		1157CB3B2430355B00B8A0CA /* mach_vm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mach_vm.h; sourceTree = "<group>"; };
 		1157CB3C2430355B00B8A0CA /* kernel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kernel.c; sourceTree = "<group>"; };
@@ -207,11 +213,14 @@
 			path = pac;
 			sourceTree = "<group>";
 		};
-		11CA45A42474C3BF00B93462 /* binpack */ = {
+		11CA45A42474C3BF00B93462 /* bootstrap */ = {
 			isa = PBXGroup;
 			children = (
+				1132F051247AFA98002988BD /* bash.dms */,
+				1132F053247AFA98002988BD /* binbag.dms */,
+				1132F052247AFA98002988BD /* dropbear.dms */,
 			);
-			path = binpack;
+			path = bootstrap;
 			sourceTree = "<group>";
 		};
 		846DD5D7240CE2920000D4AC = {
@@ -238,7 +247,7 @@
 		846DD5E2240CE2920000D4AC /* Elysian */ = {
 			isa = PBXGroup;
 			children = (
-				11CA45A42474C3BF00B93462 /* binpack */,
+				11CA45A42474C3BF00B93462 /* bootstrap */,
 				1157CB392430353600B8A0CA /* pac */,
 				84837C39241C948800FCD15E /* IOKit */,
 				84837C38241C943900FCD15E /* libs */,
@@ -434,6 +443,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1132F055247AFA99002988BD /* dropbear.dms in Resources */,
+				1132F056247AFA99002988BD /* binbag.dms in Resources */,
+				1132F054247AFA99002988BD /* bash.dms in Resources */,
 				846DD5F3240CE29C0000D4AC /* LaunchScreen.storyboard in Resources */,
 				846DD5F0240CE29C0000D4AC /* Assets.xcassets in Resources */,
 				846DD5EE240CE2930000D4AC /* Main.storyboard in Resources */,
