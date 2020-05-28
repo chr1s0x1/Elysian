@@ -15,7 +15,7 @@ static mach_port_t amfid_task_port;
 
 // Support functions for amfidestroyer
 uint64_t binary_load_address(mach_port_t tp);
-int AmfidSetException(uint64_t amfidport, void *(exceptionHandler)(void*));
+int AmfidSetException(mach_port_t amfidport, void *(exceptionHandler)(void*));
 void init_amfid_mem(mach_port_t amfid_tp);
 void* AmfidRead(uint64_t addr, uint64_t len);
 void AmfidWrite_8bits(uint64_t addr, uint8_t val);

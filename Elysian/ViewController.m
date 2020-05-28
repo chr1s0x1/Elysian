@@ -25,6 +25,10 @@
 #include "pac/parameters.h"
 #include "pac/kernel.h"
 
+uint64_t kernel_proc;
+uint64_t launchd_proc;
+UInt32 amfi_pid;
+
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
@@ -32,6 +36,32 @@
 #define SetButtonText(what)\
 [self->JBButton setTitle:@(what) forState:UIControlStateNormal];
 
+void FillProcs() {
+    LOG("[proc] Filling procs..");
+    
+    kernel_proc = proc_of_pid(0);
+    LOG("[proc] Got kernel proc");
+    
+    launchd_proc = proc_of_pid(1);
+    LOG("[proc] Got launchd proc");
+    
+    uint64_t proc = rk64(Find_allproc());
+    while(proc != 0) {
+        char amfidname[32];
+        var pid = rk32(proc + (UInt64)(0x68));
+        uint64_t procname = proc + 0x258;
+        kread(procname, amfidname, 32);
+        if(strncmp(amfidname, "amfid", 32) == 0) {
+            LOG("[proc] Found amfid");
+            amfi_pid = pid;
+            break;
+        }
+        proc = rk64(proc);
+    }
+    
+    LOG("[proc] Done");
+    return;
+}
 
 
 @interface ViewController ()
@@ -49,11 +79,11 @@
 - (void)viewDidLoad {
     
     // iOS Compatibility check
-    if(SYSTEM_VERSION_GREATER_THAN(@"13.3") || SYSTEM_VERSION_LESS_THAN(@"13.0")){
-    printf("ERR: Unsupported Firmware\n");
-    [JBButton setTitle:@"Unsupported" forState:UIControlStateNormal];
-        JBButton.enabled = NO;
-    }
+    if(SYSTEM_VERSION_GREATER_THAN(@"13.3") || SYSTEM_VERSION_LESS_THAN(@"13.0")) {
+    LOG("ERR: Unsupported Firmware");
+    JBButton.enabled = NO; // should disable this first
+    SetButtonText("Error: Unsupported");
+}
     
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -76,7 +106,7 @@
     /* Start of Elysian Jailbreak ************************************/
        
         // used for checks
-       int errs;
+        int errs;
         
         LOG("Starting Jailbreak Process..");
         
@@ -133,52 +163,43 @@
         errs = EscalateTask(our_task);
         ASSERT(errs == 0, "ERR: Failed to platform ourselves", "Error: Platformizing task");
         
-            // ------------- Kernel Call ----------------- //
-              
-        /*
-         
-         So, we need kernel call to execute kernel functions
-         (in GatherOffsets() function)
-         
-         */
-        
-        // Currently this code doesn't work, we need to add offsets for kernel_call in parameters.m
-        
-        /*
-        kern_return_t call = kernel_call_init();
-        ASSERTM(call == KERN_SUCCESS, "Failed to init kernel call\n", [JBButton setTitle:@"Kernel Call Failed" forState:UIControlStateNormal]);
-        */
-        
         
         // Get offsets to kernel functions
         errs = GatherOffsets();
         ASSERT(errs == 0, "ERR: Failed to get offsets", "Error: Gathering offsets");
-        
+    
+        FillProcs();
         
         // ------------ Remount RootFS -------------- //
         
         // remount.m for code
-        errs = RemountFS();
+        errs = RemountFS(kernel_proc);
         
     /* error checks in remount - its not pretty but "it's honest work" */
         
         if (errs == _NOKERNPROC) {
-            SetButtonText("Error: Finding Kernel process");
+            SetButtonText("Error: Kernel process");
             goto out;
         } else if (errs == _NODISK) {
             SetButtonText("Error: Finding disk0s1s1");
             goto out;
         } else if (errs == _NOKERNCREDS) {
-            SetButtonText("Error: Finding Kerncreds");
+            SetButtonText("Error: Grabbing Kerncreds");
             goto out;
         } else if (errs == _NOMNTPATH) {
             SetButtonText("Error: Creating mount path");
+            goto out;
+        } else if(errs == _REVERTMNTFAILED) {
+            SetButtonText("Error: Reverting MntPath");
             goto out;
         } else if (errs == _MOUNTFAILED) {
             SetButtonText("Error: Mounting FS");
             goto out;
         } else if (errs == _MOUNTFAILED2) {
             SetButtonText("Error: Mounting FS in new path");
+            goto out;
+        } else if (errs == _NONEWDISK) {
+            SetButtonText("Error: Finding new disk");
             goto out;
         } else if (errs == _RENAMEFAILED) {
             SetButtonText("Error: Renaming Snapshot");
@@ -203,10 +224,13 @@
             LOG("Remounted RootFS");
         } else { // idk how this would happen
             SetButtonText("Error: Remount");
+            goto out;
         }
         
+        CredsTool(kernel_proc, 0, NO, YES);
+        
         // Nuke AMFI >:)
-        errs = amfidestroyer();
+        errs = amfidestroyer(amfi_pid);
         ASSERT(errs == 0, "ERR: Failed to patch amfid!", "Error: Patching amfid");
         
         // setup bootstrap
@@ -214,11 +238,11 @@
         ASSERT((bool)errs == true, "ERR: Failed creating bootstrap!", "Error: Creating Bootstrap");
         
         out:
-        // terminate jelbrekLibE
+        // clean up
         term_jelbrek();
-        // clean our creds
         CredsTool(0, 1, NO, NO);
         return;
+    
 }
 
 @end

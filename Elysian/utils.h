@@ -21,25 +21,6 @@
 
 #define ADDRISVALID(val) ((val) >= 0xffff000000000000 && (val) != 0xffffffffffffffff)
 
-#define ASSERTs(stuff, error...) do {\
-if(stuff){\
-break;\
-}else{\
-LOG(error);\
-goto out;\
-}\
-} while(false)
-
-
-#define ASSERTM(stuff, error, more) do {\
-if(stuff){\
-break;\
-}else{\
-LOG(error);\
-more;\
-goto out;\
-}\
-} while(false)
 
 #define ASSERT(stuff, error, text) do {\
 if(stuff != true){\

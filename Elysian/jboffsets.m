@@ -8,9 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #include "jboffsets.h"
-
-
 #import "jelbrekLib.h"
+#import "kernel_memory.h"
 #import "utils.h"
 
 int GatherOffsets() {    
@@ -50,6 +49,4 @@ fail:
     LOG("[offsets] ERR: Failed to get offset %d", offset);
     return 1;
 }
-
-
 

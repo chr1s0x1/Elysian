@@ -14,10 +14,12 @@
 enum remount_ret {
     _NOKERNPROC,
     _NODISK,
+    _NONEWDISK,
     _NOKERNCREDS,
     _NOSNAP,
     _NOMNTPATH,
     _MOUNTFAILED,
+    _REVERTMNTFAILED,
     _MOUNTFAILED2,
     _RENAMEFAILED,
     _NOUPDATEDDISK,
@@ -65,5 +67,5 @@ uint64_t FindNewMount(uint64_t vnode);
  New and improved remount code that remounts the RootFS.
  */
 
-int RemountFS(void);
+int RemountFS(uint64_t kernproc);
 #endif /* remount_h */

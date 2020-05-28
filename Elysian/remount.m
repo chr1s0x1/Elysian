@@ -20,6 +20,7 @@
 #import "jelbrekLib.h"
 #import "jbtools.h"
 #import "kernel_memory.h"
+#include "jboffsets.h"
 #include "offsets.h"
 
 // After renaming the snapshot, trying to grab the disk0s1s1 name from the offset
@@ -56,15 +57,13 @@ uint64_t FindNewMount(uint64_t vnode) {
 
 char vnodename[20];
 
-int RemountFS() {
+int RemountFS(uint64_t kernel_proc) {
     LOG("Remounting RootFS..");
-    // grab kernproc for CredsTool
-    uint64_t kernproc = proc_of_pid(0);
-    if(!ADDRISVALID(kernproc)) {
-        LOG("ERR: Failed to get kernproc");
+    if(!ADDRISVALID(kernel_proc)) {
+        LOG("ERR: kernproc is invalid");
         return _NOKERNPROC;
     }
-    LOG("Got kernproc: 0x%llx", kernproc);
+    LOG("Got kernproc: 0x%llx", kernel_proc);
    
     bool rename = RenameSnapRequired();
     if(rename == YES) {
@@ -81,7 +80,7 @@ int RemountFS() {
     LOG("Got vnode: %s", vnodename);
 
     // grab kern creds to mount RootFS
-    int ret = CredsTool(kernproc, 0, NO, YES);
+    int ret = CredsTool(kernel_proc, 0, NO, YES);
     if(ret == 1) {
         LOG("ERR: Failed to get kernel creds");
         CredsTool(0, 1, NO, NO);
@@ -104,15 +103,19 @@ int RemountFS() {
             LOG("ERR: Couldnt remove mount path");
         }
     }
-    // setup mount path for mounting rootvnode
+       // setup mount path for mounting rootvnode
+       if(!fileExists("/var/rootmnt")) {
     kern_return_t dir = mkdir("/var/rootmnt", 0755);
     if(dir != KERN_SUCCESS) {
         LOG("ERR: Failed to create mount path");
         CredsTool(0, 1, NO, NO);
         return _NOMNTPATH;
-    }
+         }
+       } else {
+    LOG("?: Mount path already exists (assuming old)");
+    LOG("?: Using old path can be dangerous, resuming anyway..");
+   }
     chown("/var/rootmnt", 0, 0);
-    
     let mntpath = strdup("/var/rootmnt");
     
     // get dev flags
@@ -147,7 +150,7 @@ int RemountFS() {
     if(fd < 0 || revert != KERN_SUCCESS) {
         LOG("ERR: Can't open or revert mount path after mount");
         CredsTool(0, 1, NO, NO);
-        return 1;
+        return _REVERTMNTFAILED;
     }
     close(fd);
     
@@ -167,11 +170,11 @@ int RemountFS() {
     uint64_t newdisk = FindNewMount(rootvnode);
     if(!ADDRISVALID(newdisk)) {
         LOG("ERR: Couldn't find disk0s1s1 in new mount path");
-        return 1;
+        return _NONEWDISK;
     }
     LOG("Found disk0s1s1 in new mount path");
     
-    /* Patch the snapshot so XNU can't boot from it */
+    /*------ Patch the snapshot so XNU can't boot from it -----*/
     
     // 1. Remove snapshot flags (loop over vnode list til we find snapshot's)
     uint64_t nodelist = rk64(newdisk + 0x40);
@@ -219,7 +222,7 @@ return 0;
 // Should go here when we already renamed the snapshot
    LOG("?: Snapshot already renamed");
    LOG("Remounting RootFS as r/w..");
-   CredsTool(kernproc, 0, NO, YES);
+   CredsTool(kernel_proc, 0, NO, YES);
    uint64_t rootvnode = lookup_rootvnode();
    let vmount = rk64(rootvnode + 0xd8);
    let flag = rk32(vmount + (UInt64)(0x70)) & ~((UInt32)(MNT_NOSUID) | (UInt32)(MNT_RDONLY));
@@ -246,6 +249,7 @@ return 0;
    }
    LOG("Created '.Elysian' at '/'");
    fclose(f);
+   CredsTool(0, 1, NO, NO);
    return _REMOUNTSUCCESS;
    }
 return 0;

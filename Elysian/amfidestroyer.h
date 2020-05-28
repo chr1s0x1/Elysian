@@ -10,14 +10,6 @@
 #define amfidestroyer_h
 
 /*
- function: find_amfid
- 
- Use:
- Grabs the amfi pid for use in amfidestroyer()
- */
-int find_amfid(void);
-
-/*
  function: hijacksysdiagnose
  
  Use:
@@ -31,6 +23,6 @@ pid_t hijacksysdiagnose(void);
  Use:
  Patches amfid so we can run fakesigned binaries
  */
-int amfidestroyer(void);
+int amfidestroyer(UInt32 amfipid);
 
 #endif /* amfidestroyer_h */

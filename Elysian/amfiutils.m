@@ -31,7 +31,7 @@ uint64_t binary_load_address(mach_port_t tp) {
                          &region_count,
                          &object_name);
     
-    if (err != KERN_SUCCESS) {
+    if (err != KERN_SUCCESS || target_first_addr == 0) {
         printf("[-] Failed to get the region: %s\n", mach_error_string(err));
         return -1;
     }

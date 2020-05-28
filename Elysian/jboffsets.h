@@ -9,6 +9,7 @@
 #ifndef jboffsets_h
 #define jboffsets_h
 
+
 /*
  function: GatherOffsets
  
@@ -16,4 +17,5 @@
  Get offsets to functions we'll use with kernel_call. The offsets are gathered from Patchfinder64 in jelbrekLibE
  */
 int GatherOffsets(void);
+
 #endif /* jboffsets_h */

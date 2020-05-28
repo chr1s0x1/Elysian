@@ -48,7 +48,9 @@ int CredsTool(uint64_t proc, int todo, bool ents, bool set) {
         LOG("[credstool] ERR: Can't revert and get entitlements at once");
         return 1;
     }
+    
     //------- for reverting creds -------\\
+    
     // creds
     let our_orig_t = find_self_task();
     let our_orig_p = rk64(our_orig_t + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
@@ -84,6 +86,10 @@ int CredsTool(uint64_t proc, int todo, bool ents, bool set) {
     LOG("[credstool] Grabbing entitlements..");
     let ourents = rk64(rk64(our_creds + 0x78) + 0x8);
     let s_ents = rk64(rk64(s_ucred + 0x78) + 0x8);
+    if(!ADDRISVALID(s_ents)) {
+        LOG("[credstool] ERR: couldn't get proc entitlements!");
+        return 1;
+    }
     wk64(rk64(our_creds + 0x78) + 0x8, s_ents);
     LOG("[credstool] Got entitlements");
         }
@@ -92,7 +98,6 @@ int CredsTool(uint64_t proc, int todo, bool ents, bool set) {
     LOG("[credstool] Setting uid to 0..");
     setuid(0);
     setuid(0);
-    wk64(our_creds + 0x78, our_label);
     if(getuid() != 0) {
     LOG("[credstool] ERR: Failed to set uid to 0");
     return 1;
@@ -128,10 +133,10 @@ int CredsTool(uint64_t proc, int todo, bool ents, bool set) {
 
 int EscalateTask(uint64_t task) {
     if(!ADDRISVALID(task)) {
-        LOG("[platform] ERR: Invalid task");
+        LOG("[escalate] ERR: Invalid task");
         return 1;
     }
-    LOG("[platform] Platforming task..");
+    LOG("[escalate] Escalating task..");
     let our_proc = rk64(task + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
 #if __arm64e__
     let our_flags = rk32(task + 0x3C0);
@@ -144,10 +149,12 @@ int EscalateTask(uint64_t task) {
     our_csflags = our_csflags | CS_PLATFORM_BINARY | CS_INSTALLER | CS_GET_TASK_ALLOW;
     our_csflags &= ~(CS_RESTRICT | CS_HARD | CS_KILL);
     wk32(our_proc + 0x298, our_csflags);
-    LOG("[platform] Platformized task");
+    LOG("[escalate] Escalated task");
     return 0;
 }
 
+/* Dont need this rn
+ 
 int Execute(const char *file, char * const* args, ...) {
     int status;
     pid_t pid;
@@ -159,7 +166,8 @@ int Execute(const char *file, char * const* args, ...) {
     }
     return status;
 }
-
+ 
+*/
 // took this from Apple, Ty Siguza for showing me this
 uint64_t lookup_rootvnode() {
     LOG("Finding rootvnode..");
@@ -227,7 +235,7 @@ uint64_t vnode_finder(const char *path, const char *nodename, BOOL mountype) {
     LOG("[vnode] Got the fdesc");
     
     uint64_t fofiles = rk64(fdesc + koffset(KSTRUCT_OFFSET_FILEDESC_FD_OFILES));
-    uint64_t fileproc = rk64(fofiles + fd * 8); // * 8 is a pointer in bytes
+    uint64_t fileproc = rk64(fofiles + fd * 8);
     uint64_t fglob = rk64(fileproc + koffset(KSTRUCT_OFFSET_FILEPROC_F_FGLOB));
     if(!ADDRISVALID(fglob)) {
         LOG("[vnode] ERR: Couldn't get fglob");
