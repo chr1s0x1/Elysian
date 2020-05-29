@@ -25,7 +25,12 @@ void AmfidWrite_64bits(uint64_t addr, uint64_t val);
 // needed for load_binary_address
 kern_return_t mach_vm_region(vm_map_t target_task, mach_vm_address_t *address, mach_vm_size_t *size, vm_region_flavor_t flavor, vm_region_info_t info, mach_msg_type_number_t *infoCnt, mach_port_t *object_name);
 
-// from Chimera 13 :/
-uint64_t getArmLr(arm_thread_state64_t state);
-uint64_t getArmPc(arm_thread_state64_t state);
+// cdhash stuff
+uint32_t swap_uint32( uint32_t val );
+uint32_t read_magic(FILE* file, off_t offset);
+void *load_bytes(FILE *file, off_t offset, size_t size);
+uint8_t *getCodeDirectory(const char* name);
+static unsigned int hash_rank(const CodeDirectory *cd);
+int get_hash(const CodeDirectory* directory, uint8_t dst[CS_CDHASH_LEN]);
+int parse_superblob(uint8_t *code_dir, uint8_t dst[CS_CDHASH_LEN]);
 #endif /* amfiutils_h */

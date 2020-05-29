@@ -24,6 +24,7 @@
 #import "jbtools.h"
 #import "utils.h"
 #import "amfiutils.h"
+#import "include/cs_blob.h"
 
 
 pthread_t exceptionThread;
@@ -64,18 +65,43 @@ void* AMFIDExceptionHandler(void* arg) {
     memcpy(&new_state, &state, sizeof(_STRUCT_ARM_THREAD_STATE64));
     
     char* filename = (char*)AmfidRead(new_state.__x[23], 1024);
-    
-    
-    /*
-    uint64_t loadaddr = binary_load_address(task_port);
-    if(loadaddr == 0) {
-        LOG("[handler] ERR: Unable to get load address");
+    uint8_t* code_directory = getCodeDirectory(filename);
+    if(!code_directory) {
+        LOG("[handler] ERR: Unable to get code directory");
         return (void *)1;
     }
-    LOG("[handler] Found load address");
-     */
+    
+    LOG("[handler] Found CodeDirectory");
+    
+    uint8_t cd_hash[CS_CDHASH_LEN];
+    if (parse_superblob(code_directory, cd_hash)) {
+        LOG("[handler] ERR: Failed to find cdhash");
+        return (void *)1;
+    }
+    
+    LOG("[handler] Found cdhash");
+    
+    // Patch up cdhash
+    ret = mach_vm_write(task_port, new_state.__x[24], (vm_offset_t)&cd_hash, (mach_msg_type_number_t)(CS_CDHASH_LEN));
+    
+    if(ret != KERN_SUCCESS) {
+        LOG("[handler] ERR: Unable to write hash into amfid");
+        return (void *)1;
+    }
+    
+    LOG("[handler] Wrote hash into amfid");
+    
+    AmfidWrite_32bits(state.__x[19], 1);
+    
+    ret = thread_set_state(thread_port, 6, (thread_state_t)&new_state, (mach_msg_type_number_t)(ARM_THREAD_STATE64_COUNT));
+    if(ret != KERN_SUCCESS) {
+        LOG("[handler] ERR: Couldn't set new thread state");
+        return (void *)1;
+    }
+    LOG("[handler] Successfully set new thread state");
     
     // Setup reply message
+    
     LOG("[handler] Setting up reply message..");
 
     reply.Head.msgh_bits = req->Head.msgh_bits & (UInt32)(MACH_MSGH_BITS_REMOTE_MASK);
@@ -103,6 +129,8 @@ void* AMFIDExceptionHandler(void* arg) {
         return (void *)1;
         }
     LOG("[handler] Sent reply message..");
+    
+    LOG("[handler] We're done!");
     return NULL;
 }
 

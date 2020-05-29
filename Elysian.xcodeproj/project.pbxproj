@@ -89,6 +89,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		110AE9822481757200DC4ADD /* cs_blob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cs_blob.h; sourceTree = "<group>"; };
 		1112737624576B07001EF237 /* jbtools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = jbtools.m; sourceTree = "<group>"; };
 		1112737824576B28001EF237 /* jbtools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jbtools.h; sourceTree = "<group>"; };
 		111EA28B2464FBA500C093B7 /* jboffsets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jboffsets.h; sourceTree = "<group>"; };
@@ -189,6 +190,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		110AE9812481757200DC4ADD /* include */ = {
+			isa = PBXGroup;
+			children = (
+				110AE9822481757200DC4ADD /* cs_blob.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
 		1157CB392430353600B8A0CA /* pac */ = {
 			isa = PBXGroup;
 			children = (
@@ -247,6 +256,7 @@
 		846DD5E2240CE2920000D4AC /* Elysian */ = {
 			isa = PBXGroup;
 			children = (
+				110AE9812481757200DC4ADD /* include */,
 				11CA45A42474C3BF00B93462 /* bootstrap */,
 				1157CB392430353600B8A0CA /* pac */,
 				84837C39241C948800FCD15E /* IOKit */,
@@ -673,7 +683,7 @@
 					arm64e,
 				);
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Z25WL7QR46;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)\"";
 				INFOPLIST_FILE = Elysian/Info.plist;
@@ -707,7 +717,7 @@
 					arm64e,
 				);
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Z25WL7QR46;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)\"";
 				INFOPLIST_FILE = Elysian/Info.plist;
