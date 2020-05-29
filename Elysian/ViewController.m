@@ -27,6 +27,7 @@
 
 uint64_t kernel_proc;
 uint64_t launchd_proc;
+uint64_t ourproc;
 UInt32 amfi_pid;
 
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
@@ -44,6 +45,9 @@ void FillProcs() {
     
     launchd_proc = proc_of_pid(1);
     LOG("[proc] Got launchd proc");
+    
+    ourproc = proc_of_pid(getpid());
+    LOG("[proc] Got our proc");
     
     uint64_t proc = rk64(Find_allproc());
     while(proc != 0) {
@@ -223,15 +227,15 @@ void FillProcs() {
         } else if (errs == _REMOUNTSUCCESS) {
             LOG("Remounted RootFS");
         } else { // idk how this would happen
-            SetButtonText("Error: Remount");
+            SetButtonText("Error: Unkown Remount Error");
             goto out;
         }
         
         CredsTool(kernel_proc, 0, NO, YES);
         
         // Nuke AMFI >:)
-        errs = amfidestroyer(amfi_pid);
-        ASSERT(errs == 0, "ERR: Failed to patch amfid!", "Error: Patching amfid");
+        errs = amfidestroyer(amfi_pid, ourproc);
+        ASSERT((bool)errs == true, "ERR: Failed to patch amfid!", "Error: Patching amfid");
         
         // setup bootstrap
         errs = createbootstrap();

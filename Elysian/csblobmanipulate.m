@@ -33,7 +33,7 @@ int csblobmanipulate(const char *macho) {
     LOG("[csblob] ?: Checking if a csblob exists..");
     uint64_t cs_blob = rk64(vnode + 0x78);
     if(cs_blob != 0) {
-        LOG("[csblob] ?: %s already has a blob, setting gen count..", macho);
+        LOG("[csblob] ?: MachO already has a blob, setting gen count..");
         wk64(cs_blob + 44, rk32(Find_cs_gen_count()));
         return 0;
     }

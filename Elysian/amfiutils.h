@@ -24,4 +24,8 @@ void AmfidWrite_64bits(uint64_t addr, uint64_t val);
 
 // needed for load_binary_address
 kern_return_t mach_vm_region(vm_map_t target_task, mach_vm_address_t *address, mach_vm_size_t *size, vm_region_flavor_t flavor, vm_region_info_t info, mach_msg_type_number_t *infoCnt, mach_port_t *object_name);
+
+// from Chimera 13 :/
+uint64_t getArmLr(arm_thread_state64_t state);
+uint64_t getArmPc(arm_thread_state64_t state);
 #endif /* amfiutils_h */

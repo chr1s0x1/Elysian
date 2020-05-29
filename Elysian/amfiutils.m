@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #include <pthread.h>
 #include <mach-o/loader.h>
+#include <mach-o/fat.h>
 #include <mach/mach.h>
 
 #import "kernel_memory.h"
@@ -81,3 +82,4 @@ void AmfidWrite_64bits(uint64_t addr, uint64_t val) {
         printf("[-] amfid write failed (0x%llx)\n", addr);
     }
 }
+
