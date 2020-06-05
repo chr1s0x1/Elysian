@@ -194,7 +194,7 @@ pid_t hijacksysdiagnose(uint64_t ourproc) {
     return syspid;
 }
 
-uint64_t amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
+int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
     LOG("[amfid] Let's do this..");
     mach_port_t amfid_task = MACH_PORT_NULL;
     
@@ -278,5 +278,5 @@ uint64_t amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
     LOG("[amfid] Mission complete, cleaning up..");
     kill(syspid, SIGKILL);
     CredsTool(0, 1, NO, NO);
-    return origAMFID_MISVSACI;
+    return 0;
 }

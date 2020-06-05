@@ -8,7 +8,7 @@
 
 #ifndef amfiutils_h
 #define amfiutils_h
-
+#include "include/cs_blob.h"
 
 #define amfid_MISValidateSignatureAndCopyInfo_import_offset 0x4150
 static mach_port_t amfid_task_port;

@@ -231,12 +231,13 @@ void FillProcs() {
             goto out;
         }
         
-        CredsTool(kernel_proc, 0, NO, YES);
+        CredsTool(kernel_proc, 0, NO, YES); // get kern creds for amfidestroyer
         
         // Nuke AMFI >:)
         errs = amfidestroyer(amfi_pid, ourproc);
-        ASSERT((bool)errs == true, "ERR: Failed to patch amfid!", "Error: Patching amfid");
-        
+        ASSERT(errs == 0, "ERR: Failed to patch amfid!", "Error: Patching amfid");
+    
+    
         // setup bootstrap
         errs = createbootstrap();
         ASSERT((bool)errs == true, "ERR: Failed creating bootstrap!", "Error: Creating Bootstrap");

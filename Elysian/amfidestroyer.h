@@ -39,6 +39,6 @@ pid_t hijacksysdiagnose(uint64_t myproc);
  Use:
  Patches amfid so we can run fakesigned binaries
  */
-uint64_t amfidestroyer(UInt32 amfipid, uint64_t ourproc);
+int amfidestroyer(UInt32 amfipid, uint64_t ourproc);
 
 #endif /* amfidestroyer_h */

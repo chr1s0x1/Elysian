@@ -133,7 +133,7 @@ int CredsTool(uint64_t proc, int todo, bool ents, bool set) {
 
 int EscalateTask(uint64_t task) {
     if(!ADDRISVALID(task)) {
-        LOG("[escalate] ERR: Invalid task");
+        LOG("[escalate] ERR: Invalid task given");
         return 1;
     }
     LOG("[escalate] Escalating task..");
@@ -168,6 +168,7 @@ int Execute(const char *file, char * const* args, ...) {
 }
  
 */
+
 // took this from Apple, Ty Siguza for showing me this
 uint64_t lookup_rootvnode() {
     LOG("Finding rootvnode..");
@@ -254,12 +255,11 @@ uint64_t vnode_finder(const char *path, const char *nodename, BOOL mountype) {
     
     // plz don't do this to me
     if(nodename == NULL && mountype == NO) {
-        LOG("[vnode] No vnode specified");
-        LOG("[vnode] Returning with the one we have");
+        LOG("[vnode] ?: No vnode specified");
+        LOG("[vnode] ?: Returning with the one we have");
         close(fd);
         return node;
     }
-    
     // Are we looking for a mount type??
     if(mountype == YES) {
         LOG("[vnode] ?: Looping over mount vnodes..");
@@ -285,7 +285,7 @@ uint64_t vnode_finder(const char *path, const char *nodename, BOOL mountype) {
     }
         // plz don't do this x2
     if(nodename == NULL && mountype == YES) {
-        LOG("[vnode] Uh.. mountype sure, but what exact vnode??");
+        LOG("[vnode] ?: Uh.. mountype sure, but what exact vnode??");
         LOG("[vnode] ?: Will go up one mount vnode..");
         uint64_t vmount = rk64(node + 0xd8);
         if(vmount != 0) {
