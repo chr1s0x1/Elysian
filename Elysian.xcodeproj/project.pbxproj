@@ -700,7 +700,7 @@
 				);
 				MACH_O_TYPE = mh_execute;
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.chr1sstuff;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chr1sstuff.elysian;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYSTEM_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Elysian\"";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -734,7 +734,7 @@
 				);
 				MACH_O_TYPE = mh_execute;
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.chr1sstuff;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chr1sstuff.elysian;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYSTEM_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Elysian\"";
 				TARGETED_DEVICE_FAMILY = "1,2";

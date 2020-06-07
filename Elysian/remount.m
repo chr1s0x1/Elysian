@@ -34,9 +34,9 @@ bool RenameSnapRequired(void) {
    
    // We can make a better check by checking if the address contains the name or not
    kread(rvnodename, ok, 20);
-   strncmp("disk0s1s1", ok, 20);
+   int cmp = strncmp("disk0s1s1", ok, 20);
    
-   return ADDRISVALID(rvnodename) ? YES : NO || strcmp(ok, "disk0s1s1") == 0 ? YES : NO;
+   return ADDRISVALID(rvnodename) ? YES : NO || cmp == 0 ? YES : NO;
 }
 
 uint64_t FindNewMount(uint64_t vnode) {
