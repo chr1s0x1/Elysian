@@ -23,7 +23,7 @@ enum remount_ret {
     _MOUNTFAILED2,
     _RENAMEFAILED,
     _NOUPDATEDDISK,
-    _TESTFAILED,
+    _FSTESTFAILED,
     _RENAMEDSNAP,
     _REMOUNTSUCCESS,
 };
@@ -61,7 +61,7 @@ bool RenameSnapRequired(void);
 uint64_t FindNewMount(uint64_t vnode);
 
 /*
- function : Remount13
+ function : RemountFS
  
  Use:
  New and improved remount code that remounts the RootFS.

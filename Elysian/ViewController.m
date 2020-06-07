@@ -27,7 +27,7 @@
 
 uint64_t kernel_proc;
 uint64_t launchd_proc;
-uint64_t ourproc;
+uint64_t our_proc;
 UInt32 amfi_pid;
 
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
@@ -35,27 +35,30 @@ UInt32 amfi_pid;
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 #define SetButtonText(what)\
-[self->JBButton setTitle:@(what) forState:UIControlStateNormal];
+[self->JBButton setTitle:@(what) forState:UIControlStateNormal]
 
 void FillProcs() {
     LOG("[proc] Filling procs..");
     
     kernel_proc = proc_of_pid(0);
+    if(!ADDRISVALID(kernproc)) return;
     LOG("[proc] Got kernel proc");
     
     launchd_proc = proc_of_pid(1);
+    if(!ADDRISVALID(launchd_proc)) return;
     LOG("[proc] Got launchd proc");
     
-    ourproc = proc_of_pid(getpid());
+    our_proc = proc_of_pid(getpid());
+    if(!ADDRISVALID(our_proc)) return;
     LOG("[proc] Got our proc");
     
     uint64_t proc = rk64(Find_allproc());
     while(proc != 0) {
-        char amfidname[32];
+        char name[32];
         var pid = rk32(proc + (UInt64)(0x68));
         uint64_t procname = proc + 0x258;
-        kread(procname, amfidname, 32);
-        if(strncmp(amfidname, "amfid", 32) == 0) {
+        kread(procname, name, 32);
+        if(strncmp(name, "amfid", 32) == 0) {
             LOG("[proc] Found amfid");
             amfi_pid = pid;
             break;
@@ -63,7 +66,7 @@ void FillProcs() {
         proc = rk64(proc);
     }
     
-    LOG("[proc] Done");
+    LOG("[proc] Filled all procs");
     return;
 }
 
@@ -102,7 +105,7 @@ void FillProcs() {
         if(!MACH_PORT_VALID(tfpzero)){
             LOG("ERR: Exploit Failed");
             LOG("Please reboot and try again");
-            SetButtonText("Error: Exploiting kernel");
+            SetButtonText("Error: Exploiting Kernel");
             return;
         }
         LOG("[i] tfp0: 0x%x", tfpzero);
@@ -121,9 +124,9 @@ void FillProcs() {
         uint64_t our_task = find_self_task();
         LOG("our_task: 0x%llx", our_task);
             // find the sandbox slot
-        uint64_t our_proc = rk64(our_task + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
-        LOG("our_proc: 0x%llx", our_proc);
-        uint64_t our_ucred = rk64(our_proc + 0x100); // 0x100 - off_p_ucred
+        uint64_t proc = rk64(our_task + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
+        LOG("our_proc: 0x%llx", proc);
+        uint64_t our_ucred = rk64(proc + 0x100); // 0x100 - off_p_ucred
         LOG("ucred: 0x%llx", our_ucred);
         uint64_t cr_label = rk64(our_ucred + 0x78); // 0x78 - off_ucred_cr_label
         LOG("cr_label: 0x%llx", cr_label);
@@ -140,8 +143,10 @@ void FillProcs() {
         LOG("ERR: Failed to set Sandbox_slot to 0");
         LOG("ERR: Failed to Unsanbox");
         SetButtonText("Error: Escaping Sandbox");
-         return;
+        CredsTool(0, 1, NO, NO);
+        goto out;
         }
+        
         LOG("Escaped Sandbox");
         
         
@@ -150,7 +155,7 @@ void FillProcs() {
         errs = init_with_kbase(tfpzero, KernelBase, kernel_exec);
         if(errs != 0) {
         LOG("ERR: Failed to initialize jelbrekLibE");
-        SetButtonText("Error: Initializing jelbrekLibE");
+        SetButtonText("Error: Initializing JelbrekLibE");
         goto out;
         }
         LOG("[*] Initialized jelbrekLibE");
@@ -165,12 +170,12 @@ void FillProcs() {
         
         // Platform ourselves
         errs = EscalateTask(our_task);
-        ASSERT(errs == 0, "ERR: Failed to platform ourselves", "Error: Platformizing task");
+        ASSERT(errs == 0, "ERR: Failed to platform ourselves", "Error: Escalating Task");
         
         
         // Get offsets to kernel functions
         errs = GatherOffsets();
-        ASSERT(errs == 0, "ERR: Failed to get offsets", "Error: Gathering offsets");
+        ASSERT(errs == 0, "ERR: Failed to get offsets", "Error: Gathering Offsets");
     
         FillProcs();
         
@@ -182,7 +187,7 @@ void FillProcs() {
     /* error checks in remount - its not pretty but "it's honest work" */
         
         if (errs == _NOKERNPROC) {
-            SetButtonText("Error: Kernel process");
+            SetButtonText("Error: Kernel Process");
             goto out;
         } else if (errs == _NODISK) {
             SetButtonText("Error: Finding disk0s1s1");
@@ -191,7 +196,7 @@ void FillProcs() {
             SetButtonText("Error: Grabbing Kerncreds");
             goto out;
         } else if (errs == _NOMNTPATH) {
-            SetButtonText("Error: Creating mount path");
+            SetButtonText("Error: Creating Mount Path");
             goto out;
         } else if(errs == _REVERTMNTFAILED) {
             SetButtonText("Error: Reverting MntPath");
@@ -203,7 +208,7 @@ void FillProcs() {
             SetButtonText("Error: Mounting FS in new path");
             goto out;
         } else if (errs == _NONEWDISK) {
-            SetButtonText("Error: Finding new disk");
+            SetButtonText("Error: Finding New Disk");
             goto out;
         } else if (errs == _RENAMEFAILED) {
             SetButtonText("Error: Renaming Snapshot");
@@ -221,8 +226,8 @@ void FillProcs() {
         } else if (errs == _NOUPDATEDDISK) {
             SetButtonText("Error: Updating disk01s1");
             goto out;
-        } else if (errs == _TESTFAILED){
-            SetButtonText("Error: Test file");
+        } else if (errs == _FSTESTFAILED){
+            SetButtonText("Error: RootFS Test File");
             goto out;
         } else if (errs == _REMOUNTSUCCESS) {
             LOG("Remounted RootFS");
@@ -234,7 +239,7 @@ void FillProcs() {
         CredsTool(kernel_proc, 0, NO, YES); // get kern creds for amfidestroyer
         
         // Nuke AMFI >:)
-        errs = amfidestroyer(amfi_pid, ourproc);
+        errs = amfidestroyer(amfi_pid, our_proc);
         ASSERT(errs == 0, "ERR: Failed to patch amfid!", "Error: Patching amfid");
     
     

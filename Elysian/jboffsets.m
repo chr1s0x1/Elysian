@@ -12,33 +12,38 @@
 #import "kernel_memory.h"
 #import "utils.h"
 
+// functions gathered from GatherOffsets()
+uint64_t _vnode_lookup;
+uint64_t _vnode_put;
+uint64_t _vfs_context_current;
+
 int GatherOffsets() {    
 LOG("[offsets] Getting offsets..");
 int offset = 0;
     
-uint64_t vnode_lookup = Find_vnode_lookup();
-    if(!ADDRISVALID(vnode_lookup)) {
+_vnode_lookup = Find_vnode_lookup();
+    if(!ADDRISVALID(_vnode_lookup)) {
         LOG("[offsets] ERR: Failed to get vnode_lookup offset");
         offset = 1;
         goto fail;
     }
-    LOG("[offsets] vnode_lookup: 0x%llx", vnode_lookup);
+    LOG("[offsets] vnode_lookup: 0x%llx", _vnode_lookup);
     
-uint64_t vnode_put = Find_vnode_put();
-    if(!ADDRISVALID(vnode_put)) {
+_vnode_put = Find_vnode_put();
+    if(!ADDRISVALID(_vnode_put)) {
         LOG("[offsets] ERR: Failed to get vnode_put offset");
         offset = 2;
         goto fail;
     }
-    LOG("[offsets] vnode_put: 0x%llx", vnode_put);
+    LOG("[offsets] vnode_put: 0x%llx", _vnode_put);
     
-uint64_t vfs_context_current = Find_vfs_context_current();
-    if(!ADDRISVALID(vfs_context_current)) {
+_vfs_context_current = Find_vfs_context_current();
+    if(!ADDRISVALID(_vfs_context_current)) {
         LOG("[offset] ERR: Failed to get vfs_context_current offset");
         offset = 3;
         goto fail;
     }
-    LOG("[offsets] vfs_context_current: 0x%llx", vfs_context_current);
+    LOG("[offsets] vfs_context_current: 0x%llx", _vfs_context_current);
     
     // Got all the offsets!
     LOG("[offsets] Offset error count is %d", offset);

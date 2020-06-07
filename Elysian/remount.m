@@ -20,19 +20,23 @@
 #import "jelbrekLib.h"
 #import "jbtools.h"
 #import "kernel_memory.h"
-#include "jboffsets.h"
 #include "offsets.h"
 
 // After renaming the snapshot, trying to grab the disk0s1s1 name from the offset
 // 0xb8 = an invalid address.. So we just check if the address is valid to tell
 // us if we've renamed the snapshot (valid = NO) (invalid = YES)
 bool RenameSnapRequired(void) {
+   char ok[20];
    uint64_t rootvnode = lookup_rootvnode();
    uint64_t vmount = rk64(rootvnode + 0xd8);
    uint64_t dev = rk64(vmount + 0x980);
    uint64_t rvnodename = rk64(dev + 0xb8);
    
-   return ADDRISVALID(rvnodename) ? YES : NO;
+   // We can make a better check by checking if the address contains the name or not
+   kread(rvnodename, ok, 20);
+   strncmp("disk0s1s1", ok, 20);
+   
+   return ADDRISVALID(rvnodename) ? YES : NO || strcmp(ok, "disk0s1s1") == 0 ? YES : NO;
 }
 
 uint64_t FindNewMount(uint64_t vnode) {
@@ -63,11 +67,11 @@ int RemountFS(uint64_t kernel_proc) {
         LOG("ERR: kernproc is invalid");
         return _NOKERNPROC;
     }
-    LOG("Got kernproc: 0x%llx", kernel_proc);
    
     bool rename = RenameSnapRequired();
     if(rename == YES) {
-        // get disk0s1s1
+       
+      // get disk0s1s1
     uint64_t rootvnode = lookup_rootvnode();
     uint64_t vmount = rk64(rootvnode + 0xd8);
     uint64_t dev = rk64(vmount + 0x980);
@@ -101,6 +105,7 @@ int RemountFS(uint64_t kernel_proc) {
     try: rmdir("/var/rootmnt");
         if(fileExists("/var/rootmnt")) {
             LOG("ERR: Couldnt remove mount path");
+            LOG("Not major, so we'll continue anyway..");
         }
     }
        // setup mount path for mounting rootvnode
@@ -155,7 +160,8 @@ int RemountFS(uint64_t kernel_proc) {
     close(fd);
     
     unmount(mntpath, MNT_FORCE);
-    fspec = strdup("/dev/disk0s1s1");
+    // set up mount args... again
+    fspec = strdup("/dev/disk0s1s1"); // have to strdup again because we freed it
     mntargs.fspec = fspec;
     mntargs.hfs_mask = 1;
     gettimeofday(nil, &mntargs.hfs_timezone);
@@ -217,9 +223,9 @@ int RemountFS(uint64_t kernel_proc) {
         }
     }
 return 0;
-} else {
-       
-// Should go here when we already renamed the snapshot
+}  else  {
+   
+   // Should go here when we already renamed the snapshot
    LOG("?: Snapshot already renamed");
    LOG("Remounting RootFS as r/w..");
    CredsTool(kernel_proc, 0, NO, YES);
@@ -238,6 +244,7 @@ return 0;
       }
    LOG("Updated mount as r/w? testing..");
    wk32(vmount + 0x70, flag);
+   
     // RootFS is r/w ???
    createFILE("/.Elysian", nil);
    FILE *f = fopen("/.Elysian", "rw");
@@ -245,8 +252,9 @@ return 0;
       LOG("ERR: Test file doesn't exist or we have no r/w");
       fclose(f);
       CredsTool(0, 1, NO, NO);
-      return _TESTFAILED;
+      return _FSTESTFAILED;
    }
+   
    LOG("Created '.Elysian' at '/'");
    fclose(f);
    CredsTool(0, 1, NO, NO);

@@ -35,9 +35,14 @@ int csblobmanipulate(const char *macho) {
     if(cs_blob != 0) {
         LOG("[csblob] ?: MachO already has a blob, setting gen count..");
         wk64(cs_blob + 44, rk32(Find_cs_gen_count()));
+        LOG("[csblob] Gen count is 0, exiting..");
         return 0;
     }
+    
+    // I don't want to do this :(
     LOG("[csblob] ?: Creating a valid blob..");
     
+
+    LOG("[csblob] Created blob and set generation count, finishing up..");
     return 0;
 }

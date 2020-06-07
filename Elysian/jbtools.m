@@ -137,7 +137,7 @@ int EscalateTask(uint64_t task) {
         return 1;
     }
     LOG("[escalate] Escalating task..");
-    let our_proc = rk64(task + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
+    let proc = rk64(task + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
 #if __arm64e__
     let our_flags = rk32(task + 0x3C0);
     wk32(task + 0x3C0, our_flags | TF_PLATFORM);
@@ -145,10 +145,10 @@ int EscalateTask(uint64_t task) {
     let our_flags = rk32(task + 0x3B8);
     wk32(task + 0x3B8, our_flags | TF_PLATFORM);
 #endif
-    var our_csflags = rk32(our_proc + 0x298);
+    var our_csflags = rk32(proc + 0x298);
     our_csflags = our_csflags | CS_PLATFORM_BINARY | CS_INSTALLER | CS_GET_TASK_ALLOW;
     our_csflags &= ~(CS_RESTRICT | CS_HARD | CS_KILL);
-    wk32(our_proc + 0x298, our_csflags);
+    wk32(proc + 0x298, our_csflags);
     LOG("[escalate] Escalated task");
     return 0;
 }

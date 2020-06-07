@@ -130,6 +130,7 @@ void* AMFIDExceptionHandler(void* arg) {
         }
     LOG("[handler] Sent reply message..");
     
+    // we're finished!
     LOG("[handler] We're done!");
     return NULL;
 }
