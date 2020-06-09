@@ -216,10 +216,72 @@ uint64_t lookup_rootvnode() {
     return 1;
 }
 
-// similar to lookup_rootvnode, although we have an option for mount types
-uint64_t vnode_finder(const char *path, const char *nodename, BOOL mountype) {
+
+uint64_t vnode_finder(const char *path, uint64_t givenproc, const char *nodename, BOOL mountype) {
     LOG("[vnode] Looking for '%s'..", nodename);
     char nodeidentity[20];
+    
+    // if a proc is given
+    if(givenproc != 0 && ADDRISVALID(givenproc)) {
+        char procv[20];
+                            // grab vnode from process
+        uint64_t vnode = rk64(givenproc + 0x238);
+        
+        if(nodename == NULL && mountype == NO) {
+            LOG("[vnode] ?: No vnode specified");
+            LOG("[vnode] ?: Returning with the one we have");
+            return vnode;
+        }
+        
+        if(nodename == NULL && mountype == NO) {
+            LOG("[vnode] ?: Uh, mountype sure, but what exact vnode??");
+            LOG("[vnode] ?: Will go up one mount type..");
+            uint64_t vmount = rk64(vnode + 0xd8);
+            uint64_t newnode = rk64(vmount + 0x980);
+            uint64_t nodename = rk64(newnode + 0xb8);
+            kread(nodename, procv, 20);
+            LOG("[vnode] Got vnode: %s", procv);
+            return newnode;
+        }
+        
+        if(mountype == YES) { // loop mount vnodes to find the specified one
+            LOG("[vnode] ?: Looping mount vnodes..");
+            uint64_t vmount = rk64(vnode + 0xd8);
+            uint64_t mntnext = rk64(vmount + 0x0);
+            while(mntnext != 0) {
+            uint64_t newnode = rk64(mntnext + 0x980);
+            uint64_t namenode = rk64(newnode + 0xb8);
+            kread(namenode, procv, 20);
+            
+            if(strncmp(nodename, procv, 20) == 0) {
+                LOG("[vnode] Found vnode: %s", procv);
+                return newnode;
+                }
+                mntnext = rk64(mntnext + 0x0);
+            }
+        }
+        // loop parent nodes if we don't have the right vnode
+        uint64_t vname = rk64(vnode + 0xb8);
+        kread(vname, procv, 20);
+        if(strncmp(nodename, procv, 20) != 0) {
+        LOG("[vnode] ?: Looping parent nodes..");
+        uint64_t pnode = rk64(vnode + 0xc0);
+        while(pnode != 0) {
+        uint64_t pname = rk64(pnode + 0xb8);
+        kread(pname, procv, 20);
+        if(strncmp(nodename, procv, 20) == 0) {
+            LOG("[vnode] Found vnode: %s", procv);
+            return vnode;
+                }
+            pnode = rk64(pnode + 0xc0);
+            }
+        }
+        LOG("[vnode] Got vnode: %s", procv);
+        return vnode;
+    } else if(givenproc != 0 && !ADDRISVALID(givenproc)) {
+        LOG("[vnode] ERR: The process given is invalid!");
+        return 1;
+    }
     
     int fd = open(path, O_RDONLY);
     if(fd < 0) {

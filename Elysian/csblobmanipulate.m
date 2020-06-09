@@ -22,7 +22,7 @@ int csblobmanipulate(const char *macho) {
     LOG("[csblob] Setting gen count for %s..", macho);
     
     // grab machO vnode, vnode_finder works on binaries ;)
-    uint64_t vnode = vnode_finder(macho, NULL, NO);
+    uint64_t vnode = vnode_finder(macho, 0, NULL, NO);
     if(!ADDRISVALID(vnode)) {
         LOG("[csblob] ERR: Failed to get vnode for %s", macho);
         return 1;
