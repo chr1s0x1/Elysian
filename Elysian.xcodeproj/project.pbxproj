@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1112737724576B07001EF237 /* jbtools.m in Sources */ = {isa = PBXBuildFile; fileRef = 1112737624576B07001EF237 /* jbtools.m */; };
+		1116136A2491D86B00F33AC8 /* SSH in Resources */ = {isa = PBXBuildFile; fileRef = 111613692491D86A00F33AC8 /* SSH */; };
 		111EA28D2464FD0300C093B7 /* jboffsets.m in Sources */ = {isa = PBXBuildFile; fileRef = 111EA28C2464FD0300C093B7 /* jboffsets.m */; };
 		11220284246284100053015A /* remount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11220283246284100053015A /* remount.m */; };
 		112A60B52436589D00258F9C /* sethsp4.c in Sources */ = {isa = PBXBuildFile; fileRef = 112A60B42436589D00258F9C /* sethsp4.c */; };
@@ -15,9 +16,6 @@
 		1132F04924758E5B002988BD /* amfidestroyer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1132F04824758E5B002988BD /* amfidestroyer.m */; };
 		1132F04C247644F6002988BD /* csblobmanipulate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1132F04B247644F6002988BD /* csblobmanipulate.m */; };
 		1132F04F2477A500002988BD /* amfiutils.m in Sources */ = {isa = PBXBuildFile; fileRef = 1132F04E2477A4FF002988BD /* amfiutils.m */; };
-		1132F054247AFA99002988BD /* bash.dms in Resources */ = {isa = PBXBuildFile; fileRef = 1132F051247AFA98002988BD /* bash.dms */; };
-		1132F055247AFA99002988BD /* dropbear.dms in Resources */ = {isa = PBXBuildFile; fileRef = 1132F052247AFA98002988BD /* dropbear.dms */; };
-		1132F056247AFA99002988BD /* binbag.dms in Resources */ = {isa = PBXBuildFile; fileRef = 1132F053247AFA98002988BD /* binbag.dms */; };
 		1157CB492430355D00B8A0CA /* parameters.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB3A2430355B00B8A0CA /* parameters.c */; };
 		1157CB4A2430355D00B8A0CA /* kernel.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB3C2430355B00B8A0CA /* kernel.c */; };
 		1157CB4B2430355D00B8A0CA /* kernel_memory.c in Sources */ = {isa = PBXBuildFile; fileRef = 1157CB412430355C00B8A0CA /* kernel_memory.c */; };
@@ -92,6 +90,7 @@
 		110AE9822481757200DC4ADD /* cs_blob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cs_blob.h; sourceTree = "<group>"; };
 		1112737624576B07001EF237 /* jbtools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = jbtools.m; sourceTree = "<group>"; };
 		1112737824576B28001EF237 /* jbtools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jbtools.h; sourceTree = "<group>"; };
+		111613692491D86A00F33AC8 /* SSH */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SSH; sourceTree = "<group>"; };
 		111EA28B2464FBA500C093B7 /* jboffsets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jboffsets.h; sourceTree = "<group>"; };
 		111EA28C2464FD0300C093B7 /* jboffsets.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = jboffsets.m; sourceTree = "<group>"; };
 		11220283246284100053015A /* remount.m */ = {isa = PBXFileReference; indentWidth = 3; lastKnownFileType = sourcecode.c.objc; path = remount.m; sourceTree = "<group>"; };
@@ -104,9 +103,6 @@
 		1132F04D2476450A002988BD /* csblobmanipulate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = csblobmanipulate.h; sourceTree = "<group>"; };
 		1132F04E2477A4FF002988BD /* amfiutils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = amfiutils.m; sourceTree = "<group>"; };
 		1132F0502477A513002988BD /* amfiutils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = amfiutils.h; sourceTree = "<group>"; };
-		1132F051247AFA98002988BD /* bash.dms */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = bash.dms; sourceTree = "<group>"; };
-		1132F052247AFA98002988BD /* dropbear.dms */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = dropbear.dms; sourceTree = "<group>"; };
-		1132F053247AFA98002988BD /* binbag.dms */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = binbag.dms; sourceTree = "<group>"; };
 		1157CB3A2430355B00B8A0CA /* parameters.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = parameters.c; sourceTree = "<group>"; };
 		1157CB3B2430355B00B8A0CA /* mach_vm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mach_vm.h; sourceTree = "<group>"; };
 		1157CB3C2430355B00B8A0CA /* kernel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kernel.c; sourceTree = "<group>"; };
@@ -198,6 +194,14 @@
 			path = include;
 			sourceTree = "<group>";
 		};
+		111613682491D83700F33AC8 /* bootstrap */ = {
+			isa = PBXGroup;
+			children = (
+				111613692491D86A00F33AC8 /* SSH */,
+			);
+			path = bootstrap;
+			sourceTree = "<group>";
+		};
 		1157CB392430353600B8A0CA /* pac */ = {
 			isa = PBXGroup;
 			children = (
@@ -220,16 +224,6 @@
 				1157CB422430355C00B8A0CA /* platform.h */,
 			);
 			path = pac;
-			sourceTree = "<group>";
-		};
-		11CA45A42474C3BF00B93462 /* bootstrap */ = {
-			isa = PBXGroup;
-			children = (
-				1132F051247AFA98002988BD /* bash.dms */,
-				1132F053247AFA98002988BD /* binbag.dms */,
-				1132F052247AFA98002988BD /* dropbear.dms */,
-			);
-			path = bootstrap;
 			sourceTree = "<group>";
 		};
 		846DD5D7240CE2920000D4AC = {
@@ -256,8 +250,8 @@
 		846DD5E2240CE2920000D4AC /* Elysian */ = {
 			isa = PBXGroup;
 			children = (
+				111613682491D83700F33AC8 /* bootstrap */,
 				110AE9812481757200DC4ADD /* include */,
-				11CA45A42474C3BF00B93462 /* bootstrap */,
 				1157CB392430353600B8A0CA /* pac */,
 				84837C39241C948800FCD15E /* IOKit */,
 				84837C38241C943900FCD15E /* libs */,
@@ -288,8 +282,8 @@
 				846DD5F5240CE29C0000D4AC /* main.m */,
 				112A60B32436589D00258F9C /* sethsp4.h */,
 				112A60B42436589D00258F9C /* sethsp4.c */,
-				1112737624576B07001EF237 /* jbtools.m */,
 				1112737824576B28001EF237 /* jbtools.h */,
+				1112737624576B07001EF237 /* jbtools.m */,
 				11220283246284100053015A /* remount.m */,
 				11220285246284220053015A /* remount.h */,
 				111EA28B2464FBA500C093B7 /* jboffsets.h */,
@@ -453,9 +447,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1132F055247AFA99002988BD /* dropbear.dms in Resources */,
-				1132F056247AFA99002988BD /* binbag.dms in Resources */,
-				1132F054247AFA99002988BD /* bash.dms in Resources */,
+				1116136A2491D86B00F33AC8 /* SSH in Resources */,
 				846DD5F3240CE29C0000D4AC /* LaunchScreen.storyboard in Resources */,
 				846DD5F0240CE29C0000D4AC /* Assets.xcassets in Resources */,
 				846DD5EE240CE2930000D4AC /* Main.storyboard in Resources */,
@@ -683,7 +675,7 @@
 					arm64e,
 				);
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = Z25WL7QR46;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)\"";
 				INFOPLIST_FILE = Elysian/Info.plist;
@@ -717,7 +709,7 @@
 					arm64e,
 				);
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = Z25WL7QR46;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)\"";
 				INFOPLIST_FILE = Elysian/Info.plist;

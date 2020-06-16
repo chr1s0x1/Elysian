@@ -225,6 +225,8 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
     uint64_t amfi_load = binary_load_address(amfid_task);
     if(amfi_load == 0) {
         LOG("[amfid] ERR: Couldn't find amfid load address");
+        kill(syspid, SIGKILL);
+        CredsTool(0, 1, NO, NO);
         return 1;
     }
     LOG("[amfid] Found amfid load address");
@@ -260,7 +262,7 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
         kill(syspid, SIGKILL);
         CredsTool(0, 1, NO, NO);
         return 1;
-    }                                           // remove vm protection flags
+    }                                          // add read/write permission flags
     kr = vm_protect(amfid_task, misvsaci_page, vm_page_size, 0, VM_PROT_READ | VM_PROT_WRITE);
     if(kr != KERN_SUCCESS) {
         LOG("[amfid patch] ERR: Couldn't make MISVSACI r/w");

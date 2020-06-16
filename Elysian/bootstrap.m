@@ -53,7 +53,7 @@ bool createbootstrap() {
     LOG("[bootstrap] ?: Copying over JB files..");
     
     // copy over SSH files
-
+    
 
     LOG("[bootstrap] Bootstrap returned: %d", retval);
     return true;

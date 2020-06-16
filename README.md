@@ -7,6 +7,8 @@ JB ETA????
 
 - UI will not be added until Elysian is fully functional
 
+## Currently cleaning up current code before continuing..
+
 # TODO :
 - Remount: **Done**
 - Code Signing (amfid patching): **Done** (Testing..)

@@ -10,6 +10,7 @@
 #include <sys/snapshot.h>
 #include <spawn.h>
 
+
 #import "ViewController.h"
 #import "exploit.h"
 #import "jelbrekLib.h"
@@ -20,6 +21,7 @@
 #import "utils.h"
 #import "remount.h"
 #import "amfidestroyer.h"
+#import "csblobmanipulate.h"
 #import "bootstrap.h"
 #include "pac/kernel_call.h"
 #include "pac/parameters.h"
@@ -41,7 +43,7 @@ void FillProcs() {
     LOG("[proc] Filling procs..");
     
     kernel_proc = proc_of_pid(0);
-    if(!ADDRISVALID(kernproc)) return;
+    if(!ADDRISVALID(kernel_proc)) return;
     LOG("[proc] Got kernel proc");
     
     launchd_proc = proc_of_pid(1);
@@ -108,7 +110,7 @@ void FillProcs() {
             SetButtonText("Error: Exploiting Kernel");
             return;
         }
-        LOG("[i] tfp0: 0x%x", tfpzero);
+        LOG("Exploited kernel");
         
     /* Start of Elysian Jailbreak ************************************/
        
@@ -177,7 +179,7 @@ void FillProcs() {
         errs = GatherOffsets();
         ASSERT(errs == 0, "ERR: Failed to get offsets", "Error: Gathering Offsets");
     
-        FillProcs();
+        FillProcs(); // grab important processes and etc.
         
         // ------------ Remount RootFS -------------- //
         
@@ -217,7 +219,7 @@ void FillProcs() {
         
         // After renaming the snapshot
         if (errs == _RENAMEDSNAP) {
-            MESSAGE("Snapshot successfully renamed, device will be rebooted. Run Elysian again to finish Jailbreaking", true);
+            // - broken lol - MESSAGE("Snapshot successfully renamed, device will be rebooted. Run Elysian again to finish Jailbreaking", true);
             usleep(2000);
             reboot(0);
         } else if (errs == _NOSNAP) {
@@ -242,11 +244,12 @@ void FillProcs() {
         errs = amfidestroyer(amfi_pid, our_proc);
         ASSERT(errs == 0, "ERR: Failed to patch amfid!", "Error: Patching amfid");
     
-    
         // setup bootstrap
         errs = createbootstrap();
         ASSERT((bool)errs == true, "ERR: Failed creating bootstrap!", "Error: Creating Bootstrap");
+    
         
+
         out:
         // clean up
         term_jelbrek();
