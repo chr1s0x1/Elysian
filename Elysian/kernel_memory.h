@@ -25,6 +25,7 @@ kern_return_t mach_vm_map(vm_map_t target_task, mach_vm_address_t *address, mach
 kern_return_t mach_vm_region_recurse(vm_map_t target_task, mach_vm_address_t *address, mach_vm_size_t *size, natural_t *nesting_depth, vm_region_recurse_info_t info, mach_msg_type_number_t *infoCnt);
 
 void init_kernel_memory(mach_port_t tfp0, uint64_t our_port_addr);
+void init_read_write(mach_port_t tfp0);
 
 size_t kread(uint64_t where, void *p, size_t size);
 uint32_t rk32(uint64_t where);

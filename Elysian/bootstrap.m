@@ -15,19 +15,13 @@
 #import "jbtools.h"
 #import "jelbrekLib.h"
 
-bool createbootstrap() {
+bool createbootstrap(uint64_t kproc) {
     int retval = 0;
     
     // need perms for mkdir
     if(getuid() != 0) {
         LOG("[bootstrap] ?: Getting perms..");
-        uint64_t kernproc = proc_of_pid(0);
-        if(!ADDRISVALID(kernproc)) {
-            LOG("[bootstrap] ERR: Couldn't get kernproc for perms");
-            retval = 1;
-            goto out;
-        }
-        CredsTool(kernproc, 0, NO, YES);
+        CredsTool(kproc, 0, NO, YES);
     }
     LOG("[bootstrap] Setting up Bootstrap..");
     mkdir("/Elysian", 0755);
@@ -50,7 +44,7 @@ bool createbootstrap() {
     LOG("[bootstrap] Created bin folder");
     chown("Elysian/bin", 0, 0);
     
-    LOG("[bootstrap] ?: Copying over JB files..");
+    // LOG("[bootstrap] ?: Copying over JB files..");
     
     // copy over SSH files
     

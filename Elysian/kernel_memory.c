@@ -17,6 +17,10 @@ void init_kernel_memory(mach_port_t tfp0, uint64_t our_port_addr) {
     task_self = our_port_addr;
 }
 
+void init_read_write(mach_port_t tfp0) {
+    tfpzero = tfp0;
+}
+
 uint64_t kalloc(vm_size_t size) {
     mach_vm_address_t address = 0;
     mach_vm_allocate(tfpzero, (mach_vm_address_t *)&address, size, VM_FLAGS_ANYWHERE);

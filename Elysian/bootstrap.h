@@ -9,5 +9,5 @@
 #ifndef boostrap_h
 #define boostrap_h
 
-bool createbootstrap(void);
+bool createbootstrap(uint64_t kproc);
 #endif /* boostrap_h */

@@ -20,6 +20,7 @@
 #import "kernel_memory.h"
 #import "jbtools.h"
 
+
 let TF_PLATFORM = (UInt32)(0x00000400);
 
 let CS_VALID = (UInt32)0x00000001;
@@ -33,7 +34,7 @@ let CS_RESTRICT = (UInt32)(0x00000800);
 let CS_PLATFORM_BINARY = (UInt32)(0x04000000);
 let CS_DEBUGGED = (UInt32)(0x10000000);
 
-
+// I'll make CredsTool more flexiable in the future
 int CredsTool(uint64_t proc, int todo, bool ents, bool set) {
     if(todo > 1 || todo < 0) {
         LOG("[credstool] ERR: Integer 'todo' must be 0 or 1");
@@ -152,6 +153,7 @@ int EscalateTask(uint64_t task) {
     LOG("[escalate] Escalated task");
     return 0;
 }
+
 
 /* Dont need this rn
  
@@ -403,3 +405,4 @@ uint64_t vnode_finder(const char *path, uint64_t givenproc, const char *nodename
     close(fd);
     return node;
 }
+

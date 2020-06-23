@@ -20,6 +20,7 @@
 #import "sethsp4.h"
 #import "utils.h"
 #import "remount.h"
+#import "ESpeed.h"
 #import "amfidestroyer.h"
 #import "csblobmanipulate.h"
 #import "bootstrap.h"
@@ -38,6 +39,7 @@ UInt32 amfi_pid;
 
 #define SetButtonText(what)\
 [self->JBButton setTitle:@(what) forState:UIControlStateNormal]
+
 
 void FillProcs() {
     LOG("[proc] Filling procs..");
@@ -72,6 +74,23 @@ void FillProcs() {
     return;
 }
 
+int PreSpeed(void) {
+    LOG("[PreSpeed] Setting up..");
+    struct kernel_all_image_info_addr kernelstuff = {};
+    kernelstuff.kernproc = kernel_proc;
+    if(!ADDRISVALID(kernelstuff.kernproc)) {
+        LOG("[PreSpeed] ERR: Couldn't set kernproc");
+        return 1;
+    }
+    kernelstuff.kernel_base_address = KernelBase;
+    if(!ADDRISVALID(kernelstuff.kernel_base_address)) {
+        LOG("[PreSpeed] ERR: Couldn't set kernel base");
+        return 1;
+    }
+    LOG("[PreSpeed] Done");
+    return 0;
+}
+
 
 @interface ViewController ()
 
@@ -89,8 +108,8 @@ void FillProcs() {
     
     // iOS Compatibility check
     if(SYSTEM_VERSION_GREATER_THAN(@"13.3") || SYSTEM_VERSION_LESS_THAN(@"13.0")) {
-    LOG("ERR: Unsupported Firmware");
     JBButton.enabled = NO; // should disable this first
+    LOG("ERR: Unsupported Firmware");
     SetButtonText("Error: Unsupported");
 }
     
@@ -102,16 +121,19 @@ void FillProcs() {
 - (IBAction)JBGo:(id)sender {
     [self->JBButton setEnabled:NO];
         LOG("[*] Starting Exploit");
+        int espeed;
         __block mach_port_t tfpzero = MACH_PORT_NULL;
+        espeed = ESpeed();
+        if(espeed != 0) {
         tfpzero = get_tfp0();
         if(!MACH_PORT_VALID(tfpzero)){
             LOG("ERR: Exploit Failed");
             LOG("Please reboot and try again");
             SetButtonText("Error: Exploiting Kernel");
             return;
-        }
+            }
         LOG("Exploited kernel");
-        
+        }
     /* Start of Elysian Jailbreak ************************************/
        
         // used for checks
@@ -120,7 +142,7 @@ void FillProcs() {
         LOG("Starting Jailbreak Process..");
         
             // ------------ Unsandbox ------------ //
-        
+        if (espeed != 0) {
         LOG("Unsandboxing..");
             // find our task
         uint64_t our_task = find_self_task();
@@ -150,8 +172,8 @@ void FillProcs() {
         }
         
         LOG("Escaped Sandbox");
-        
-        
+            
+
         LOG("Here comes the fun..");
             // Initiate jelbrekLibE
         errs = init_with_kbase(tfpzero, KernelBase, kernel_exec);
@@ -173,13 +195,14 @@ void FillProcs() {
         // Platform ourselves
         errs = EscalateTask(our_task);
         ASSERT(errs == 0, "ERR: Failed to platform ourselves", "Error: Escalating Task");
-        
+    }
         
         // Get offsets to kernel functions
         errs = GatherOffsets();
         ASSERT(errs == 0, "ERR: Failed to get offsets", "Error: Gathering Offsets");
     
         FillProcs(); // grab important processes and etc.
+        PreSpeed();
         
         // ------------ Remount RootFS -------------- //
         
@@ -245,7 +268,7 @@ void FillProcs() {
         ASSERT(errs == 0, "ERR: Failed to patch amfid!", "Error: Patching amfid");
     
         // setup bootstrap
-        errs = createbootstrap();
+        errs = createbootstrap(kernel_proc);
         ASSERT((bool)errs == true, "ERR: Failed creating bootstrap!", "Error: Creating Bootstrap");
     
         
@@ -255,7 +278,7 @@ void FillProcs() {
         term_jelbrek();
         CredsTool(0, 1, NO, NO);
         return;
-    
+ 
 }
 
 @end

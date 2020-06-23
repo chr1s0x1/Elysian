@@ -29,6 +29,7 @@ int CredsTool(uint64_t proc, int todo, bool ents, bool set);
  */
 int EscalateTask(uint64_t task);
 
+
 /*
  function: Execute
  

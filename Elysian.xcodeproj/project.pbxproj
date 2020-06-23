@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1112737724576B07001EF237 /* jbtools.m in Sources */ = {isa = PBXBuildFile; fileRef = 1112737624576B07001EF237 /* jbtools.m */; };
 		1116136A2491D86B00F33AC8 /* SSH in Resources */ = {isa = PBXBuildFile; fileRef = 111613692491D86A00F33AC8 /* SSH */; };
+		1116139524A26ED000F33AC8 /* ESpeed.m in Sources */ = {isa = PBXBuildFile; fileRef = 1116139424A26ED000F33AC8 /* ESpeed.m */; };
 		111EA28D2464FD0300C093B7 /* jboffsets.m in Sources */ = {isa = PBXBuildFile; fileRef = 111EA28C2464FD0300C093B7 /* jboffsets.m */; };
 		11220284246284100053015A /* remount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11220283246284100053015A /* remount.m */; };
 		112A60B52436589D00258F9C /* sethsp4.c in Sources */ = {isa = PBXBuildFile; fileRef = 112A60B42436589D00258F9C /* sethsp4.c */; };
@@ -91,6 +92,8 @@
 		1112737624576B07001EF237 /* jbtools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = jbtools.m; sourceTree = "<group>"; };
 		1112737824576B28001EF237 /* jbtools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jbtools.h; sourceTree = "<group>"; };
 		111613692491D86A00F33AC8 /* SSH */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SSH; sourceTree = "<group>"; };
+		1116139424A26ED000F33AC8 /* ESpeed.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ESpeed.m; sourceTree = "<group>"; };
+		1116139624A26F2200F33AC8 /* ESpeed.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ESpeed.h; sourceTree = "<group>"; };
 		111EA28B2464FBA500C093B7 /* jboffsets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jboffsets.h; sourceTree = "<group>"; };
 		111EA28C2464FD0300C093B7 /* jboffsets.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = jboffsets.m; sourceTree = "<group>"; };
 		11220283246284100053015A /* remount.m */ = {isa = PBXFileReference; indentWidth = 3; lastKnownFileType = sourcecode.c.objc; path = remount.m; sourceTree = "<group>"; };
@@ -296,6 +299,8 @@
 				1132F04D2476450A002988BD /* csblobmanipulate.h */,
 				1132F04E2477A4FF002988BD /* amfiutils.m */,
 				1132F0502477A513002988BD /* amfiutils.h */,
+				1116139424A26ED000F33AC8 /* ESpeed.m */,
+				1116139624A26F2200F33AC8 /* ESpeed.h */,
 			);
 			path = Elysian;
 			sourceTree = "<group>";
@@ -496,6 +501,7 @@
 				1157CB4F2430355D00B8A0CA /* kernel_call.c in Sources */,
 				1157CB4A2430355D00B8A0CA /* kernel.c in Sources */,
 				1157CB4D2430355D00B8A0CA /* log.c in Sources */,
+				1116139524A26ED000F33AC8 /* ESpeed.m in Sources */,
 				111EA28D2464FD0300C093B7 /* jboffsets.m in Sources */,
 				112A60B52436589D00258F9C /* sethsp4.c in Sources */,
 				1157CB4C2430355D00B8A0CA /* pac_bypass.c in Sources */,

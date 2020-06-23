@@ -10,7 +10,7 @@
 #define utils_h
 
 #include <stdio.h>
-#import <objc/runtime.h>
+#include <objc/runtime.h>
 #import <dlfcn.h>
 
 // I love the "let" & "var" operator
@@ -21,7 +21,7 @@
 #define var __auto_type
 #endif
 
-NSError *error;
+// NSError *error;
 
 #define ADDRISVALID(val) ((val) >= 0xffff000000000000 && (val) != 0xffffffffffffffff)
 
