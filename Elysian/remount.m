@@ -226,6 +226,7 @@ return 0;
 }  else  {
    
    // Should go here when we already renamed the snapshot
+   
    LOG("?: Snapshot already renamed");
    LOG("Remounting RootFS as r/w..");
    CredsTool(kernel_proc, 0, NO, YES);
@@ -260,5 +261,6 @@ return 0;
    CredsTool(0, 1, NO, NO);
    return _REMOUNTSUCCESS;
    }
+   
 return 0;
 }

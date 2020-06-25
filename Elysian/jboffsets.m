@@ -27,6 +27,7 @@ _vnode_lookup = Find_vnode_lookup();
         offset = 1;
         goto fail;
     }
+    
     LOG("[offsets] vnode_lookup: 0x%llx", _vnode_lookup);
     
 _vnode_put = Find_vnode_put();
@@ -35,6 +36,7 @@ _vnode_put = Find_vnode_put();
         offset = 2;
         goto fail;
     }
+    
     LOG("[offsets] vnode_put: 0x%llx", _vnode_put);
     
 _vfs_context_current = Find_vfs_context_current();
@@ -43,6 +45,7 @@ _vfs_context_current = Find_vfs_context_current();
         offset = 3;
         goto fail;
     }
+    
     LOG("[offsets] vfs_context_current: 0x%llx", _vfs_context_current);
     
     // Got all the offsets!

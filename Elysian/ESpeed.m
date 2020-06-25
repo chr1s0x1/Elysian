@@ -33,6 +33,8 @@ int ESpeed(void) {
         return 1;
     }
     
+    init_offsets();
+    
     // init rk64, wk64 etc.
     init_read_write(tfp0hsp4);
     

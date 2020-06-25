@@ -75,8 +75,28 @@ void FillProcs() {
     return;
 }
                         // Setup for ESpeed to use the tfp0 in HSP4
-int PreSpeed(void) {
+int PreSpeed(mach_port_t ktaskport) {
+    if(!MACH_PORT_VALID(ktaskport)) {
+        LOG("[PreSpeed] ERR: tfp0 is invalid!");
+        return 1;
+    }
     LOG("[PreSpeed] Setting up..");
+    
+    // get port address of tfp0
+    uint64_t kportaddr = find_port(ktaskport);
+    if(!ADDRISVALID(kportaddr)) {
+        LOG("[PreSpeed] ERR: Couldn't find tfp0 port address");
+        return 1;
+    }
+    
+    // get the tfp0 task
+    uint64_t ktask = rk64(kportaddr + koffset(KSTRUCT_OFFSET_IPC_PORT_IP_KOBJECT));
+    if(!ADDRISVALID(ktask)) {
+        LOG("[PreSpeed] ERR: Couldn't find tfp0 task");
+        return 1;
+    }
+    
+    // add things to struct xD
     struct kernel_all_image_info_addr kernelstuff = {};
     kernelstuff.kernproc = kernel_proc;
     if(!ADDRISVALID(kernelstuff.kernproc)) {
@@ -93,14 +113,8 @@ int PreSpeed(void) {
     uint64_t kernel_all_image_info_addr_struct = kalloc(pagesize);
     uint64_t kernel_slide = KernelBase - 0xfffffff007004000;
     kwrite(kernel_all_image_info_addr_struct, &kernelstuff, sizeof(kernelstuff));
-    
-    int init = kernel_parameters_init();
-    if(init != 0) {
-        LOG("[PreSpeed] ERR: Couldn't init kernel parameters");
-        return 1;
-    }
-    wk64(TFP0 + 0x3d0, kernel_all_image_info_addr_struct);
-    wk64(TFP0 + 0x3d8, kernel_slide);
+    wk64(ktask + 0x3d0, kernel_all_image_info_addr_struct);
+    wk64(ktask + 0x3d8, kernel_slide);
     
     LOG("[PreSpeed] Done");
     return 0;
@@ -136,7 +150,7 @@ int PreSpeed(void) {
 - (IBAction)JBGo:(id)sender {
     [self->JBButton setEnabled:NO];
         LOG("[*] Starting Exploit");
-        int espeed;
+        int espeed = 0;
         __block mach_port_t tfpzero = MACH_PORT_NULL;
         espeed = ESpeed();
         if(espeed != 0) {
@@ -147,9 +161,9 @@ int PreSpeed(void) {
             SetButtonText("Error: Exploiting Kernel");
             return;
             }
-        TFP0 = tfpzero;
         LOG("Exploited kernel");
         }
+    
     /* Start of Elysian Jailbreak ************************************/
        
         // used for checks
@@ -218,7 +232,7 @@ int PreSpeed(void) {
         ASSERT(errs == 0, "ERR: Failed to get offsets", "Error: Gathering Offsets");
     
         FillProcs(); // grab important processes and etc.
-        PreSpeed(); // gang gang
+        PreSpeed(tfpzero); // gang gang
         
         // ------------ Remount RootFS -------------- //
         
