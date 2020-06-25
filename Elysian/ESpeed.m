@@ -16,9 +16,9 @@
 #import "jelbrekLib.h"
 #import "ESpeed.h"
 
-mach_port_t tfp0hsp4 = MACH_PORT_NULL;
+extern mach_port_t tfp0hsp4 = MACH_PORT_NULL;
 
-
+// Not fully finished yet
 int ESpeed(void) {
     LOG("[ESpeed] Trying to grab tfp0 from HSP4..");
     host_t myself = mach_host_self();
@@ -77,6 +77,9 @@ int ESpeed(void) {
     // now init with our task
     init_kernel_memory(tfp0hsp4, selftask);
     
+    // -------- Now Unsandbox -------- //
+    
+    LOG("[ESpeed] Unsandboxing..");
     uint64_t proc = rk64(selftask + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
     LOG("[ESpeed] our_proc: 0x%llx", proc);
     uint64_t our_ucred = rk64(proc + 0x100); // 0x100 - off_p_ucred
@@ -101,8 +104,8 @@ int ESpeed(void) {
     
     LOG("[Espeed] Escaped Sandbox");
         
-    int init = init_IOSurface();
-    if(init != 0) {
+    int init = init_IOSurface(); // we need to initiate the services for finding
+    if(init != 0) {              // the kernel_base
         LOG("[ESpeed] ERR: Failed to initiate IOSurface services");
         CredsTool(0, 1, NO, NO);
         term_IOSurface();
@@ -149,6 +152,9 @@ int ESpeed(void) {
     }
     
     EscalateTask(selftask);
+    
+    // clean up
+    term_IOSurface();
     
     LOG("[ESpeed] Finished with speed..");
     return 0;

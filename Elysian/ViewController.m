@@ -28,6 +28,7 @@
 #include "pac/parameters.h"
 #include "pac/kernel.h"
 
+mach_port_t task_for_pid0;
 uint64_t kernel_proc;
 uint64_t launchd_proc;
 uint64_t our_proc;
@@ -40,7 +41,7 @@ UInt32 amfi_pid;
 #define SetButtonText(what)\
 [self->JBButton setTitle:@(what) forState:UIControlStateNormal]
 
-
+                        // Setup important processes and pids
 void FillProcs() {
     LOG("[proc] Filling procs..");
     
@@ -73,7 +74,7 @@ void FillProcs() {
     LOG("[proc] Filled all procs");
     return;
 }
-
+                        // Setup for ESpeed to use the tfp0 in HSP4
 int PreSpeed(void) {
     LOG("[PreSpeed] Setting up..");
     struct kernel_all_image_info_addr kernelstuff = {};
@@ -87,6 +88,20 @@ int PreSpeed(void) {
         LOG("[PreSpeed] ERR: Couldn't set kernel base");
         return 1;
     }
+    
+     // set up the struct
+    uint64_t kernel_all_image_info_addr_struct = kalloc(pagesize);
+    uint64_t kernel_slide = KernelBase - 0xfffffff007004000;
+    kwrite(kernel_all_image_info_addr_struct, &kernelstuff, sizeof(kernelstuff));
+    
+    int init = kernel_parameters_init();
+    if(init != 0) {
+        LOG("[PreSpeed] ERR: Couldn't init kernel parameters");
+        return 1;
+    }
+    wk64(TFP0 + 0x3d0, kernel_all_image_info_addr_struct);
+    wk64(TFP0 + 0x3d8, kernel_slide);
+    
     LOG("[PreSpeed] Done");
     return 0;
 }
@@ -132,6 +147,7 @@ int PreSpeed(void) {
             SetButtonText("Error: Exploiting Kernel");
             return;
             }
+        TFP0 = tfpzero;
         LOG("Exploited kernel");
         }
     /* Start of Elysian Jailbreak ************************************/
@@ -172,7 +188,7 @@ int PreSpeed(void) {
         }
         
         LOG("Escaped Sandbox");
-            
+        
 
         LOG("Here comes the fun..");
             // Initiate jelbrekLibE
@@ -202,7 +218,7 @@ int PreSpeed(void) {
         ASSERT(errs == 0, "ERR: Failed to get offsets", "Error: Gathering Offsets");
     
         FillProcs(); // grab important processes and etc.
-        PreSpeed();
+        PreSpeed(); // gang gang
         
         // ------------ Remount RootFS -------------- //
         

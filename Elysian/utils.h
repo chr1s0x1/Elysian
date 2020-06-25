@@ -24,6 +24,8 @@
 // NSError *error;
 
 #define ADDRISVALID(val) ((val) >= 0xffff000000000000 && (val) != 0xffffffffffffffff)
+#define ASSUME_ADDR(what, val) static let what = val
+#define STATIC_ADDR(what, val) static uint64_t what = val
 
 
 #define ASSERT(stuff, error, text) do {\
@@ -126,7 +128,7 @@ error = NULL; \
 #define createFILE(where, info) {\
     [[NSFileManager defaultManager] createFileAtPath:@(where) contents:info attributes:nil];\
     if(!fileExists(where)) {\
-        LOG("ERR: Failed to create File at %s", where);\
+        LOG("ERR: Failed to create file at %s", where);\
     }\
 }
 

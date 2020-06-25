@@ -8,7 +8,7 @@
 
 #ifndef jboffsets_h
 #define jboffsets_h
-
+#import "utils.h"
 
 /*
  function: GatherOffsets
