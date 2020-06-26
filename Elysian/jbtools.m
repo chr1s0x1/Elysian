@@ -47,12 +47,14 @@ int CredsTool(uint64_t proc, int todo, bool ents, bool set) {
     } else if(todo == 1 && ents == YES) {
         LOG("[credstool] ERR: Can't revert and get entitlements at once");
         return 1;
+    } else if(ADDRISVALID(proc) && todo == 1) {
+        goto revert;
     }
     
     //------- for reverting creds -------\\
     
     // creds
-    let our_orig_p = proc_of_pid(getpid());
+    var our_orig_p = proc_of_pid(getpid());
     let orig_creds = rk64(our_orig_p + 0x100);
     // label
     let orig_label = rk64(orig_creds + 0x78);
@@ -65,7 +67,7 @@ int CredsTool(uint64_t proc, int todo, bool ents, bool set) {
         // find creds..
     LOG("[credstool] Borrowing creds..");
     LOG("[credstool] Given proc: 0x%llx", proc);
-    let our_proc = proc_of_pid(getpid());
+    var our_proc = proc_of_pid(getpid());
     LOG("[credstool] Our proc: 0x%llx", our_proc);
         if(!ADDRISVALID(our_proc)) {
             LOG("[credstool] ERR: Couldn't get our proc!");
@@ -105,10 +107,14 @@ int CredsTool(uint64_t proc, int todo, bool ents, bool set) {
     LOG("[credstool] Done");
     return 0;
     } else if (todo == 1) {
+    revert:;
         // revert creds..
         LOG("[credstool] Reverting creds..");
-        let our_proc = proc_of_pid(getpid());
-        LOG("[credstool] Our proc: 0x%llx", our_proc);
+        var our_proc = our_orig_p;
+        if(ADDRISVALID(proc) && todo == 1) {
+            our_proc = proc;
+        }
+        LOG("[credstool] proc: 0x%llx", our_proc);
         let our_creds = rk64(our_proc + 0x100);
         wk64(our_proc + 0x100, orig_creds);
         let our_label = rk64(our_creds + 0x78);

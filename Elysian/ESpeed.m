@@ -119,7 +119,7 @@ int ESpeed(void) {
         return 1;
     }
     
-    LOG("[ESpeed] Found KernelBase: 0x%llx", KernelBase);
+    LOG("[ESpeed] Got our KernelBase: 0x%llx", KernelBase);
     
     // now initiate jelbrekLibE
     int init = init_with_kbase(tfp0hsp4, KernelBase, kernel_exec);
