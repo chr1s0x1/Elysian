@@ -16,7 +16,9 @@
 #import "jelbrekLib.h"
 #import "ESpeed.h"
 
-extern mach_port_t tfp0hsp4 = MACH_PORT_NULL;
+mach_port_t tfp0hsp4 = MACH_PORT_NULL;
+uint64_t selfproc = 0;
+uint64_t selftask = 0;
 
 // Not fully finished yet
 int ESpeed(void) {
@@ -38,6 +40,7 @@ int ESpeed(void) {
     // init rk64, wk64 etc.
     init_read_write(tfp0hsp4);
     
+    // took this from oob_timestamp
     // Call task_info(TASK_DYLD_INFO) to get the kernel_all_image_info_addr struct address.
     if (kernel_all_image_info_addr == 0) {
         struct task_dyld_info info = {};
@@ -51,13 +54,13 @@ int ESpeed(void) {
         kernel_all_image_info_addr = info.all_image_info_addr;
     }
     
-    // Now we need to find our own process
+    /* -------- Finding our own process -------- */
+     
     UInt32 mypid = getpid();
-    uint64_t selfproc = 0;
-    uint64_t selftask = 0;
+
     if(mypid == 0) return 1;
     
-    // took this from oob_timestamp
+    // took this from oob_timestamp x2
     uint64_t kproc = rk64(kernel_all_image_info_addr + offsetof(struct kernel_all_image_info_addr, kernproc));
     uint64_t proclist = kproc;
     if(!ADDRISVALID(kproc)) {
@@ -105,47 +108,21 @@ int ESpeed(void) {
     }
     
     LOG("[Espeed] Escaped Sandbox");
-        
-    int init = init_IOSurface(); // we need to initiate the services for finding
-    if(init != 0) {              // the kernel_base
-        LOG("[ESpeed] ERR: Failed to initiate IOSurface services");
-        CredsTool(0, 1, NO, NO);
-        term_IOSurface();
-        return 1;
-    }
-    LOG("[ESpeed] Started IOSurface services");
-    
+     
     // ------ grab the kernel base ------ \\
-        
-    LOG("[ESpeed] Looking for the KernelBase..");
     
-    uint64_t IOSurface_port_addr = find_port(IOSurfaceRootUserClient);
-    if(!ADDRISVALID(IOSurface_port_addr)) {
-        LOG("[ESpeed] ERR: Couldn't find IOSRUC port address");
-        CredsTool(0, 1, NO, NO);
-        term_IOSurface();
+    // check if we can get the kernel base from the kernel struct
+    KernelBase = rk64(kernel_all_image_info_addr +
+    offsetof(struct kernel_all_image_info_addr, kernel_base_address));
+    if(!ADDRISVALID(KernelBase)) {
+        LOG("[ESpeed] ERR: Couldn't grab KernelBase from struct");
         return 1;
     }
-     uint64_t IOSurface_object = rk64(IOSurface_port_addr + koffset(KSTRUCT_OFFSET_IPC_PORT_IP_KOBJECT));
-     uint64_t vtable = rk64(IOSurface_object);
-     vtable |= 0xffffff8000000000; // in case it has PAC
-    LOG("[ESpeed] vtable: 0x%llx", vtable);
-     uint64_t function = rk64(vtable + 8 * koffset(OFFSET_GETFI));
-     function |= 0xffffff8000000000; // this address is inside the kernel image
-    LOG("[ESpeed] function in kernel image: 0x%llx", function);
-     uint64_t page = trunc_page_kernel(function);
-    LOG("[ESpeed] kernel page: 0x%llx", page);
-     while (true) {
-         if (rk64(page) == 0x0100000cfeedfacf && (rk64(page + 8) == 0x0000000200000000 || rk64(page + 8) == 0x0000000200000002)) {
-             KernelBase = page;
-             break;
-         }
-         page -= pagesize;
-     }
+    
     LOG("[ESpeed] Found KernelBase: 0x%llx", KernelBase);
     
     // now initiate jelbrekLibE
-    init = init_with_kbase(tfp0hsp4, KernelBase, kernel_exec);
+    int init = init_with_kbase(tfp0hsp4, KernelBase, kernel_exec);
     if(init != 0) {
         LOG("[ESpeed] ERR: Couldn't initiate jelbrekLibE");
         CredsTool(0, 1, NO, NO);
@@ -154,9 +131,6 @@ int ESpeed(void) {
     }
     
     EscalateTask(selftask);
-    
-    // clean up
-    term_IOSurface();
     
     LOG("[ESpeed] Finished with speed..");
     return 0;

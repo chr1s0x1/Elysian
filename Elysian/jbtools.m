@@ -12,8 +12,7 @@
 #include <dlfcn.h>
 #include <sys/cdefs.h>
 
-
-
+#import "ESpeed.h"
 #import "jelbrekLib.h"
 #import "utils.h"
 #import "offsets.h"
@@ -53,8 +52,7 @@ int CredsTool(uint64_t proc, int todo, bool ents, bool set) {
     //------- for reverting creds -------\\
     
     // creds
-    let our_orig_t = find_self_task();
-    let our_orig_p = rk64(our_orig_t + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
+    let our_orig_p = proc_of_pid(getpid());
     let orig_creds = rk64(our_orig_p + 0x100);
     // label
     let orig_label = rk64(orig_creds + 0x78);
@@ -67,8 +65,7 @@ int CredsTool(uint64_t proc, int todo, bool ents, bool set) {
         // find creds..
     LOG("[credstool] Borrowing creds..");
     LOG("[credstool] Given proc: 0x%llx", proc);
-    let our_task = find_self_task();
-    let our_proc = rk64(our_task + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
+    let our_proc = proc_of_pid(getpid());
     LOG("[credstool] Our proc: 0x%llx", our_proc);
         if(!ADDRISVALID(our_proc)) {
             LOG("[credstool] ERR: Couldn't get our proc!");
@@ -110,8 +107,7 @@ int CredsTool(uint64_t proc, int todo, bool ents, bool set) {
     } else if (todo == 1) {
         // revert creds..
         LOG("[credstool] Reverting creds..");
-        let our_task = find_self_task();
-        let our_proc = rk64(our_task + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
+        let our_proc = proc_of_pid(getpid());
         LOG("[credstool] Our proc: 0x%llx", our_proc);
         let our_creds = rk64(our_proc + 0x100);
         wk64(our_proc + 0x100, orig_creds);

@@ -28,7 +28,7 @@
 #include "pac/parameters.h"
 #include "pac/kernel.h"
 
-mach_port_t task_for_pid0;
+bool ESpeedMode; // lets Elysian know if we're running off of HSP4
 uint64_t kernel_proc;
 uint64_t launchd_proc;
 uint64_t our_proc;
@@ -46,15 +46,24 @@ void FillProcs() {
     LOG("[proc] Filling procs..");
     
     kernel_proc = proc_of_pid(0);
-    if(!ADDRISVALID(kernel_proc)) return;
+    if(!ADDRISVALID(kernel_proc)) {
+        LOG("[proc] ERR: Couldn't get kern proc");
+        return;
+    }
     LOG("[proc] Got kernel proc");
     
     launchd_proc = proc_of_pid(1);
-    if(!ADDRISVALID(launchd_proc)) return;
+    if(!ADDRISVALID(launchd_proc)) {
+        LOG("[proc] ERR: Couldn't get launchd proc");
+        return;
+    }
     LOG("[proc] Got launchd proc");
     
     our_proc = proc_of_pid(getpid());
-    if(!ADDRISVALID(our_proc)) return;
+    if(!ADDRISVALID(our_proc)) {
+        LOG("[proc] ERR: Couldn't get our proc");
+        return;
+    }
     LOG("[proc] Got our proc");
     
     uint64_t proc = rk64(Find_allproc());
@@ -112,6 +121,7 @@ int PreSpeed(mach_port_t ktaskport) {
      // set up the struct
     uint64_t kernel_all_image_info_addr_struct = kalloc(pagesize);
     uint64_t kernel_slide = KernelBase - 0xfffffff007004000;
+    kernelstuff.kernel_all_image_info_addr_size = kernelstuff.kernel_all_image_info_addr_size = sizeof(kernelstuff);
     kwrite(kernel_all_image_info_addr_struct, &kernelstuff, sizeof(kernelstuff));
     wk64(ktask + 0x3d0, kernel_all_image_info_addr_struct);
     wk64(ktask + 0x3d8, kernel_slide);
@@ -153,7 +163,9 @@ int PreSpeed(mach_port_t ktaskport) {
         int espeed = 0;
         __block mach_port_t tfpzero = MACH_PORT_NULL;
         espeed = ESpeed();
-        if(espeed != 0) {
+        if(espeed == 0) {
+            ESpeedMode = YES;
+        } else {
         tfpzero = get_tfp0();
         if(!MACH_PORT_VALID(tfpzero)){
             LOG("ERR: Exploit Failed");
@@ -161,8 +173,8 @@ int PreSpeed(mach_port_t ktaskport) {
             SetButtonText("Error: Exploiting Kernel");
             return;
             }
-        LOG("Exploited kernel");
         }
+        LOG("Exploited kernel");
     
     /* Start of Elysian Jailbreak ************************************/
        
