@@ -290,7 +290,7 @@ uint64_t vnode_finder(const char *path, uint64_t givenproc, const char *nodename
             return vnode;
         }
         
-        if(nodename == NULL && mountype == NO) {
+        if(nodename == NULL && mountype == YES) {
             LOG("[vnode proc] ?: Uh, mountype sure, but what exact vnode??");
             LOG("[vnode proc] ?: Will go up one mount type..");
             uint64_t vmount = rk64(vnode + 0xd8);
