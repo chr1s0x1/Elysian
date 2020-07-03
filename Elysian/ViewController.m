@@ -9,8 +9,6 @@
 #include <sys/mount.h>
 #include <sys/snapshot.h>
 #include <spawn.h>
-
-
 #import "ViewController.h"
 #import "exploit.h"
 #import "jelbrekLib.h"
@@ -166,6 +164,7 @@ int PreSpeed(mach_port_t ktaskport) {
         if(espeed == 0) {
             ESpeedMode = YES;
         } else {
+        LOG("?: ESpeed failed, trying exploit..");
         tfpzero = get_tfp0();
         if(!MACH_PORT_VALID(tfpzero)){
             LOG("ERR: Exploit Failed");
@@ -173,10 +172,10 @@ int PreSpeed(mach_port_t ktaskport) {
             SetButtonText("Error: Exploiting Kernel");
             return;
             }
+            LOG("Exploited kernel");
         }
-        LOG("Exploited kernel");
     
-    /* Start of Elysian Jailbreak ************************************/
+        /* Start of Elysian Jailbreak ********************************/
        
         // used for checks
         int errs;
@@ -209,7 +208,7 @@ int PreSpeed(mach_port_t ktaskport) {
         LOG("ERR: Failed to set Sandbox_slot to 0");
         LOG("ERR: Failed to Unsanbox");
         SetButtonText("Error: Escaping Sandbox");
-        CredsTool(0, 1, NO, NO);
+        CredsTool(0, 0 ,1, NO, NO);
         goto out;
         }
         
@@ -237,7 +236,7 @@ int PreSpeed(mach_port_t ktaskport) {
         // Platform ourselves
         errs = EscalateTask(our_task);
         ASSERT(errs == 0, "ERR: Failed to platform ourselves", "Error: Escalating Task");
-    }
+        }
         
         // Get offsets to kernel functions
         errs = GatherOffsets();
@@ -302,8 +301,8 @@ int PreSpeed(mach_port_t ktaskport) {
             SetButtonText("Error: Unkown Remount Error");
             goto out;
         }
-        
-        CredsTool(kernel_proc, 0, NO, YES); // get kern creds for amfidestroyer
+        // lol using kernel_proc 2 times xD
+        CredsTool(kernel_proc, kernel_proc, 0, NO, YES); // get kern creds for amfidestroyer
         
         // Nuke AMFI >:)
         errs = amfidestroyer(amfi_pid, our_proc);
@@ -318,7 +317,8 @@ int PreSpeed(mach_port_t ktaskport) {
         out:
         // clean up
         term_jelbrek();
-        CredsTool(0, 1, NO, NO);
+        CredsTool(0, kernel_proc, 1, NO, NO);
+        usleep(5000);
         return;
  
 }

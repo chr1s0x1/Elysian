@@ -18,7 +18,7 @@
  2. revert our tasks creds & uid to default (proc = 0 && todo = 1)
  
  */
-int CredsTool(uint64_t proc, int todo, bool ents, bool set);
+int CredsTool(uint64_t proc, uint64_t kp, int todo, bool ents, bool set);
 
 /*
  function: EscalateTask
@@ -61,4 +61,5 @@ uint64_t lookup_rootvnode(void);
  */
 uint64_t vnode_finder(const char *path, uint64_t givenproc, const char *nodename, BOOL mountype);
 
+uint64_t find_proc_by_kernel(pid_t pid, uint64_t kernproc);
 #endif /* jbtools_h */

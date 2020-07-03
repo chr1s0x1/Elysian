@@ -84,10 +84,10 @@ int RemountFS(uint64_t kernel_proc) {
     LOG("Got vnode: %s", vnodename);
 
     // grab kern creds to mount RootFS
-    int ret = CredsTool(kernel_proc, 0, NO, YES);
+    int ret = CredsTool(kernel_proc, 0, 0, NO, YES);
     if(ret == 1) {
         LOG("ERR: Failed to get kernel creds");
-        CredsTool(0, 1, NO, NO);
+        CredsTool(0, 0, 1, NO, NO);
         return _NOKERNCREDS;
     }
     
@@ -113,7 +113,7 @@ int RemountFS(uint64_t kernel_proc) {
     kern_return_t dir = mkdir("/var/rootmnt", 0755);
     if(dir != KERN_SUCCESS) {
         LOG("ERR: Failed to create mount path");
-        CredsTool(0, 1, NO, NO);
+        CredsTool(0, 0, 1, NO, NO);
         return _NOMNTPATH;
          }
        } else {
@@ -145,7 +145,7 @@ int RemountFS(uint64_t kernel_proc) {
     
     if(retval != 0) {
        LOG("ERR: MountFS failed!");
-       CredsTool(0, 1, NO, NO);
+       CredsTool(0, 0, 1, NO, NO);
        return _MOUNTFAILED;
     }
     LOG("Mount returned: %d", retval);
@@ -154,7 +154,7 @@ int RemountFS(uint64_t kernel_proc) {
     kern_return_t revert = fs_snapshot_revert(fd, Snapshot, 0);
     if(fd < 0 || revert != KERN_SUCCESS) {
         LOG("ERR: Can't open or revert mount path after mount");
-        CredsTool(0, 1, NO, NO);
+        CredsTool(0, 0, 1, NO, NO);
         return _REVERTMNTFAILED;
     }
     close(fd);
@@ -169,7 +169,7 @@ int RemountFS(uint64_t kernel_proc) {
     free(fspec);
     if(retval != 0) {
         LOG("ERR: Failed to mount rootFS in new mount path");
-        CredsTool(0, 1, NO, NO);
+        CredsTool(0, 0, 1, NO, NO);
         return _MOUNTFAILED2;
     }
     LOG("Mount returned (2nd time): %d", retval);
@@ -203,7 +203,7 @@ int RemountFS(uint64_t kernel_proc) {
         kern_return_t rename = fs_snapshot_rename(fd2, Snapshot, "orig-fs", 0);
         if(fd2 < 0 || rename != KERN_SUCCESS) {
           LOG("ERR: Failed to rename Snapshot");
-          CredsTool(0, 1, NO, NO);
+          CredsTool(0, 0, 1, NO, NO);
           close(fd2);
           return _RENAMEFAILED;
                }
@@ -218,7 +218,7 @@ int RemountFS(uint64_t kernel_proc) {
         nodelist = rk64(nodelist + (UInt64)(0x20));
         if(nodelist == 0 && strncmp(prefix, name, sizeof(prefix)) != 0) {
             LOG("ERR: Failed to find snapshot for rename");
-            CredsTool(0, 1, NO, NO);
+            CredsTool(0, 0, 1, NO, NO);
             return _NOSNAP;
         }
     }
@@ -229,7 +229,7 @@ return 0;
    
    LOG("?: Snapshot already renamed");
    LOG("Remounting RootFS as r/w..");
-   CredsTool(kernel_proc, 0, NO, YES);
+   CredsTool(kernel_proc, 0, 0, NO, YES);
    uint64_t rootvnode = lookup_rootvnode();
    let vmount = rk64(rootvnode + 0xd8);
    let flag = rk32(vmount + (UInt64)(0x70)) & ~((UInt32)(MNT_NOSUID) | (UInt32)(MNT_RDONLY));
@@ -240,7 +240,7 @@ return 0;
    free(disk);
    if(update != 0) {
       LOG("ERR: Failed to update disk0s1s1 as r/w");
-      CredsTool(0, 1, NO, NO);
+      CredsTool(0, 0, 1, NO, NO);
       return _NOUPDATEDDISK;
       }
    LOG("Updated mount as r/w? testing..");
@@ -252,13 +252,13 @@ return 0;
    if(!fileExists("/.Elysian") || !f) {
       LOG("ERR: Test file doesn't exist or we have no r/w");
       fclose(f);
-      CredsTool(0, 1, NO, NO);
+      CredsTool(0, 0, 1, NO, NO);
       return _FSTESTFAILED;
    }
    
    LOG("Created '.Elysian' at '/'");
    fclose(f);
-   CredsTool(0, 1, NO, NO);
+   CredsTool(0, 0, 1, NO, NO);
    return _REMOUNTSUCCESS;
    }
    

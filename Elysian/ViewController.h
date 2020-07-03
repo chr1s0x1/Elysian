@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+
 #define MESSAGE(msg, shouldwait) ALERT(@msg, shouldwait)
 
 static inline void ALERT(NSString *notice, Boolean wait) {

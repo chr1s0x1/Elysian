@@ -103,7 +103,7 @@ int ESpeed(void) {
     if(!f){
     LOG("[ESpeed] ERR: Failed to set Sandbox_slot to 0");
     LOG("[ESpeed] ERR: Failed to Unsanbox");
-    CredsTool(0, 1, NO, NO);
+    CredsTool(0, kproc, 1, NO, NO);
     return 1;
     }
     
@@ -125,12 +125,12 @@ int ESpeed(void) {
     int init = init_with_kbase(tfp0hsp4, KernelBase, kernel_exec);
     if(init != 0) {
         LOG("[ESpeed] ERR: Couldn't initiate jelbrekLibE");
-        CredsTool(0, 1, NO, NO);
-        term_IOSurface();
+        CredsTool(0, 0, 1, NO, NO);
         return 1;
     }
     
     EscalateTask(selftask);
+    rootify(getpid());
     
     LOG("[ESpeed] Finished with speed..");
     return 0;

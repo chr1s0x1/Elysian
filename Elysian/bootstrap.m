@@ -21,7 +21,7 @@ bool createbootstrap(uint64_t kproc) {
     // need perms for mkdir
     if(getuid() != 0) {
         LOG("[bootstrap] ?: Getting perms..");
-        CredsTool(kproc, 0, NO, YES);
+        CredsTool(kproc, 0, 0, NO, YES);
     }
     LOG("[bootstrap] Setting up Bootstrap..");
     mkdir("/Elysian", 0755);
@@ -54,6 +54,6 @@ bool createbootstrap(uint64_t kproc) {
     
     out:
     LOG("[bootstrap] Bootstrap returned with error: %d", retval);
-    CredsTool(0, 1, NO, NO);
+    CredsTool(0, 0, 1, NO, NO);
     return false;
 }

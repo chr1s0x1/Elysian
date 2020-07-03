@@ -205,7 +205,7 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
     pid_t syspid = hijacksysdiagnose(ourproc);
     if(syspid == 1) { // hijacksysdiagnose returns 1 if it fails
         LOG("[amfid] ERR: Couldn't get sysdiagnose creds");
-        CredsTool(0, 1, NO, NO);
+        CredsTool(0, 0, 1, NO, NO);
         return 1;
     }
     
@@ -226,7 +226,7 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
     if(amfi_load == 0) {
         LOG("[amfid] ERR: Couldn't find amfid load address");
         kill(syspid, SIGKILL);
-        CredsTool(0, 1, NO, NO);
+        CredsTool(0, 0, 1, NO, NO);
         return 1;
     }
     LOG("[amfid] Found amfid load address");
@@ -240,7 +240,7 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
     if(set != 0) {
         LOG("[amfid patch] ERR: Couldn't set exception handler!");
         kill(syspid, SIGKILL);
-        CredsTool(0, 1, NO, NO);
+        CredsTool(0, 0, 1, NO, NO);
         return 1;
     }
     LOG("[amfid patch] 1/3 - Successfully set exception handler");
@@ -251,7 +251,7 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
      if(kr != KERN_SUCCESS) {
         LOG("[amfid patch] ERR: Couldn't read MISVSACI");
         kill(syspid, SIGKILL);
-        CredsTool(0, 1, NO, NO);
+        CredsTool(0, 0, 1, NO, NO);
         return 1;
     }
     
@@ -260,14 +260,14 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
     if(misvsaci_page == 0) {
         LOG("[amfid patch] ERR: MISVSACI page is invalid!");
         kill(syspid, SIGKILL);
-        CredsTool(0, 1, NO, NO);
+        CredsTool(0, 0, 1, NO, NO);
         return 1;
     }                                          // add read/write permission flags
     kr = vm_protect(amfid_task, misvsaci_page, vm_page_size, 0, VM_PROT_READ | VM_PROT_WRITE);
     if(kr != KERN_SUCCESS) {
         LOG("[amfid patch] ERR: Couldn't make MISVSACI r/w");
         kill(syspid, SIGKILL);
-        CredsTool(0, 1, NO, NO);
+        CredsTool(0, 0, 1, NO, NO);
         return 1;
     }
     LOG("[amfid patch] 2/3 - Made MISVSACI page r/w");
@@ -280,6 +280,6 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
     
     LOG("[amfid] Mission complete, cleaning up..");
     kill(syspid, SIGKILL);
-    CredsTool(0, 1, NO, NO);
+    CredsTool(0, 0, 1, NO, NO);
     return 0;
 }

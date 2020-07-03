@@ -33,8 +33,37 @@ let CS_RESTRICT = (UInt32)(0x00000800);
 let CS_PLATFORM_BINARY = (UInt32)(0x04000000);
 let CS_DEBUGGED = (UInt32)(0x10000000);
 
+uint64_t find_proc_by_kernel(pid_t pid, uint64_t kernproc) {
+    LOG("[proc finder] Looking for process of pid: %d", pid);
+    uint64_t proc = 0;
+    uint64_t proclist = kernproc;
+    if(!ADDRISVALID(kernproc)) {
+        LOG("[proc finder] ERR: Kernel process is invalid!");
+        return 1;
+    }
+    
+    for(;;) {
+        if(proclist == 0 || proclist == -1) break;
+        UInt32 procpid = rk32(proclist + koffset(KSTRUCT_OFFSET_PROC_PID));
+        if(procpid == pid) {
+            proc = proclist;
+            break;
+        }
+        proclist = rk64(proclist + 0x8);
+    }
+    
+    if(!ADDRISVALID(proc)) {
+        LOG("[proc finder] ERR: Couldn't find proc!");
+        return 1;
+    }
+    
+    LOG("[proc finder] Found proc: 0x%llx", proc);
+    return proc;
+}
+
 // I'll make CredsTool more flexiable in the future
-int CredsTool(uint64_t proc, int todo, bool ents, bool set) {
+// Lots of the modificatons rn is to allow CredsTool to run properly with ESpeed
+int CredsTool(uint64_t proc, uint64_t kp, int todo, bool ents, bool set) {
     if(todo > 1 || todo < 0) {
         LOG("[credstool] ERR: Integer 'todo' must be 0 or 1");
         return 1;
@@ -54,7 +83,13 @@ int CredsTool(uint64_t proc, int todo, bool ents, bool set) {
     //------- for reverting creds -------\\
     
     // creds
-    var our_orig_p = proc_of_pid(getpid());
+    uint64_t our_orig_p = 0;
+    if(ADDRISVALID(kp)) {
+    our_orig_p = find_proc_by_kernel(getpid(), kp);
+    } else {
+    uint64_t our_orig_t = find_self_task();
+    our_orig_p = rk64(our_orig_t + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
+    }
     let orig_creds = rk64(our_orig_p + 0x100);
     // label
     let orig_label = rk64(orig_creds + 0x78);
@@ -67,7 +102,13 @@ int CredsTool(uint64_t proc, int todo, bool ents, bool set) {
         // find creds..
     LOG("[credstool] Borrowing creds..");
     LOG("[credstool] Given proc: 0x%llx", proc);
-    var our_proc = proc_of_pid(getpid());
+    uint64_t our_proc = 0;
+    if(ADDRISVALID(kp)) {
+    our_proc = find_proc_by_kernel(getpid(), kp);
+    } else {
+    uint64_t our_task = find_self_task();
+    our_proc = rk64(our_task + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
+    }
     LOG("[credstool] Our proc: 0x%llx", our_proc);
         if(!ADDRISVALID(our_proc)) {
             LOG("[credstool] ERR: Couldn't get our proc!");
@@ -110,9 +151,14 @@ int CredsTool(uint64_t proc, int todo, bool ents, bool set) {
     revert:;
         // revert creds..
         LOG("[credstool] Reverting creds..");
-        var our_proc = our_orig_p;
+        uint64_t our_proc = 0;
         if(ADDRISVALID(proc) && todo == 1) {
             our_proc = proc;
+        } else if(ADDRISVALID(kp)) {
+           our_proc = find_proc_by_kernel(getpid(), kp);
+        } else {
+            uint64_t our_t = find_self_task();
+            our_proc = rk64(our_t + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
         }
         LOG("[credstool] proc: 0x%llx", our_proc);
         let our_creds = rk64(our_proc + 0x100);
