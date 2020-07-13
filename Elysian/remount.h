@@ -67,5 +67,5 @@ uint64_t FindNewMount(uint64_t vnode);
  New and improved remount code that remounts the RootFS.
  */
 
-int RemountFS(uint64_t kernproc);
+int RemountFS(uint64_t kernproc, int espeedmode);
 #endif /* remount_h */

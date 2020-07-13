@@ -252,7 +252,7 @@ int PreSpeed(mach_port_t ktaskport) {
         // ------------ Remount RootFS -------------- //
         
         // remount.m for code
-        errs = RemountFS(kernel_proc);
+        errs = RemountFS(kernel_proc, espeed);
         
     /* error checks in remount - its not pretty but "it's honest work" */
         

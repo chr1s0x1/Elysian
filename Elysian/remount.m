@@ -61,7 +61,7 @@ uint64_t FindNewMount(uint64_t vnode) {
 
 char vnodename[20];
 
-int RemountFS(uint64_t kernel_proc) {
+int RemountFS(uint64_t kernel_proc, int espeedmode) {
     LOG("Remounting RootFS..");
     if(!ADDRISVALID(kernel_proc)) {
         LOG("ERR: kernproc is invalid");
@@ -69,7 +69,7 @@ int RemountFS(uint64_t kernel_proc) {
     }
    
     bool rename = RenameSnapRequired();
-    if(rename == YES) {
+    if(rename == YES && espeedmode == 1) {
        
       // get disk0s1s1
     uint64_t rootvnode = lookup_rootvnode();
@@ -229,6 +229,20 @@ return 0;
    
    LOG("?: Snapshot already renamed");
    LOG("Remounting RootFS as r/w..");
+   // check if .Elysian already exists because of ESpeed
+   if(fileExists("/.Elysian")) {
+      // check if we can open it
+      FILE *file = fopen("/.Elysian", "rw");
+      if(!file) {
+         LOG("?: Can't open '.Elysian' as r/w yet");
+         LOG("?: Continuing as usual..");
+      } else {
+      LOG("Already have r/w to '/'");
+      LOG("Must be some sort of ESpeed...");
+      fclose(file);
+      return _REMOUNTSUCCESS;
+      }
+   }
    CredsTool(kernel_proc, 0, 0, NO, YES);
    uint64_t rootvnode = lookup_rootvnode();
    let vmount = rk64(rootvnode + 0xd8);
