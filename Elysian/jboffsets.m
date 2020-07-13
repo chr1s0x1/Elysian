@@ -23,7 +23,7 @@ int offset = 0;
     
 _vnode_lookup = Find_vnode_lookup();
     if(!ADDRISVALID(_vnode_lookup)) {
-        LOG("[offsets] ERR: Failed to get vnode_lookup offset");
+        LOG("\n[offsets] ERR: Failed to get vnode_lookup offset");
         offset = 1;
         goto fail;
     }

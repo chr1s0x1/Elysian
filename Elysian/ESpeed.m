@@ -21,7 +21,8 @@ uint64_t selfproc = 0;
 uint64_t selftask = 0;
 
 // Not fully finished yet
-int ESpeed(void) {
+mach_port_t ESpeed(void) {
+    
     LOG("[ESpeed] Trying to grab tfp0 from HSP4..");
     host_t myself = mach_host_self();
     mach_port_t hsp4 = MACH_PORT_NULL;
@@ -133,5 +134,5 @@ int ESpeed(void) {
     rootify(getpid());
     
     LOG("[ESpeed] Finished with speed..");
-    return 0;
+    return tfp0hsp4;
 }

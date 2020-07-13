@@ -23,5 +23,5 @@
  - Escalates our task
  */
 
-int ESpeed(void);
+mach_port_t ESpeed(void);
 #endif /* ESpeed_h */

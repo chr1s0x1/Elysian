@@ -27,6 +27,8 @@
 #include "pac/kernel.h"
 
 bool ESpeedMode; // lets Elysian know if we're running off of HSP4
+
+// some important stuff, don't know what to call them lol
 uint64_t kernel_proc;
 uint64_t launchd_proc;
 uint64_t our_proc;
@@ -158,11 +160,13 @@ int PreSpeed(mach_port_t ktaskport) {
 - (IBAction)JBGo:(id)sender {
     [self->JBButton setEnabled:NO];
         LOG("[*] Starting Exploit");
-        int espeed = 0;
+        int espeed = 1;
         __block mach_port_t tfpzero = MACH_PORT_NULL;
-        espeed = ESpeed();
-        if(espeed == 0) {
+        tfpzero = ESpeed();
+        if(tfpzero != 1 && MACH_PORT_VALID(tfpzero)) {
             ESpeedMode = YES;
+            espeed = 0;
+#define EMODE ESpeedMode = YES;
         } else {
         LOG("?: ESpeed failed, trying exploit..");
         tfpzero = get_tfp0();
@@ -244,7 +248,7 @@ int PreSpeed(mach_port_t ktaskport) {
     
         FillProcs(); // grab important processes and etc.
         PreSpeed(tfpzero); // gang gang
-        
+
         // ------------ Remount RootFS -------------- //
         
         // remount.m for code
