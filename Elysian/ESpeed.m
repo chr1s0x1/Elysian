@@ -25,12 +25,10 @@ mach_port_t ESpeed(void) {
     
     LOG("[ESpeed] Trying to grab tfp0 from HSP4..");
     host_t myself = mach_host_self();
-    mach_port_t hsp4 = MACH_PORT_NULL;
-    host_get_special_port(myself, HOST_LOCAL_NODE, 4, &hsp4);
+    host_get_special_port(myself, HOST_LOCAL_NODE, 4, &tfp0hsp4);
     mach_port_deallocate(mach_task_self(), myself);
-    if(MACH_PORT_VALID(hsp4)) {
+    if(MACH_PORT_VALID(tfp0hsp4)) {
         LOG("[ESpeed] Got tfp0 from HSP4");
-        tfp0hsp4 = hsp4;
     } else {
         LOG("[ESpeed] ERR: Couldn't get tfp0 from HSP4");
         return 1;

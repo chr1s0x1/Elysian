@@ -68,8 +68,8 @@ int RemountFS(uint64_t kernel_proc, int espeedmode) {
         return _NOKERNPROC;
     }
    
-    bool rename = RenameSnapRequired();
-    if(rename == YES && espeedmode == 1) {
+    bool needrename = RenameSnapRequired();
+    if(needrename == YES || espeedmode == 1) {
        
       // get disk0s1s1
     uint64_t rootvnode = lookup_rootvnode();
