@@ -34,6 +34,15 @@ typedef struct {
 pid_t hijacksysdiagnose(uint64_t myproc);
 
 /*
+ function: find_misvsaci
+ 
+ Use:
+ Parses the amfi load address and searches for MISVSACI's offset
+ */
+
+uint64_t find_misvsaci(uint64_t load_addr);
+
+/*
  function: amfidestroyer
  
  Use:

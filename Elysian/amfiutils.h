@@ -11,6 +11,7 @@
 #include "include/cs_blob.h"
 
 #define amfid_MISValidateSignatureAndCopyInfo_import_offset 0x4150
+uint8_t MISVSACI_actual_offset;
 static mach_port_t amfid_task_port;
 
 // Support functions for amfidestroyer

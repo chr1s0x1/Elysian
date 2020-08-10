@@ -195,6 +195,19 @@ pid_t hijacksysdiagnose(uint64_t ourproc) {
     return syspid;
 }
 
+uint64_t find_misvsaci(uint64_t load_addr) {
+    if(!ADDRISVALID(load_addr) || load_addr == 0) {
+        LOG("[misvsaci] ERR: Invalid load address!");
+        return 1;
+    }
+    
+    LOG("[misvsaci] Looking in 0x%llx", load_addr);
+    
+    // parse amfi load addr til we find MISVSACI
+    
+    return 0;
+}
+
 int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
     LOG("[amfid] Let's do this..");
     mach_port_t amfid_task = MACH_PORT_NULL;
@@ -231,6 +244,14 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
     }
     LOG("[amfid] Found amfid load address");
     
+    // find MISVSACI's actual address
+    MISVSACI_actual_offset = find_misvsaci(amfi_load);
+    
+    if(MISVSACI_actual_offset == 0) {
+        LOG("[amfid] ERR: Couldn't find MISVSACI");
+        return 1;
+    }
+    
     /*-------- now for patching amfi --------*/
     
     LOG("[amfid patch] ?: Applying amfid patches..");
@@ -247,7 +268,7 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
     
     // check if we can read MISValidateSignatureAndCopyInfo
     mach_vm_size_t sz;
-    kern_return_t kr = mach_vm_read_overwrite(amfid_task, amfi_load+amfid_MISValidateSignatureAndCopyInfo_import_offset, 8, (mach_vm_address_t)&origAMFID_MISVSACI, &sz);
+    kern_return_t kr = mach_vm_read_overwrite(amfid_task, amfi_load+MISVSACI_actual_offset, 8, (mach_vm_address_t)&origAMFID_MISVSACI, &sz);
      if(kr != KERN_SUCCESS) {
         LOG("[amfid patch] ERR: Couldn't read MISVSACI");
         kill(syspid, SIGKILL);
@@ -256,7 +277,7 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
     }
     
     // 2. Make MISVSACI r/w for us
-    vm_address_t misvsaci_page = (amfi_load + (UInt64)(amfid_MISValidateSignatureAndCopyInfo_import_offset)) & ~vm_page_mask;
+    vm_address_t misvsaci_page = (amfi_load + (UInt64)(MISVSACI_actual_offset)) & ~vm_page_mask;
     if(misvsaci_page == 0) {
         LOG("[amfid patch] ERR: MISVSACI page is invalid!");
         kill(syspid, SIGKILL);
@@ -273,7 +294,7 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
     LOG("[amfid patch] 2/3 - Made MISVSACI page r/w");
     
     // 3. patch up amfid to crash
-    AmfidWrite_64bits(amfi_load + amfid_MISValidateSignatureAndCopyInfo_import_offset, 0x4141414141414141);
+    AmfidWrite_64bits(amfi_load + MISVSACI_actual_offset, 0x4141414141414141);
     LOG("[amfid patch] 3/3 - MISVSACI is now 0x41");
     
     /*---------- End of patch ----------*/
