@@ -12,20 +12,20 @@
 
 // remount returns
 enum remount_ret {
-    _NOKERNPROC,
-    _NODISK,
-    _NONEWDISK,
-    _NOKERNCREDS,
-    _NOSNAP,
-    _NOMNTPATH,
-    _MOUNTFAILED,
-    _REVERTMNTFAILED,
-    _MOUNTFAILED2,
-    _RENAMEFAILED,
-    _NOUPDATEDDISK,
-    _FSTESTFAILED,
-    _RENAMEDSNAP,
-    _REMOUNTSUCCESS,
+    _NOKERNPROC = 1,
+    _NODISK = 2,
+    _NONEWDISK = 3,
+    _NOKERNCREDS = 4,
+    _NOSNAP = 5,
+    _NOMNTPATH = 6,
+    _MOUNTFAILED = 7,
+    _REVERTMNTFAILED = 8,
+    _MOUNTFAILED2 = 9,
+    _RENAMEFAILED = 10,
+    _NOUPDATEDDISK = 11,
+    _FSTESTFAILED = 12,
+    _RENAMEDSNAP = 13,
+    _REMOUNTSUCCESS = 0,
 };
 
 struct hfs_mount_args {

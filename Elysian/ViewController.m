@@ -253,58 +253,20 @@ int PreSpeed(mach_port_t ktaskport) {
         
         // remount.m for code
         errs = RemountFS(kernel_proc, espeed);
-        
-    /* error checks in remount - its not pretty but "it's honest work" */
-        
-        if (errs == _NOKERNPROC) {
-            SetButtonText("Error: Kernel Process");
-            goto out;
-        } else if (errs == _NODISK) {
-            SetButtonText("Error: Finding disk0s1s1");
-            goto out;
-        } else if (errs == _NOKERNCREDS) {
-            SetButtonText("Error: Grabbing Kerncreds");
-            goto out;
-        } else if (errs == _NOMNTPATH) {
-            SetButtonText("Error: Creating Mount Path");
-            goto out;
-        } else if(errs == _REVERTMNTFAILED) {
-            SetButtonText("Error: Reverting MntPath");
-            goto out;
-        } else if (errs == _MOUNTFAILED) {
-            SetButtonText("Error: Mounting FS");
-            goto out;
-        } else if (errs == _MOUNTFAILED2) {
-            SetButtonText("Error: Mounting FS in new path");
-            goto out;
-        } else if (errs == _NONEWDISK) {
-            SetButtonText("Error: Finding New Disk");
-            goto out;
-        } else if (errs == _RENAMEFAILED) {
-            SetButtonText("Error: Renaming Snapshot");
-            goto out;
+        if(errs != _REMOUNTSUCCESS) {
+            if(errs == _RENAMEDSNAP) {
+                 // - broken lol - MESSAGE("Snapshot successfully renamed, device will be rebooted. Run Elysian again to finish Jailbreaking", true);
+                usleep(2000);
+                reboot(0);
+            } else if(errs != _REMOUNTSUCCESS || errs != _RENAMEDSNAP) {
+                LOG("ERR: Remount returned: %d", errs);
+                SetButtonText("Error: Remounting FS");
+                goto out;
+            }
         }
         
-        // After renaming the snapshot
-        if (errs == _RENAMEDSNAP) {
-            // - broken lol - MESSAGE("Snapshot successfully renamed, device will be rebooted. Run Elysian again to finish Jailbreaking", true);
-            usleep(2000);
-            reboot(0);
-        } else if (errs == _NOSNAP) {
-            SetButtonText("Error: Finding BootSnapshot");
-            goto out;
-        } else if (errs == _NOUPDATEDDISK) {
-            SetButtonText("Error: Updating disk01s1");
-            goto out;
-        } else if (errs == _FSTESTFAILED){
-            SetButtonText("Error: RootFS Test File");
-            goto out;
-        } else if (errs == _REMOUNTSUCCESS) {
-            LOG("Remounted RootFS");
-        } else { // idk how this would happen
-            SetButtonText("Error: Unkown Remount Error");
-            goto out;
-        }
+        LOG("Remounted FS");
+        
         // lol using kernel_proc 2 times xD
         CredsTool(kernel_proc, kernel_proc, 0, NO, YES); // get kern creds for amfidestroyer
         

@@ -195,17 +195,18 @@ pid_t hijacksysdiagnose(uint64_t ourproc) {
     return syspid;
 }
 
-uint64_t find_misvsaci(uint64_t load_addr) {
+uint8_t find_misvsaci(uint64_t load_addr) {
     if(!ADDRISVALID(load_addr) || load_addr == 0) {
         LOG("[misvsaci] ERR: Invalid load address!");
         return 1;
     }
     
+    uint8_t misvsaci_place = 0; // we'll return with this
     LOG("[misvsaci] Looking in 0x%llx", load_addr);
     
     // parse amfi load addr til we find MISVSACI
     
-    return 0;
+    return misvsaci_place;
 }
 
 int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {

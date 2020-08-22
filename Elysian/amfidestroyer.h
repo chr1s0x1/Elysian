@@ -40,7 +40,7 @@ pid_t hijacksysdiagnose(uint64_t myproc);
  Parses the amfi load address and searches for MISVSACI's offset
  */
 
-uint64_t find_misvsaci(uint64_t load_addr);
+uint8_t find_misvsaci(uint64_t load_addr);
 
 /*
  function: amfidestroyer
