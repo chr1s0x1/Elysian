@@ -37,7 +37,8 @@ int EscalateTask(uint64_t task);
  A wrapper over posix_spawn that executes a file from "file" with the args "argv" unless argv == NULL
  
  */
-int Execute(const char *file, char * const* argv,...);
+// int Execute(const char *file, char * const* argv,...);
+
 
 /*
  function: lookup_rootvnode
@@ -48,11 +49,14 @@ int Execute(const char *file, char * const* argv,...);
  */
 uint64_t lookup_rootvnode(void);
 
+
 /*
  function: vnode_finder
  
  Use:
- Finds the vnode "nodename" in "path" or from "givenproc", set "givenproc" to 0 if you want to find the vnode in "path"
+ Finds the vnode "nodename" in "path" and/or from "givenproc", set "givenproc" to 0 if you want to find the vnode in only "path"
+ 
+ Setting *nodename* to NULL to make vnode_finder return with the vnode it has based on the *mountype*
  
  - if mountype == YES (loops over mount vnodes til it finds the right vnode or fails)
  
@@ -61,5 +65,12 @@ uint64_t lookup_rootvnode(void);
  */
 uint64_t vnode_finder(const char *path, uint64_t givenproc, const char *nodename, BOOL mountype);
 
+
+/*
+ function: find_proc_by_kernel
+ 
+ Use: Finds a process by it's *pid* by starting with the *kernproc* then going down.
+ 
+ */
 uint64_t find_proc_by_kernel(pid_t pid, uint64_t kernproc);
 #endif /* jbtools_h */

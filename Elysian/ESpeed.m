@@ -20,7 +20,6 @@ mach_port_t tfp0hsp4 = MACH_PORT_NULL;
 uint64_t selfproc = 0;
 uint64_t selftask = 0;
 
-// Not fully finished yet
 mach_port_t ESpeed(void) {
     
     LOG("[ESpeed] Trying to grab tfp0 from HSP4..");
@@ -113,7 +112,7 @@ mach_port_t ESpeed(void) {
     // check if we can get the kernel base from the kernel struct
     KernelBase = rk64(kernel_all_image_info_addr +
     offsetof(struct kernel_all_image_info_addr, kernel_base_address));
-    if(!ADDRISVALID(KernelBase)) {
+    if(!ADDRISVALID(KernelBase) || KernelBase == 0) {
         LOG("[ESpeed] ERR: Couldn't grab KernelBase from struct");
         return 1;
     }

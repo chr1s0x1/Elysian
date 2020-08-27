@@ -247,7 +247,9 @@ int PreSpeed(mach_port_t ktaskport) {
         ASSERT(errs == 0, "ERR: Failed to get offsets", "Error: Gathering Offsets");
     
         FillProcs(); // grab important processes and etc.
+#ifdef EMODE
         PreSpeed(tfpzero); // gang gang
+#endif
 
         // ------------ Remount RootFS -------------- //
         
@@ -260,12 +262,12 @@ int PreSpeed(mach_port_t ktaskport) {
                 reboot(0);
             } else if(errs != _REMOUNTSUCCESS || errs != _RENAMEDSNAP) {
                 LOG("ERR: Remount returned: %d", errs);
-                SetButtonText("Error: Remounting FS");
+                SetButtonText("Error: Remounting RootFS");
                 goto out;
             }
         }
         
-        LOG("Remounted FS");
+        LOG("Remounted RootFS");
         
         // lol using kernel_proc 2 times xD
         CredsTool(kernel_proc, kernel_proc, 0, NO, YES); // get kern creds for amfidestroyer

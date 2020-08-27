@@ -279,7 +279,11 @@ uint64_t vnode_finder(const char *path, uint64_t givenproc, const char *nodename
         uint64_t vnode = rk64(givenproc + 0x238);
         if(!ADDRISVALID(vnode)) {
             LOG("[vnode proc] ERR: Process has no vnode!");
+            if(path != NULL) {
+                LOG("[vnode] ?: Trying given path..");
+            } else {
             return 1;
+            }
         }
         
         if(nodename == NULL && mountype == NO) {
@@ -317,7 +321,11 @@ uint64_t vnode_finder(const char *path, uint64_t givenproc, const char *nodename
                 mntnext = rk64(mntnext + 0x0);
             }
             LOG("[vnode proc] ERR: Unable to find mount vnode");
+            if(path != NULL) {
+                LOG("[vnode] ?: Trying given path..");
+            } else {
             return 1;
+            }
         }
         // loop parent nodes if we don't have the right vnode
         uint64_t vname = rk64(vnode + 0xb8);
@@ -335,18 +343,29 @@ uint64_t vnode_finder(const char *path, uint64_t givenproc, const char *nodename
             pnode = rk64(pnode + 0xc0);
             }
             LOG("[vnode proc] ERR: Unable to find vnode");
+            if(path != NULL) {
+                LOG("[vnode] ?: Trying given path..");
+            } else {
             return 1;
+            }
         }
         LOG("[vnode proc] Got vnode: %s", procv);
         return vnode;
     } else if(givenproc != 0 && !ADDRISVALID(givenproc)) {
         LOG("[vnode proc] ERR: The process given is invalid!");
+        if(path != NULL) {
+            LOG("[vnode] ?: Trying given path..");
+        } else {
         return 1;
+        }
     }
+    
+
     
     int fd = open(path, O_RDONLY);
     if(fd < 0) {
         LOG("[vnode] ERR: Can't open %s", path);
+        LOG("[vnode] ERR: Is this a valid path?");
         return 1;
     }
     uint64_t proc = proc_of_pid(getpid());
