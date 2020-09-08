@@ -11,6 +11,8 @@
 #include <spawn.h>
 #include <dlfcn.h>
 #include <sys/cdefs.h>
+#include <mach-o/loader.h>
+#include <mach-o/swap.h>
 
 #import "ESpeed.h"
 #import "jelbrekLib.h"
@@ -18,6 +20,7 @@
 #import "offsets.h"
 #import "kernel_memory.h"
 #import "jbtools.h"
+#import "amfiutils.h"
 
 
 let TF_PLATFORM = (UInt32)(0x00000400);
@@ -473,3 +476,48 @@ uint64_t vnode_finder(const char *path, uint64_t givenproc, const char *nodename
     return node;
 }
 
+UInt32 MachOParser(const char *path, const char *symbol) {
+    int load_commands_offset = 0;
+    var segment_off = 32;
+    uint32_t sym_offset = 0;
+    uint32_t str_offset = 0;
+    uint32_t magic = 0;
+    uint32_t ncmds = 0;
+    
+    FILE * data = fopen(path, "rb");
+    if(!data) {
+        LOG("[Mach-O] ERR: Can't open %s", path);
+        return 0;
+    }
+    
+    // get magic
+    magic = read_magic(data, 0);
+    
+    int header_size;            // is 64 or nah?
+    if(magic != MH_MAGIC_64) {
+        LOG("[Mach-O] ERR: Not an Arch64 MachO!");
+        free(data);
+        return 0;
+    }
+    
+    header_size = sizeof(struct mach_header_64);
+    struct mach_header_64 *header = load_bytes(data, 0, header_size);
+    ncmds = header->ncmds;
+    load_commands_offset += header_size;
+    
+    struct segment_command_64 *segment = load_bytes(data, 32, sizeof(struct segment_command_64));
+    uint32_t seg_cmd = segment->cmd;
+    uint32_t cmd_size = segment->cmdsize;
+    
+    // I kinda know this won't be "LC_SYMTAB" lol
+    if(seg_cmd != LC_SYMTAB) {
+    LOG("[Mach-O] Parsing segments..");
+    for(int i = 0; i < ncmds; i++) {
+        seg_cmd += segment_off;
+        cmd_size += 4;
+        
+        segment_off += cmd_size;
+        }
+    }
+    return sym_offset;
+}

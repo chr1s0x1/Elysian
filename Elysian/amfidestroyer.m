@@ -195,19 +195,6 @@ pid_t hijacksysdiagnose(uint64_t ourproc) {
     return syspid;
 }
 
-uint8_t find_misvsaci(uint64_t load_addr) {
-    if(!ADDRISVALID(load_addr) || load_addr == 0) {
-        LOG("[misvsaci] ERR: Invalid load address!");
-        return 1;
-    }
-    
-    uint8_t misvsaci_place = 0; // we'll return with this
-    LOG("[misvsaci] Looking in 0x%llx", load_addr);
-    
-    // parse amfi load addr til we find MISVSACI
-    
-    return misvsaci_place;
-}
 
 int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
     LOG("[amfid] Let's do this..");
@@ -246,7 +233,7 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
     LOG("[amfid] Found amfid load address");
     
     // find MISVSACI's actual address
-    MISVSACI_actual_offset = find_misvsaci(amfi_load);
+    MISVSACI_actual_offset = MachOParser("/usr/libexec/amfid", "_MISValidateSignatureAndCopyInfo");
     
     if(MISVSACI_actual_offset == 0) {
         LOG("[amfid] ERR: Couldn't find MISVSACI");
