@@ -480,9 +480,12 @@ UInt32 MachOParser(const char *path, const char *symbol) {
     int load_commands_offset = 0;
     var segment_off = 32;
     uint32_t sym_offset = 0;
+    uint32_t sym_cmd = 0;
     uint32_t str_offset = 0;
     uint32_t magic = 0;
     uint32_t ncmds = 0;
+    
+    LOG("[Mach-O] Starting..");
     
     FILE * data = fopen(path, "rb");
     if(!data) {
@@ -490,12 +493,14 @@ UInt32 MachOParser(const char *path, const char *symbol) {
         return 0;
     }
     
+    
     // get magic
-    magic = read_magic(data, 0);
+    fseek(data, 1, SEEK_SET);
+    fread(&magic, sizeof(uint32_t), 1, data);
     
     int header_size;            // is 64 or nah?
-    if(magic != MH_MAGIC_64) {
-        LOG("[Mach-O] ERR: Not an Arch64 MachO!");
+    if(magic != MH_MAGIC_64 || magic != MH_MAGIC) {
+        LOG("[Mach-O] ERR: This binary is not a Arch MachO!");
         free(data);
         return 0;
     }
@@ -504,20 +509,8 @@ UInt32 MachOParser(const char *path, const char *symbol) {
     struct mach_header_64 *header = load_bytes(data, 0, header_size);
     ncmds = header->ncmds;
     load_commands_offset += header_size;
+
+    struct nlist_64 *symtab = load_bytes(data, segment_off, sizeof(struct nlist_64));
     
-    struct segment_command_64 *segment = load_bytes(data, 32, sizeof(struct segment_command_64));
-    uint32_t seg_cmd = segment->cmd;
-    uint32_t cmd_size = segment->cmdsize;
-    
-    // I kinda know this won't be "LC_SYMTAB" lol
-    if(seg_cmd != LC_SYMTAB) {
-    LOG("[Mach-O] Parsing segments..");
-    for(int i = 0; i < ncmds; i++) {
-        seg_cmd += segment_off;
-        cmd_size += 4;
-        
-        segment_off += cmd_size;
-        }
-    }
     return sym_offset;
 }

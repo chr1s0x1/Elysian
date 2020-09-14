@@ -25,7 +25,14 @@
 // After renaming the snapshot, trying to grab the disk0s1s1 name from the offset
 // 0xb8 = an invalid address.. So we just check if the address is valid to tell
 // us if we've renamed the snapshot (valid = NO) (invalid = YES)
-bool RenameSnapRequired(void) {
+
+/*
+ 
+ One thing to note that I can't really explain, but when running RenameSnapRequired in EMODE (Espeed), apparently the name address is valid and we can pull the name into "ok". Not sure why this happens, perhaps someone can explain this to me in the future...
+ 
+ */
+bool RenameSnapRequired(int espeedon) {
+   if(espeedon == 1) {
    char ok[20];
    uint64_t rootvnode = lookup_rootvnode();
    uint64_t vmount = rk64(rootvnode + 0xd8);
@@ -37,6 +44,19 @@ bool RenameSnapRequired(void) {
    int cmp = strncmp("disk0s1s1", ok, 20);
    
    return ADDRISVALID(rvnodename) ? YES : NO || cmp == 0 ? YES : NO;
+   }
+   
+   int fd = open("/", O_RDONLY, 0);
+      if(fd < 0) { // this shouldn't happen
+          close(fd);
+          return 1;
+      }
+      struct attrlist alist = { 0 };
+      char abuf[MAXPATHLEN]; // I believe we have to do this for iOS 13
+      alist.commonattr = ATTR_BULK_REQUIRED;
+      int snaps = fs_snapshot_list(fd, &alist, &abuf[0], sizeof(abuf), 0);
+      close(fd);
+      return snaps == -1 ? YES:NO;
 }
 
 uint64_t FindNewMount(uint64_t vnode) {
@@ -68,7 +88,7 @@ int RemountFS(uint64_t kernel_proc, int espeedmode) {
         return _NOKERNPROC;
     }
    
-    bool needrename = RenameSnapRequired();
+    bool needrename = RenameSnapRequired(espeedmode);
     if(needrename == YES || espeedmode == 1) {
        
       // get disk0s1s1
@@ -97,7 +117,7 @@ int RemountFS(uint64_t kernel_proc, int espeedmode) {
         LOG("ERR: Failed to get Boot Snapshot");
         return 1;
     }
-    LOG("Got System Snapshot");
+    LOG("Got System Snapshot!");
     
     // check if mount path already exists and attempt to remove it
     if(fileExists("/var/rootmnt")) {

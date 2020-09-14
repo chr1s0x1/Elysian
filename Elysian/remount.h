@@ -49,7 +49,7 @@ struct hfs_mount_args {
  Checks if we already renamed the snapshot, if we did, it executes the "else" statement
  */
 
-bool RenameSnapRequired(void);
+bool RenameSnapRequired(int espeedon);
 
 /*
  function: FindNewMount

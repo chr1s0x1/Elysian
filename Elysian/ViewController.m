@@ -265,11 +265,13 @@ int PreSpeed(mach_port_t ktaskport) {
                 SetButtonText("Error: Remounting RootFS");
                 goto out;
             }
+            LOG("?: Uhh, we shouldn't be here..");
+            goto out;
         }
         
         LOG("Remounted RootFS");
         
-        // lol using kernel_proc 2 times xD
+        
         CredsTool(kernel_proc, kernel_proc, 0, NO, YES); // get kern creds for amfidestroyer
         
         // Nuke AMFI >:)
@@ -284,6 +286,7 @@ int PreSpeed(mach_port_t ktaskport) {
 
         out:
         // clean up
+        // LOG("Cleaning up before respringing..");
         term_jelbrek();
         CredsTool(0, kernel_proc, 1, NO, NO);
         usleep(5000);
