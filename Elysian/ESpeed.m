@@ -112,9 +112,43 @@ mach_port_t ESpeed(void) {
     // check if we can get the kernel base from the kernel struct
     KernelBase = rk64(kernel_all_image_info_addr +
     offsetof(struct kernel_all_image_info_addr, kernel_base_address));
-    if(!ADDRISVALID(KernelBase) || KernelBase == 0) {
+    if(!ADDRISVALID(KernelBase) || KernelBase == 0) { // this shouldn't happen
         LOG("[ESpeed] ERR: Couldn't grab KernelBase from struct");
-        return 1;
+        
+        // try using the timewaste method
+        int init = init_IOSurface();
+        if(init != 0) {
+            LOG("[ESpeed] ERR: Failed to initiate IOSurface services");
+            return 1;
+        }
+        
+        LOG("[ESpeed] Initiated IOSurface services");
+        
+        uint64_t IOSurface_port_addr = find_port(IOSurfaceRootUserClient);
+        if(!ADDRISVALID(IOSurface_port_addr)) {
+            LOG("[ESpeed] ERR: Couldn't find IOSRUC port address");
+            CredsTool(0, 0, 1, NO, NO);
+            term_IOSurface();
+            return 1;
+        }
+        
+        uint64_t IOSurface_object = rk64(IOSurface_port_addr + koffset(KSTRUCT_OFFSET_IPC_PORT_IP_KOBJECT));
+         uint64_t vtable = rk64(IOSurface_object);
+         vtable |= 0xffffff8000000000; // in case it has PAC
+        LOG("[ESpeed] vtable: 0x%llx", vtable);
+         uint64_t function = rk64(vtable + 8 * koffset(OFFSET_GETFI));
+         function |= 0xffffff8000000000; // this address is inside the kernel image
+        LOG("[ESpeed] function in kernel image: 0x%llx", function);
+         uint64_t page = trunc_page_kernel(function);
+        LOG("[ESpeed] kernel page: 0x%llx", page);
+         while (true) {
+             if (rk64(page) == 0x0100000cfeedfacf && (rk64(page + 8) == 0x0000000200000000 || rk64(page + 8) == 0x0000000200000002)) {
+                 KernelBase = page;
+                 break;
+             }
+             page -= pagesize;
+         }
+        LOG("[ESpeed] Found KernelBase: 0x%llx", KernelBase);
     }
     
     LOG("[ESpeed] Got our KernelBase: 0x%llx", KernelBase);
