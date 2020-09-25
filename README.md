@@ -10,9 +10,9 @@ JB ETA????
 
 # TODO :
 - Remount: **Done**
-- Code Signing (amfid patching): **Done** (Testing..)
-- Kernel Call: (Undefined) (probably will not be needed)
-- TC Injection: (In Progress)
+- Create macho-parser for amfid patching: **Working on**
+- Code Signing (amfid patching): **Done (after macho parser)**
+- TC Injection: (On hold)
 - (More added later) 
 
 # Credits ( so far )
