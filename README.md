@@ -13,6 +13,7 @@ JB ETA????
 - Create macho-parser for amfid patching: **Working on**
 - Code Signing (amfid patching): **Done (after macho parser)**
 - TC Injection: (On hold)
+- BootStrap (Procursus by Diatrus)
 - (More added later) 
 
 # Credits ( so far )
