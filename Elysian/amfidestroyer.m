@@ -175,7 +175,7 @@ pid_t hijacksysdiagnose(uint64_t ourproc, uint64_t kernel_process) {
     char const *args[] = {"sysdiagnose", NULL};
     posix_spawn(&syspid, "/usr/bin/sysdiagnose", NULL, NULL, (char **)args, NULL);
     // get the proc from syspid
-    uint64_t sysproc = find_proc_by_kernel((UInt32)(syspid), kernel_process)
+    uint64_t sysproc = find_proc_by_kernel((UInt32)(syspid), kernel_process);
     if(!ADDRISVALID(sysproc) || sysproc == 0) {
         LOG("[sys] ERR: sysdiagnose proc is invalid");
         return 1;

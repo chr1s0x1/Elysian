@@ -26,7 +26,7 @@
 #include "pac/parameters.h"
 #include "pac/kernel.h"
 
-bool ESpeedMode; // lets Elysian know if we're running off of HSP4
+bool ESpeedMode = NO; // lets Elysian know if we're running off of HSP4
 
 // some important stuff, don't know what to call them lol
 uint64_t kernel_proc;
@@ -162,11 +162,10 @@ int PreSpeed(mach_port_t ktaskport) {
         LOG("[*] Starting Exploit");
         int espeed = 1;
         __block mach_port_t tfpzero = MACH_PORT_NULL;
-        tfpzero = ESpeed();
+        tfpzero = ESpeed(); // HSP4 POWAH
         if(tfpzero != 1 && MACH_PORT_VALID(tfpzero)) {
             ESpeedMode = YES;
             espeed = 0;
-#define EMODE ESpeedMode = YES;
         } else {
         LOG("?: ESpeed failed, trying exploit..");
         tfpzero = get_tfp0();
@@ -247,9 +246,11 @@ int PreSpeed(mach_port_t ktaskport) {
         ASSERT(errs == 0, "ERR: Failed to get offsets", "Error: Gathering Offsets");
     
         FillProcs(); // grab important processes and etc.
-#ifdef EMODE
+    
+    if(ESpeedMode == NO) {
         PreSpeed(tfpzero); // gang gang
-#endif
+    }
+
 
         // ------------ Remount RootFS -------------- //
         
