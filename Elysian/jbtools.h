@@ -75,5 +75,11 @@ uint64_t vnode_finder(const char *path, uint64_t givenproc, const char *nodename
 uint64_t find_proc_by_kernel(pid_t pid, uint64_t kernproc);
 
 
-UInt32 MachOParser(const char *path, const char *symbol);
+/*
+ function: mmap_file
+ 
+ Use: mmaps the file in "path" into memory
+ */
+uint8_t *mmap_file(const char *path);
+
 #endif /* jbtools_h */

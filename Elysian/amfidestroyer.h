@@ -29,18 +29,18 @@ typedef struct {
  function: hijacksysdiagnose
  
  Use:
- borrows/steals the sysdiagnose creds to get the amfid task port
+ borrows/steals the spindump creds to get the amfid task port
  */
-pid_t hijacksysdiagnose(uint64_t myproc, uint64_t kernel_process);
+pid_t hijackspindump(uint64_t myproc, uint64_t kernel_process);
 
 /*
  function: find_misvsaci
  
  Use:
- Parses the amfi load address and searches for MISVSACI's offset
+ Parses amfid's binary header and searches for MISVSACI's offset
  */
 
-uint8_t find_misvsaci(uint64_t load_addr);
+uint64_t find_misvsaci(uint8_t *amfid);
 
 /*
  function: amfidestroyer

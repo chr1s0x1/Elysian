@@ -168,31 +168,57 @@ int AmfidSetException(mach_port_t amfidport, void *(exceptionHandler)(void*)) {
     return 0;
 }
 
-pid_t hijacksysdiagnose(uint64_t ourproc, uint64_t kernel_process) {
-    LOG("[sys] Hijacking sysdiagnose..");
-    // find sysdiagnose's pid
-    pid_t syspid;
-    char const *args[] = {"sysdiagnose", NULL};
-    posix_spawn(&syspid, "/usr/bin/sysdiagnose", NULL, NULL, (char **)args, NULL);
-    // get the proc from syspid
-    uint64_t sysproc = find_proc_by_kernel((UInt32)(syspid), kernel_process);
-    if(!ADDRISVALID(sysproc) || sysproc == 0) {
-        LOG("[sys] ERR: sysdiagnose proc is invalid");
+pid_t hijackspindump(uint64_t ourproc, uint64_t kernel_process) {
+    LOG("[sys] Hijacking spindump..");
+    // find spindump's pid
+    pid_t spinpid;
+    char const *args[] = {"spindump", NULL};
+    posix_spawn(&syspid, "/usr/sbin/spindump", NULL, NULL, (char **)args, NULL);
+    // get the proc from spinpid
+    uint64_t spinproc = find_proc_by_kernel((UInt32)(spinpid), kernel_process);
+    if(!ADDRISVALID(spinproc) || spinproc == 0) {
+        LOG("[sys] ERR: spindump's proc is invalid");
         return 1;
     }
-    LOG("[sys] Got sysdiagnose proc: 0x%llx", sysproc);
+    LOG("[sys] Got spindump proc: 0x%llx", spinproc);
     
-    // grab sysdiagnose's creds and entitlements
+    // grab spindump's creds and entitlements
     // was gonna use CredsTool, but it also borrows the creds
     // which we don't need so..
     uint64_t ourcreds = rk64(ourproc + 0x100);
-    uint64_t syscred = rk64(sysproc + 0x100);
+    uint64_t spincred = rk64(spinproc + 0x100);
 
     let ents = rk64(rk64(ourcreds + 0x78) + 0x8);
-    let sysents = rk64(rk64(syscred + 0x78) + 0x8);
-    wk64(rk64(ourcreds + 0x78) + 0x8, sysents);
-    LOG("[sys] Got sysdiagnose creds, returning..");
-    return syspid;
+    let spinents = rk64(rk64(spincred + 0x78) + 0x8);
+    wk64(rk64(ourcreds + 0x78) + 0x8, spinents);
+    LOG("[sys] Got spindump creds, returning..");
+    return spinpid;
+}
+
+uint64_t find_misvsaci(uint8_t *amfid) {
+
+    uint64_t sym_offset = 0;
+
+    
+    LOG("[misvsaci] Starting..");
+    struct mach_header_64 *mh = (struct mach_header_64*)amfid;
+    uint32_t ncmds = mh->ncmds;
+    
+    struct load_command *cmds = (struct load_command*)(mh + 1);
+    struct load_command *lcmds = cmds;
+    
+    for(uint32_t i = 0; i < ncmds; i++) {
+        switch (lcmds->cmd) {
+            case LC_SYMTAB: {
+                struct symtab_command *sym_cmd = (struct symtab_command*)lcmds;
+                uint32_t symoff = sym_cmd->symoff;
+                uint32_t nsyms = sym_cmd->nsyms;
+                uint32_t stroff = sym_cmd->stroff;
+                
+            }
+        }
+    }
+    return sym_offset;
 }
 
 
@@ -203,8 +229,8 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc, uint64_t kernel) {
     if(amfipid == 0) return 1;
     
     // hijack sysdiagnose so we can get the amfi task port
-    pid_t syspid = hijacksysdiagnose(ourproc, kernel);
-    if(syspid == 1) { // hijacksysdiagnose returns 1 if it fails
+    pid_t spinpid = hijackspindump(ourproc, kernel);
+    if(spinid == 1) { // hijacksysdiagnose returns 1 if it fails
         LOG("[amfid] ERR: Couldn't get sysdiagnose creds");
         CredsTool(0, 0, 1, NO, NO);
         return 1;
@@ -226,14 +252,27 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc, uint64_t kernel) {
     uint64_t amfi_load = binary_load_address(amfid_task);
     if(amfi_load == 0) {
         LOG("[amfid] ERR: Couldn't find amfid load address");
-        kill(syspid, SIGKILL);
+        kill(spinpid, SIGKILL);
         CredsTool(0, 0, 1, NO, NO);
         return 1;
     }
     LOG("[amfid] Found amfid load address");
     
-    // find MISVSACI's actual address
-    MISVSACI_actual_offset = MachOParser("/usr/libexec/amfid", "_MISValidateSignatureAndCopyInfo");
+    // -- find MISVSACI's actual address -- \\
+    
+    // 1. map amfid's binary in memory
+    struct stat fstat = {0};
+    stat(path, &fstat);
+    uint8_t *amfid_fsize = fstat.st_size;
+    uint8_t *amfi_fdata = mmap_file("/usr/libexec/amfid");
+    if((int)amfi_fdata == 0) {
+        LOG("[amfid] ERR: Unable to map amfid!");
+        munmap(amfid_fdata, amfid_fsize);
+        return 1;
+    }
+    
+    // parse amfid's binary to get the offset (find_misvsaci for code)
+    MISVSACI_actual_offset = find_misvsaci(amfi_fdata);
     
     if(MISVSACI_actual_offset == 0) {
         LOG("[amfid] ERR: Couldn't find MISVSACI offset");
@@ -248,7 +287,7 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc, uint64_t kernel) {
     int set = AmfidSetException(amfid_task, AMFIDExceptionHandler);
     if(set != 0) {
         LOG("[amfid patch] ERR: Couldn't set exception handler!");
-        kill(syspid, SIGKILL);
+        kill(spinpid, SIGKILL);
         CredsTool(0, 0, 1, NO, NO);
         return 1;
     }
@@ -259,7 +298,7 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc, uint64_t kernel) {
     kern_return_t kr = mach_vm_read_overwrite(amfid_task, amfi_load+MISVSACI_actual_offset, 8, (mach_vm_address_t)&origAMFID_MISVSACI, &sz);
      if(kr != KERN_SUCCESS) {
         LOG("[amfid patch] ERR: Couldn't read MISVSACI");
-        kill(syspid, SIGKILL);
+        kill(spinpid, SIGKILL);
         CredsTool(0, 0, 1, NO, NO);
         return 1;
     }
@@ -268,14 +307,14 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc, uint64_t kernel) {
     vm_address_t misvsaci_page = (amfi_load + (UInt64)(MISVSACI_actual_offset)) & ~vm_page_mask;
     if(misvsaci_page == 0) {
         LOG("[amfid patch] ERR: MISVSACI page is invalid!");
-        kill(syspid, SIGKILL);
+        kill(spinpid, SIGKILL);
         CredsTool(0, 0, 1, NO, NO);
         return 1;
     }                                          // add read/write permission flags
     kr = vm_protect(amfid_task, misvsaci_page, vm_page_size, 0, VM_PROT_READ | VM_PROT_WRITE);
     if(kr != KERN_SUCCESS) {
         LOG("[amfid patch] ERR: Couldn't make MISVSACI page r/w");
-        kill(syspid, SIGKILL);
+        kill(spinpid, SIGKILL);
         CredsTool(0, 0, 1, NO, NO);
         return 1;
     }
@@ -288,7 +327,7 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc, uint64_t kernel) {
     /*---------- End of patch ----------*/
     
     LOG("[amfid] Mission complete, cleaning up..");
-    kill(syspid, SIGKILL);
+    kill(spinpid, SIGKILL);
     CredsTool(0, 0, 1, NO, NO);
     return 0;
 }

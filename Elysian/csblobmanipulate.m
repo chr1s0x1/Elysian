@@ -42,7 +42,7 @@ int csblobmanipulate(const char *macho) {
     // I don't want to do this :(
     LOG("[csblob] ?: Creating a valid blob..");
     
-
+    
     LOG("[csblob] Created blob and set generation count, finishing up..");
     return 0;
 }

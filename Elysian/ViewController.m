@@ -161,7 +161,7 @@ int PreSpeed(mach_port_t ktaskport) {
     [self->JBButton setEnabled:NO];
         LOG("[*] Starting Exploit");
         int espeed = 1;
-        __block mach_port_t tfpzero = MACH_PORT_NULL;
+        mach_port_t tfpzero = MACH_PORT_NULL;
         tfpzero = ESpeed(); // HSP4 POWAH
         if(tfpzero != 1 && MACH_PORT_VALID(tfpzero)) {
             ESpeedMode = YES;
@@ -216,7 +216,7 @@ int PreSpeed(mach_port_t ktaskport) {
         }
         
         LOG("Escaped Sandbox");
-        
+
 
         LOG("Here comes the fun..");
             // Initiate jelbrekLibE
@@ -230,7 +230,7 @@ int PreSpeed(mach_port_t ktaskport) {
         
         LOG("Exporting tfp0 to HSP4..");
         
-        // Export tfp0
+        // Export tfp0 to HSP4 for ESpeed
         Set_tfp0HSP4(tfpzero);
         
         // wait for export to finish

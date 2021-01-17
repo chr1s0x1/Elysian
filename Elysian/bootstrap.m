@@ -15,6 +15,7 @@
 #import "jbtools.h"
 #import "jelbrekLib.h"
 
+// Incomplete so far
 bool createbootstrap(uint64_t kproc) {
     int retval = 0;
     

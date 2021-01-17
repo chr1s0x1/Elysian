@@ -13,6 +13,8 @@
 #include <sys/cdefs.h>
 #include <mach-o/loader.h>
 #include <mach-o/swap.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
 
 #import "ESpeed.h"
 #import "jelbrekLib.h"
@@ -476,41 +478,21 @@ uint64_t vnode_finder(const char *path, uint64_t givenproc, const char *nodename
     return node;
 }
 
-UInt32 MachOParser(const char *path, const char *symbol) {
-    int load_commands_offset = 0;
-    var segment_off = 32;
-    uint32_t sym_offset = 0;
-    uint32_t sym_cmd = 0;
-    uint32_t str_offset = 0;
-    uint32_t magic = 0;
-    uint32_t ncmds = 0;
+uint8_t *mmap_file(const char *path) {
     
-    LOG("[Mach-O] Starting..");
+    int fd = open(path, O_RDONLY);
+    if(fd < 0) return NULL;
     
-    FILE * data = fopen(path, "rb");
-    if(!data) {
-        LOG("[Mach-O] ERR: Can't open %s", path);
-        return 0;
+    uint8_t *file_address;
+    struct stat s = {0};
+    stat(path, &s);
+    size_t mapsize = s.st_size;
+    
+    file_address = mmap(NULL, mach_vm_round_page(mapsize), PROT_READ, MAP_FILE | MAP_PRIVATE, fd, 0);
+    if((int)file_address == -1) {
+        LOG("[mmap_file] ERR: Unable to map succesfully");
+        return NULL;
     }
-    
-    
-    // get magic
-    fseek(data, 1, SEEK_SET);
-    fread(&magic, sizeof(uint32_t), 1, data);
-    
-    int header_size;            // is 64 or nah?
-    if(magic != MH_MAGIC_64 || magic != MH_MAGIC) {
-        LOG("[Mach-O] ERR: This binary is not a Arch MachO!");
-        free(data);
-        return 0;
-    }
-    
-    header_size = sizeof(struct mach_header_64);
-    struct mach_header_64 *header = load_bytes(data, 0, header_size);
-    ncmds = header->ncmds;
-    load_commands_offset += header_size;
-
-    struct nlist_64 *symtab = load_bytes(data, segment_off, sizeof(struct nlist_64));
-    
-    return sym_offset;
+    return file_address;
 }
+
