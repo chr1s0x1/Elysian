@@ -36,6 +36,14 @@ goto out;\
 }\
 } while(false)
 
+#define _assert(condition) do {\
+if(condition) {\
+break;\
+}\
+LOG("_assert ERR: %s | %d", __FILE__, __LINE__);\
+return 1;\
+} while(false)
+
 /*
  
  function : LOG

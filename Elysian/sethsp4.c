@@ -34,6 +34,7 @@ int Set_tfp0HSP4(mach_port_t tfp0) {
     // Set hsp4
     wk32(host_port + koffset(KSTRUCT_OFFSET_IPC_PORT_IO_BITS), io_makebits(1, IOT_PORT, IKOT_HOST_PRIV));
     uint64_t realhost = rk64(host_port + koffset(KSTRUCT_OFFSET_IPC_PORT_IP_KOBJECT));
+    _assert(ADDRISVALID(realhost));
     wk64(realhost + 0x10 + 4 * sizeof(uint64_t), hsp4); // 0x10 = OFFSET(host, special)
     
     // check if we successfully set hsp4

@@ -205,7 +205,7 @@ uint64_t find_misvsaci() {
      struct stat fstat = {0};
      stat("usr/libexec/amfid", &fstat);
      uint8_t *amfid_fsize = fstat.st_size;
-     uint8_t *amfid = mmap_file("/usr/libexec/amfid");
+     void *amfid = mmap_file("/usr/libexec/amfid");
      if((int)amfid == 0) {
          LOG("[amfid] ERR: Unable to map amfid!");
          munmap(amfid, amfid_fsize);
@@ -214,6 +214,9 @@ uint64_t find_misvsaci() {
 
     uint64_t sym_offset = 0;
     uint32_t MISVSACI_symindex = 0;
+    uint32_t symoff = 0;
+    uint32_t nsyms = 0;
+    uint32_t stroff = 0;
 
     // 2. Parse amfid's DSYMTAB to get the exact offset to patch
     LOG("[misvsaci] Starting..");
@@ -224,26 +227,26 @@ uint64_t find_misvsaci() {
     struct load_command *lcmds = cmds;
     
     for(uint32_t i = 0; i < ncmds; i++) {
-        switch (lcmds->cmd) {
-            case LC_SYMTAB: {
+             if(lcmds->cmd == LC_SYMTAB) {
                 LOG("[misvsaci] Found the LC_SYMTAB");
                 struct symtab_command *sym_cmd = (struct symtab_command*)lcmds;
-                uint32_t symoff = sym_cmd->symoff;
-                uint32_t nsyms = sym_cmd->nsyms;
-                uint32_t stroff = sym_cmd->stroff;
+                symoff = sym_cmd->symoff;
+                nsyms = sym_cmd->nsyms;
+                stroff = sym_cmd->stroff;
                 _assert(symoff != 0);
                 _assert(nsyms != 0);
                 _assert(stroff != 0);
-                for(int i=0; i < nsyms; i++) {
-                struct nlist_64 *symtab = (void*)mh + symoff*sizeof(struct nlist_64);
-                const char *strtab = (const char*)((uintptr_t)amfid + sym_cmd->stroff);
-                    for(int i = 0; i < sym_cmd->nsyms; i++) {
-                
+                 struct nlist_64 *symtab = (struct nlist_64*)((uintptr_t)amfid + symoff);
+                    _assert(ADDRISVALID((uint64_t)symtab));
+                const char *strtab = (const char*)((uintptr_t)amfid + stroff);
+                    _assert(strtab != NULL);
             }
-         }
-       }
+        if(lcmds->cmd == LC_DYSYMTAB) { // this is what we're looking for
+            // credit to S1guza for the help in this
+            
+        }
+    lcmds = (struct load_command*)((char*)lcmds + lcmds->cmdsize);
     }
- }
      return sym_offset;
 }
         
