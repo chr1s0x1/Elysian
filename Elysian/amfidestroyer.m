@@ -199,12 +199,13 @@ pid_t hijackspindump(uint64_t ourproc, uint64_t kernel_process) {
     return spinpid;
 }
 
+// credit to ZecOps for this
 uint64_t find_misvsaci() {
     
     // 1. map amfid's binary in memory
      struct stat fstat = {0};
      stat("usr/libexec/amfid", &fstat);
-     uint8_t *amfid_fsize = fstat.st_size;
+     size_t amfid_fsize = fstat.st_size;
      void *amfid = mmap_file("/usr/libexec/amfid");
      if((int)amfid == 0) {
          LOG("[amfid] ERR: Unable to map amfid!");
@@ -212,7 +213,6 @@ uint64_t find_misvsaci() {
          return 1;
      }
 
-    uint64_t sym_offset = 0;
     uint32_t MISVSACI_symindex = 0;
     uint32_t symoff = 0;
     uint32_t nsyms = 0;
@@ -240,16 +240,37 @@ uint64_t find_misvsaci() {
                     _assert(ADDRISVALID((uint64_t)symtab));
                 const char *strtab = (const char*)((uintptr_t)amfid + stroff);
                     _assert(strtab != NULL);
+                 for(int i = 0; i < nsyms; i++) {
+                     char *MISVSACI_string = NULL;
+                     MISVSACI_string = (char*)mh+(uint32_t)symtab->n_un.n_strx;
+                     if(strcmp(MISVSACI_string, "_MISValidateSignatureAndCopyInfo")) {
+                         LOG("Found our symbol: %s", MISVSACI_string);
+                         break;
+                     }
+                     if(i!=0 && i!=1){
+                     MISVSACI_symindex++;
+                     }
+                 }
             }
-        if(lcmds->cmd == LC_DYSYMTAB) { // this is what we're looking for
-            // credit to S1guza for the help in this
-            
-        }
     lcmds = (struct load_command*)((char*)lcmds + lcmds->cmdsize);
     }
-     return sym_offset;
+    _assert(MISVSACI_symindex != 0);
+    
+    const struct section_64 *sect_info = NULL;
+    if(isArm64e()) {
+    const char *_segment = "__DATA_CONST", *_segment2 = "__DATA", *_section = "__auth_got";
+        sect_info = getsectbynamefromheader_64((const struct mach_header_64 *)(uint8_t *)amfid, _segment, _section);
+        if(!sect_info)
+            sect_info = getsectbynamefromheader_64((const struct mach_header_64 *)(uint8_t *)amfid, _segment2, _section);
+    }
+    const char *_segment = "__DATA", *_section = "__la_symbol_ptr";
+        sect_info = getsectbynamefromheader_64((const struct mach_header_64 *)(uint8_t *)amfid, _segment, _section);
+    
+    _assert(sect_info);
+    
+    LOG("[misvsaci] Done, exiting..");
+    return sect_info->offset + (MISVSACI_symindex * 0x8);
 }
-        
         
 
 int amfidestroyer(UInt32 amfipid, uint64_t ourproc, uint64_t kernel) {
@@ -292,11 +313,7 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc, uint64_t kernel) {
     
     // parse amfid's binary to get the offset (find_misvsaci for code)
     MISVSACI_actual_offset = find_misvsaci();
-    
-    if(MISVSACI_actual_offset == 0) {
-        LOG("[amfid] ERR: Couldn't find MISVSACI offset");
-        return 1;
-    }
+    _assert(MISVSACI_actual_offset != 1);
     
     /*-------- now for patching amfi --------*/
     

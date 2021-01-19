@@ -83,4 +83,6 @@ uint64_t find_proc_by_kernel(pid_t pid, uint64_t kernproc);
  */
 uint8_t *mmap_file(const char *path);
 
+bool isArm64e();
+
 #endif /* jbtools_h */

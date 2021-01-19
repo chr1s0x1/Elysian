@@ -38,6 +38,13 @@ let CS_RESTRICT = (UInt32)(0x00000800);
 let CS_PLATFORM_BINARY = (UInt32)(0x04000000);
 let CS_DEBUGGED = (UInt32)(0x10000000);
 
+bool isArm64e(){
+#if __arm64e__
+    return true;
+#endif
+    return false;
+}
+
 uint64_t find_proc_by_kernel(pid_t pid, uint64_t kernproc) {
     LOG("[proc finder] Looking for process of pid: %d", pid);
     uint64_t proc = 0;
