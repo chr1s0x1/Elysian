@@ -12,9 +12,12 @@
 #include <pthread.h>
 #include <mach-o/fat.h>
 #include <mach-o/loader.h>
+#include <mach-o/nlist.h>
+#include <mach-o/getsect.h>
 #import <mach/thread_state.h>
 #import <mach/thread_status.h>
 #import <mach/thread_info.h>
+#import <sys/mman.h>
 #include <mach/mach.h>
 #import <mach/vm_map.h>
 #include <mach/message.h>
@@ -31,6 +34,7 @@ pthread_t exceptionThread;
 static mach_port_name_t AMFID_ExceptionPort = MACH_PORT_NULL;
 uint64_t origAMFID_MISVSACI = 0;
 uint64_t amfid_base;
+uint64_t MISVSACI_actual_offset;
 
 // will handle the amfi exception messages
 void* AMFIDExceptionHandler(void* arg) {
@@ -173,7 +177,7 @@ pid_t hijackspindump(uint64_t ourproc, uint64_t kernel_process) {
     // find spindump's pid
     pid_t spinpid;
     char const *args[] = {"spindump", NULL};
-    posix_spawn(&syspid, "/usr/sbin/spindump", NULL, NULL, (char **)args, NULL);
+    posix_spawn(&spinpid, "/usr/sbin/spindump", NULL, NULL, (char **)args, NULL);
     // get the proc from spinpid
     uint64_t spinproc = find_proc_by_kernel((UInt32)(spinpid), kernel_process);
     if(!ADDRISVALID(spinproc) || spinproc == 0) {
@@ -195,32 +199,55 @@ pid_t hijackspindump(uint64_t ourproc, uint64_t kernel_process) {
     return spinpid;
 }
 
-uint64_t find_misvsaci(uint8_t *amfid) {
+uint64_t find_misvsaci() {
+    
+    // 1. map amfid's binary in memory
+     struct stat fstat = {0};
+     stat("usr/libexec/amfid", &fstat);
+     uint8_t *amfid_fsize = fstat.st_size;
+     uint8_t *amfid = mmap_file("/usr/libexec/amfid");
+     if((int)amfid == 0) {
+         LOG("[amfid] ERR: Unable to map amfid!");
+         munmap(amfid, amfid_fsize);
+         return 1;
+     }
 
     uint64_t sym_offset = 0;
+    uint32_t MISVSACI_symindex = 0;
 
-    
+    // 2. Parse amfid's DSYMTAB to get the exact offset to patch
     LOG("[misvsaci] Starting..");
     struct mach_header_64 *mh = (struct mach_header_64*)amfid;
     uint32_t ncmds = mh->ncmds;
-    
+
     struct load_command *cmds = (struct load_command*)(mh + 1);
     struct load_command *lcmds = cmds;
     
     for(uint32_t i = 0; i < ncmds; i++) {
         switch (lcmds->cmd) {
             case LC_SYMTAB: {
+                LOG("[misvsaci] Found the LC_SYMTAB");
                 struct symtab_command *sym_cmd = (struct symtab_command*)lcmds;
                 uint32_t symoff = sym_cmd->symoff;
                 uint32_t nsyms = sym_cmd->nsyms;
                 uint32_t stroff = sym_cmd->stroff;
+                _assert(symoff != 0);
+                _assert(nsyms != 0);
+                _assert(stroff != 0);
+                for(int i=0; i < nsyms; i++) {
+                struct nlist_64 *symtab = (void*)mh + symoff*sizeof(struct nlist_64);
+                const char *strtab = (const char*)((uintptr_t)amfid + sym_cmd->stroff);
+                    for(int i = 0; i < sym_cmd->nsyms; i++) {
                 
             }
-        }
+         }
+       }
     }
-    return sym_offset;
+ }
+     return sym_offset;
 }
-
+        
+        
 
 int amfidestroyer(UInt32 amfipid, uint64_t ourproc, uint64_t kernel) {
     LOG("[amfid] Let's do this..");
@@ -230,7 +257,7 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc, uint64_t kernel) {
     
     // hijack sysdiagnose so we can get the amfi task port
     pid_t spinpid = hijackspindump(ourproc, kernel);
-    if(spinid == 1) { // hijacksysdiagnose returns 1 if it fails
+    if(spinpid == 1) { // hijacksysdiagnose returns 1 if it fails
         LOG("[amfid] ERR: Couldn't get sysdiagnose creds");
         CredsTool(0, 0, 1, NO, NO);
         return 1;
@@ -260,19 +287,8 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc, uint64_t kernel) {
     
     // -- find MISVSACI's actual address -- \\
     
-    // 1. map amfid's binary in memory
-    struct stat fstat = {0};
-    stat(path, &fstat);
-    uint8_t *amfid_fsize = fstat.st_size;
-    uint8_t *amfi_fdata = mmap_file("/usr/libexec/amfid");
-    if((int)amfi_fdata == 0) {
-        LOG("[amfid] ERR: Unable to map amfid!");
-        munmap(amfid_fdata, amfid_fsize);
-        return 1;
-    }
-    
     // parse amfid's binary to get the offset (find_misvsaci for code)
-    MISVSACI_actual_offset = find_misvsaci(amfi_fdata);
+    MISVSACI_actual_offset = find_misvsaci();
     
     if(MISVSACI_actual_offset == 0) {
         LOG("[amfid] ERR: Couldn't find MISVSACI offset");

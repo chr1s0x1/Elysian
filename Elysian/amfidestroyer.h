@@ -40,7 +40,7 @@ pid_t hijackspindump(uint64_t myproc, uint64_t kernel_process);
  Parses amfid's binary header and searches for MISVSACI's offset
  */
 
-uint64_t find_misvsaci(uint8_t *amfid);
+uint64_t find_misvsaci();
 
 /*
  function: amfidestroyer

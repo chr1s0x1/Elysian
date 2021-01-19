@@ -681,7 +681,7 @@
 					arm64e,
 				);
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Z25WL7QR46;
+				DEVELOPMENT_TEAM = 759P57CQCB;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)\"";
 				INFOPLIST_FILE = Elysian/Info.plist;
@@ -698,7 +698,7 @@
 				);
 				MACH_O_TYPE = mh_execute;
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.chr1sstuff.elysian;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chr1sproduct.elysian;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYSTEM_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Elysian\"";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -715,7 +715,7 @@
 					arm64e,
 				);
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Z25WL7QR46;
+				DEVELOPMENT_TEAM = 759P57CQCB;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)\"";
 				INFOPLIST_FILE = Elysian/Info.plist;
@@ -732,7 +732,7 @@
 				);
 				MACH_O_TYPE = mh_execute;
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.chr1sstuff.elysian;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chr1sproducts.elysian;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SYSTEM_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/Elysian\"";
 				TARGETED_DEVICE_FAMILY = "1,2";

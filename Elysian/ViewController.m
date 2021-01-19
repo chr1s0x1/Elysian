@@ -105,7 +105,7 @@ int PreSpeed(mach_port_t ktaskport) {
         return 1;
     }
     
-    // add things to struct xD
+    // add the kernel proc and kernel base to our crafted struct. We'll need them later for ESpeed
     struct kernel_all_image_info_addr kernelstuff = {};
     kernelstuff.kernproc = kernel_proc;
     if(!ADDRISVALID(kernelstuff.kernproc)) {
@@ -190,12 +190,10 @@ int PreSpeed(mach_port_t ktaskport) {
         LOG("Unsandboxing..");
             // find our task
         uint64_t our_task = find_self_task();
-        LOG("our_task: 0x%llx", our_task);
             // find the sandbox slot
         uint64_t proc = rk64(our_task + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
-        LOG("our_proc: 0x%llx", proc);
+        LOG("Our proc: 0x%llx", proc);
         uint64_t our_ucred = rk64(proc + 0x100); // 0x100 - off_p_ucred
-        LOG("ucred: 0x%llx", our_ucred);
         uint64_t cr_label = rk64(our_ucred + 0x78); // 0x78 - off_ucred_cr_label
         LOG("cr_label: 0x%llx", cr_label);
         uint64_t sandbox = rk64(cr_label + 0x10);
