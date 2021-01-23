@@ -10,9 +10,8 @@ JB ETA????
 
 # TODO :
 - Remount: **Done**
-- Create macho-parser for amfid patching: **Working on**
-- Code Signing (amfid patching): **Done (after macho parser)**
-- TC Injection: (On hold)
+- Code Signing (amfid patching): **Done**
+- TC Injection: **In Development**
 - BootStrap (Procursus by Diatrus)
 - (More added later) 
 
