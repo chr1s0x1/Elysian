@@ -18,7 +18,8 @@ JB ETA????
 # Credits ( so far )
 - chr1s_0x1 (dev)
 - s0uthwes (dev)
-- Jake James (jelbrekLib)
+- Jake James (jelbrekLib & time_waste)
+- Odyssey Team (taryd0n exploit)
 - Mach Port (design)
 
 ## Huge thank you to s0uthwes for being an inspiration and a amazing friend
