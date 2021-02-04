@@ -11,6 +11,7 @@
 #include <spawn.h>
 #import "ViewController.h"
 #import "exploit.h"
+#import "exploit2/tardy0n.h"
 #import "jelbrekLib.h"
 #import "jbtools.h"
 #import "offsets.h"
@@ -27,6 +28,7 @@
 #include "pac/kernel.h"
 
 bool ESpeedMode = NO; // lets Elysian know if we're running off of HSP4
+bool tary = NO;
 
 // some important stuff, don't know what to call them lol
 uint64_t kernel_proc;
@@ -37,6 +39,8 @@ UInt32 amfi_pid;
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
 
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+
+#define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
 
 #define SetButtonText(what)\
 [self->JBButton setTitle:@(what) forState:UIControlStateNormal]
@@ -58,13 +62,6 @@ void FillProcs() {
         return;
     }
     LOG("[proc] Got launchd proc");
-    
-    our_proc = proc_of_pid(getpid());
-    if(!ADDRISVALID(our_proc)) {
-        LOG("[proc] ERR: Couldn't get our proc");
-        return;
-    }
-    LOG("[proc] Got our proc");
     
     uint64_t proc = rk64(Find_allproc());
     while(proc != 0) {
@@ -146,7 +143,7 @@ int PreSpeed(mach_port_t ktaskport) {
 - (void)viewDidLoad {
     
     // iOS Compatibility check
-    if(SYSTEM_VERSION_GREATER_THAN(@"13.3") || SYSTEM_VERSION_LESS_THAN(@"13.0")) {
+    if(SYSTEM_VERSION_GREATER_THAN(@"13.5") || SYSTEM_VERSION_LESS_THAN(@"13.0")) {
     JBButton.enabled = NO; // should disable this first
     LOG("ERR: Unsupported Firmware");
     SetButtonText("Error: Unsupported");
@@ -160,8 +157,8 @@ int PreSpeed(mach_port_t ktaskport) {
 - (IBAction)JBGo:(id)sender {
     [self->JBButton setEnabled:NO];
         LOG("[*] Starting Exploit");
-        int espeed = 1;
         mach_port_t tfpzero = MACH_PORT_NULL;
+        int espeed = 1;
         tfpzero = ESpeed(); // HSP4 POWAH
         if(tfpzero != 1 && MACH_PORT_VALID(tfpzero)) {
             ESpeedMode = YES;
@@ -169,6 +166,11 @@ int PreSpeed(mach_port_t ktaskport) {
         } else {
         LOG("?: ESpeed failed, trying exploit..");
         tfpzero = get_tfp0();
+        if(!MACH_PORT_VALID(tfpzero)) {
+        LOG("?: Time_waste failed, trying taryd0n..");
+        tardy0n();
+        tfpzero = getTaskPort();
+        tary = YES;
         if(!MACH_PORT_VALID(tfpzero)){
             LOG("ERR: Exploit Failed");
             LOG("Please reboot and try again");
@@ -176,6 +178,7 @@ int PreSpeed(mach_port_t ktaskport) {
             return;
             }
             LOG("Exploited kernel");
+            }
         }
     
         /* Start of Elysian Jailbreak ********************************/
@@ -184,6 +187,11 @@ int PreSpeed(mach_port_t ktaskport) {
         int errs;
         
         LOG("Starting Jailbreak Process..");
+    
+        if(tary) {
+            init_offsets();
+            init_IOSurface();
+        }
         
             // ------------ Unsandbox ------------ //
         if (espeed != 0) {
@@ -192,6 +200,7 @@ int PreSpeed(mach_port_t ktaskport) {
         uint64_t our_task = find_self_task();
             // find the sandbox slot
         uint64_t proc = rk64(our_task + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
+            our_proc = proc;
         LOG("Our proc: 0x%llx", proc);
         uint64_t our_ucred = rk64(proc + 0x100); // 0x100 - off_p_ucred
         uint64_t cr_label = rk64(our_ucred + 0x78); // 0x78 - off_ucred_cr_label

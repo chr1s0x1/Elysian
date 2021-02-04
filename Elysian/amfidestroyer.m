@@ -218,7 +218,7 @@ uint64_t find_misvsaci() {
     uint32_t nsyms = 0;
     uint32_t stroff = 0;
 
-    // 2. Parse amfid's DSYMTAB to get the exact offset to patch
+    // 2. Parse amfid's SYMTAB to get the offset to patch
     LOG("[misvsaci] Starting..");
     struct mach_header_64 *mh = (struct mach_header_64*)amfid;
     uint32_t ncmds = mh->ncmds;
@@ -233,13 +233,13 @@ uint64_t find_misvsaci() {
                 symoff = sym_cmd->symoff;
                 nsyms = sym_cmd->nsyms;
                 stroff = sym_cmd->stroff;
-                _assert(symoff != 0);
-                _assert(nsyms != 0);
-                _assert(stroff != 0);
+                _assert(symoff != 0, NULL);
+                _assert(nsyms != 0, NULL);
+                _assert(stroff != 0, NULL);
                  struct nlist_64 *symtab = (struct nlist_64*)((uintptr_t)amfid + symoff);
-                    _assert(ADDRISVALID((uint64_t)symtab));
+                    _assert(ADDRISVALID((uint64_t)symtab), NULL);
                 const char *strtab = (const char*)((uintptr_t)amfid + stroff);
-                    _assert(strtab != NULL);
+                    _assert(strtab != NULL, NULL);
                  for(int i = 0; i < nsyms; i++) {
                      char *MISVSACI_string = NULL;
                      MISVSACI_string = (char*)mh+(uint32_t)symtab->n_un.n_strx;
@@ -254,7 +254,7 @@ uint64_t find_misvsaci() {
             }
     lcmds = (struct load_command*)((char*)lcmds + lcmds->cmdsize);
     }
-    _assert(MISVSACI_symindex != 0);
+    _assert(MISVSACI_symindex != 0, NULL);
     
     const struct section_64 *sect_info = NULL;
     if(isArm64e()) {
@@ -266,7 +266,7 @@ uint64_t find_misvsaci() {
     const char *_segment = "__DATA", *_section = "__la_symbol_ptr";
         sect_info = getsectbynamefromheader_64((const struct mach_header_64 *)(uint8_t *)amfid, _segment, _section);
     
-    _assert(sect_info);
+    _assert(sect_info, NULL);
     
     LOG("[misvsaci] Done, exiting..");
     return sect_info->offset + (MISVSACI_symindex * 0x8);
@@ -313,7 +313,7 @@ int amfidestroyer(UInt32 amfipid, uint64_t ourproc, uint64_t kernel) {
     
     // parse amfid's binary to get the offset (find_misvsaci for code)
     MISVSACI_actual_offset = find_misvsaci();
-    _assert(MISVSACI_actual_offset != 1);
+    _assert(ADDRISVALID(MISVSACI_actual_offset), "MISVSACI offset is invalid");
     
     /*-------- now for patching amfi --------*/
     

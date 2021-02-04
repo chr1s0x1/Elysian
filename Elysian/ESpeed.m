@@ -10,6 +10,7 @@
 #import "pac/kernel.h"
 #import "kernel_memory.h"
 #import "IOSurface_stuff.h"
+#import "IOAccelerator_stuff.h"
 #import "utils.h"
 #import "offsets.h"
 #import "jbtools.h"
@@ -26,12 +27,7 @@ mach_port_t ESpeed(void) {
     host_t myself = mach_host_self();
     host_get_special_port(myself, HOST_LOCAL_NODE, 4, &tfp0hsp4);
     mach_port_deallocate(mach_task_self(), myself);
-    if(MACH_PORT_VALID(tfp0hsp4)) {
-        LOG("[ESpeed] Got tfp0 from HSP4");
-    } else {
-        LOG("[ESpeed] ERR: Couldn't get tfp0 from HSP4");
-        return 1;
-    }
+    _assert(MACH_PORT_VALID(tfp0hsp4), "[ESpeed] ERR: Couldn't get tfp0 from HSP4");
     
     init_offsets();
     
@@ -56,7 +52,7 @@ mach_port_t ESpeed(void) {
      
     UInt32 mypid = getpid();
 
-    if(mypid == 0) return 1;
+    _assert(mypid != 0, NULL);
     
     // took this from oob_timestamp x2
     uint64_t kproc = rk64(kernel_all_image_info_addr + offsetof(struct kernel_all_image_info_addr, kernproc));
@@ -73,7 +69,6 @@ mach_port_t ESpeed(void) {
     uint64_t proc = rk64(selftask + koffset(KSTRUCT_OFFSET_TASK_BSD_INFO));
     LOG("[ESpeed] our_proc: 0x%llx", proc);
     uint64_t our_ucred = rk64(proc + 0x100); // 0x100 - off_p_ucred
-    LOG("[ESpeed] ucred: 0x%llx", our_ucred);
     uint64_t cr_label = rk64(our_ucred + 0x78); // 0x78 - off_ucred_cr_label
     LOG("[ESpeed] cr_label: 0x%llx", cr_label);
     uint64_t sandbox = rk64(cr_label + 0x10);
@@ -103,11 +98,10 @@ mach_port_t ESpeed(void) {
         LOG("[ESpeed] ?: Couldn't grab KernelBase from struct");
         
         // try using the timewaste method
-        int init = init_IOSurface();
-        if(init != 0) {
-            LOG("[ESpeed] ERR: Failed to initiate IOSurface services");
-            return 1;
-        }
+        int init = init_IOAccelerator();
+        _assert(init == 0, "[ESpeed] ERR: Failed to init IOAccelerator");
+        init = init_IOSurface();
+        _assert(init == 0, "[ESpeed] ERR: Failed to init IOSurface services");
         
         LOG("[ESpeed] Initiated IOSurface services");
         
@@ -148,6 +142,6 @@ mach_port_t ESpeed(void) {
     EscalateTask(selftask);
     rootify(getpid());
     
-    LOG("[ESpeed] Finished with speed..");
+    LOG("[ESpeed] ESpeed completed successfully..");
     return tfp0hsp4;
 }

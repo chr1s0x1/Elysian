@@ -44,6 +44,9 @@
 		84E812F3240DE4860075AA3B /* IOSurface_stuff.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812EA240DE4850075AA3B /* IOSurface_stuff.c */; };
 		84E812F4240DE4860075AA3B /* IOAccelerator_stuff.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812EC240DE4860075AA3B /* IOAccelerator_stuff.c */; };
 		84E812F5240DE4860075AA3B /* exploit.c in Sources */ = {isa = PBXBuildFile; fileRef = 84E812ED240DE4860075AA3B /* exploit.c */; };
+		CB46C67B25B8A1CC00E8BA74 /* tardy0n.cc in Sources */ = {isa = PBXBuildFile; fileRef = CB46C67A25B8A1CC00E8BA74 /* tardy0n.cc */; };
+		CB9DA89D25B89A1F00C66004 /* exploit2 in Resources */ = {isa = PBXBuildFile; fileRef = CB9DA89C25B89A1F00C66004 /* exploit2 */; };
+		CBC2D3B925B8A23D006E3968 /* helpers.c in Sources */ = {isa = PBXBuildFile; fileRef = CBC2D3B825B8A23D006E3968 /* helpers.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -160,6 +163,9 @@
 		84E812EE240DE4860075AA3B /* kernel_memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kernel_memory.h; sourceTree = "<group>"; };
 		84FFBB462422E805005A9392 /* jelbrekLibE.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = jelbrekLibE.dylib; path = Elysian/libs/jelbrekLibE.dylib; sourceTree = "<group>"; };
 		84FFBB482422E816005A9392 /* jelbrekLibE.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = jelbrekLibE.dylib; sourceTree = "<group>"; };
+		CB46C67A25B8A1CC00E8BA74 /* tardy0n.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = tardy0n.cc; path = Elysian/exploit2/tardy0n.cc; sourceTree = "<group>"; };
+		CB9DA89C25B89A1F00C66004 /* exploit2 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = exploit2; sourceTree = "<group>"; };
+		CBC2D3B825B8A23D006E3968 /* helpers.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = helpers.c; path = Elysian/exploit2/helpers.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,6 +238,8 @@
 		846DD5D7240CE2920000D4AC = {
 			isa = PBXGroup;
 			children = (
+				CBC2D3B825B8A23D006E3968 /* helpers.c */,
+				CB46C67A25B8A1CC00E8BA74 /* tardy0n.cc */,
 				846DD5E2240CE2920000D4AC /* Elysian */,
 				846DD5FE240CE29C0000D4AC /* ElysianTests */,
 				846DD609240CE29C0000D4AC /* ElysianUITests */,
@@ -253,6 +261,7 @@
 		846DD5E2240CE2920000D4AC /* Elysian */ = {
 			isa = PBXGroup;
 			children = (
+				CB9DA89C25B89A1F00C66004 /* exploit2 */,
 				111613682491D83700F33AC8 /* bootstrap */,
 				110AE9812481757200DC4ADD /* include */,
 				1157CB392430353600B8A0CA /* pac */,
@@ -455,6 +464,7 @@
 				1116136A2491D86B00F33AC8 /* SSH in Resources */,
 				846DD5F3240CE29C0000D4AC /* LaunchScreen.storyboard in Resources */,
 				846DD5F0240CE29C0000D4AC /* Assets.xcassets in Resources */,
+				CB9DA89D25B89A1F00C66004 /* exploit2 in Resources */,
 				846DD5EE240CE2930000D4AC /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -480,6 +490,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBC2D3B925B8A23D006E3968 /* helpers.c in Sources */,
+				CB46C67B25B8A1CC00E8BA74 /* tardy0n.cc in Sources */,
 				1157CB4E2430355D00B8A0CA /* platform.c in Sources */,
 				11220284246284100053015A /* remount.m in Sources */,
 				1132F04C247644F6002988BD /* csblobmanipulate.m in Sources */,

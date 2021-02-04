@@ -21,6 +21,7 @@
 #define var __auto_type
 #endif
 
+
 // NSError *error;
 
 #define ADDRISVALID(val) ((val) >= 0xffff000000000000 && (val) != 0xffffffffffffffff)
@@ -36,11 +37,11 @@ goto out;\
 }\
 } while(false)
 
-#define _assert(condition) do {\
+#define _assert(condition, message) do {\
 if(condition) {\
 break;\
 }\
-LOG("_assert ERR: %s | %d", __FILE__, __LINE__);\
+LOG("_assert ERR: %s | %d: %s", __FILE__, __LINE__, message);\
 return 1;\
 } while(false)
 

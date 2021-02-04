@@ -21,17 +21,17 @@ int GatherOffsets() {
 LOG("[offsets] Getting offsets..");
     
 _vnode_lookup = Find_vnode_lookup();
-    _assert(ADDRISVALID(_vnode_lookup));
+    _assert(ADDRISVALID(_vnode_lookup), NULL);
     
     LOG("[offsets] vnode_lookup: 0x%llx", _vnode_lookup);
     
 _vnode_put = Find_vnode_put();
-    _assert(ADDRISVALID(_vnode_put));
+    _assert(ADDRISVALID(_vnode_put), NULL);
     
     LOG("[offsets] vnode_put: 0x%llx", _vnode_put);
     
 _vfs_context_current = Find_vfs_context_current();
-    _assert(ADDRISVALID(_vfs_context_current));
+    _assert(ADDRISVALID(_vfs_context_current), NULL);
     
     LOG("[offsets] vfs_context_current: 0x%llx", _vfs_context_current);
     
